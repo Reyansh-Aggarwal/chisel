@@ -13,8 +13,7 @@ module.exports = {
         'my-blue': '#06c3ff',
       },
       backgroundImage: {
-        'black-grid': "url('./assets/blackGrid.png')",
-        'start-now': "url('/assets/startNow2.png')",
+        'black-grid': "url('/assets/blackGrid.png')",
       }
     },
   },
