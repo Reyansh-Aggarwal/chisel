@@ -653,7 +653,7 @@ video {
   background-color: rgb(6 195 255 / 0.2);
 }
 
-.bg-black-grid {
+.bg-\[url\(\'\/assets\/blackGrid\.png\'\)\] {
   background-image: url('/assets/blackGrid.png');
 }
 
