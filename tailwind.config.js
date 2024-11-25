@@ -12,6 +12,10 @@ module.exports = {
       colors: {
         'my-blue': '#06c3ff',
       },
+      backgroundImage: {
+        'black-grid': "url('https://reyansh-aggarwal.github.io/chisel/assets/blackGrid.png')",
+
+      }
     },
   },
   plugins: [],
