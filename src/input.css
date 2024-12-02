@@ -2,3 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'helvetica-roman';
+    src: url('/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'helvetica-bold';
+    src: url('/assets/fonts/HelveticaNeueBold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'helvetica-light';
+    src: url('/assets/fonts/HelveticaNeueLight.otf') format('opentype');
+    font-weight: light;
+    font-style: normal;
+}
+
+input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
