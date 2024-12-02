@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Chisel</title>
+    <script src="../dist/script.js" defer></script>
+    <link rel = "stylesheet" href = "../dist/output.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    </head>
+
+    <body id = "setupPage" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 h-screen ">
+
+        <header class = "bg-background/80 backdrop-blur-sm top-0 z-20 fixed w-full">
+            <div class = "p-2 md:p-4 lg:p-6 flex flex-row justify-between">
+              <h1 class = "text-white font-bold text-2xl md:text-2xl  lg:text-4xl font-helvetica-bold">Chisel</h1>
+              <button class = "text-white text-2xl md:text-2xl lg:text-4xl">
+                <i class="fa-solid fa-bars"></i>
+              </button>    
+            </div>
+            <hr>
+        </header>
+        
+        <div class = "flex flex-col justify-between min-h-screen">
+          <div class = "flex flex-col justify-between items-center text-white    flex-grow">
+            <div id = "tile"
+            class = "rounded-[60px] outline outline-white outline-1 bg-transparent 
+            flex flex-col gap-8 md:gap-14 p-4 md:p-6 lg:p-8 shadow-lg text-center w-full md:w-2/3 block overflow-hidden scale-[0.7]">
+             
+              <!-- Title w/ glow-->
+              <span id = "title"
+              class = "flex flex-row justify-center overflow-hidden">
+                <span
+                class = "bg-clip-text bg-gradient-to-r from-[#524dee]  via-[#0be1f7]  to-[#524dee] animate-gradient bg-[length:200%_200%]
+                text-transparent font-helvetica-bold -tracking-wide text-4xl lg:text-6xl z-10">
+                  Business Details
+                </span>
+                <span id = "glowTitle"
+                class = "bg-clip-text bg-my-blue blur-lg text-transparent font-helvetica-bold -tracking-wide text-4xl lg:text-6xl absolute z-0">
+                  Business Details
+                </span>
+              </span>
+              
+              <!-- Actual Form w/ inp. fields and labels -->
+              <form id = "details" method = "post" 
+              class = "flex flex-col gap-12 md:gap-18 px-2">
+  
+                <div id = "nameField"
+                class = "flex flex-col items-start w-full md:gap-4">
+                  <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-4xl">Name</label>  
+                  <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" onchange = "checkRequired(event)"
+                  class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl lg:text-3xl w-full
+                  placeholder:text-black placeholder:font-helvetica-roman 
+                  autofill:bg-my-gray autofill:text-white
+                  focus:outline-solid focus:outline-2 focus:outline-gray-500" required/>
+                </div>
+  
+                <div id = "colorField"
+                class = "flex flex-col items-start w-full  gap-2 md:gap-4">
+                  <label for = "colorField" class = "font-medium text-2xl md:text-xl lg:text-3xl">Colours</label>
+                  <div id = "primaryColorField" 
+                  class = "flex flex-row gap-2">
+                    <input name = "primaryColor" type = "color" id = "primaryColor" onchange = "checkRequired(event)"
+                    class = "bg-clip-content w-8 h-8 p-0 border-2 bg-transparent" required/>  
+                    <label for = "primaryColor" class = " text-xl md:text-2xl lg:text-3xl">Primary Colour</labeL>
+                  </div>
+                  <div id = "secondaryColorField" 
+                  class = "flex flex-row gap-2">
+                    <input name = "secondaryColor" type = "color" id = "secondaryColor" onchange = "checkRequired(event)"
+                    class = "bg-clip-content w-8 h-8 p-0 border-2 bg-transparent " required/>  
+                    <label for = "secondaryColor" class = "text-xl md:text-2xl lg:text-3xl">Secondary Colour</labeL>
+                  </div>
+                </div>
+  
+                <div id = "logoField"
+                class = "flex flex-col w-full h-auto gap-2 md:gap-4 lg:gap-6 relative">
+                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-3xl w-full">Logo ( Optional )
+                  </label>
+                  
+                  <!-- Image Upload and Preview Section-->
+                  <div id = "imageDiv"
+                  class = "flex bg-my-gray w-full  rounded-lg items-center justify-center px-8 py-2 z-0">
+  
+                    <div id = "imageTemplate"
+                    class = "flex flex-col w-full items-center justify-center">
+                      <i class="fa-solid fa-cloud-arrow-up text-6xl lg:text-9xl text-black"></i>
+                      <span class="text-lg md:text-xl lg:text-4xl text-black">Upload Media</span>
+                    </div>
+                    <div id = "imagePreviewDiv"
+                    class = "z-10 absolute">
+                      <img src="" id = "imagePreview"
+                      class = "w-auto h-full"/> 
+                    </div>
+                    <input class = "hidden" type = "file" id = "imageInput" accept = "image/png" name = "logo" 
+                    onchange = "previewImage(event)">
+                  </div>
+  
+                  <span class = "lg:text-xl">*Image must have a <span class ="font-helvetica-bold text-[#524dee]">transparent background</span></span>
+                </div>
+  
+                <div id = "buttonDiv"
+                class = "flex flex-col items-center lg:my-2 relative group">
+                  <button id = "submitButton"
+                  class=" bg-my-gray  
+                  animate-gradient bg-[length:300%_300%]  
+                  text-black font-helvetica-bold text-2xl md:text-3xl lg:text-4xl rounded-full w-fit px-4 z-10 "
+                  type="submit">
+                    NEXT
+                  </button>
+                  <span class = "bg-my-blue absolute text-black font-helvetica-bold text-2xl md:text-3xl lg:text-4xl rounded-full w-fit px-4 z-0 blur-lg hidden group-hover:block animate-pulse transition-all">
+                    TEST
+                  </span>
+                </div>
+                
+              </form>
+
+            </div>
+          </div>
+
+          <footer class = "flex flex-col justify-between px-8 text-white bg-black w-full bottom-0 relative">
+        
+            <div class = "flex-row flex justify-between gap-4 py-4">
+              <img src="assets/logo.png" />
+              <div class = "flex flex-col items-end font-helvetica-light text-sm"> 
+                <span class ="font-helvetica-bold text-lg md:text-xl lg:text-2xl">CONTACT US</span>
+                <a href="tel:+91-9311352507" class = "text-blue-500 md:text-md lg:text-lg">+91-9311352507</a>
+                <a href="tel:+91-9086222000" class = "text-blue-500 md:text-md lg:text-lg">+91-9086222000</a>
+              </div>
+            </div>
+            
+          </footer>
+        </div>
+
+        
+        
+    </body>
+</html>

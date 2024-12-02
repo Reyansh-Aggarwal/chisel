@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta charset="UTF-8" />
-      <title>Chisel</title>
-      <link rel = "stylesheet" href = "./dist/output.css">
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Chisel</title>
+    <script src="./dist/script.js" defer></script>
+    <link rel = "stylesheet" href = "./dist/output.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   </head>
-  <body class = "bg-black-grid bg-cover font-Helvetica">
+  <body id = "landingPage" class = "bg-black-grid bg-cover font-helvetica-roman">
 
-    <header class = "bg-background/80 backdrop-blur-sm sticky top-0 z-20">
-      <div class = "px-4 py-4 flex flex-row justify-between">
-        <h1 class = "text-white font-bold text-2xl">Chisel</h1>
-        <button class = "text-white text-2xl">
+    <header class = "bg-background/80 backdrop-blur-sm top-0 z-20 fixed w-full">
+      <div class = "p-4 md:p-6 lg:p-8 flex flex-row justify-between">
+        <h1 class = "text-white font-bold text-4xl md:text-4xl  lg:text-5xl font-helvetica-bold">Chisel</h1>
+        <button class = "text-white text-4xl md:text-4xl lg:text-5xl">
           <i class="fa-solid fa-bars"></i>
         </button>    
       </div>
       <hr>
     </header>
+    
 
-    <div class = "flex flex-col gap-8 py-14 w-full z-0">
+    <div id = "mainSection" class = "flex flex-col gap-8 py-14 w-full z-10 transition">
+      
       <div id = "hero"
       class = "flex flex-col items-center justify-center md:justify-between md:flex-row w-full px-8 md:px-16 lg:px-24">
-        <div id  = "txt-glow"
-        class = "flex flex-col gap-2 items-center md:items-start py-6 md:py-0">       
+        <div id  = "txtDiv"
+        class = "flex flex-col gap-2 items-center md:items-start py-6 md:py-0 font-helvetica-bold">       
           <span class = "flex">
             <h1 class = "text-my-blue text-6xl lg:text-8xl font-bold">Chisel</h1>
             <h1 class = "text-my-blue text-6xl lg:text-8xl absolute blur-md">Chisel</h1>
           </span>
           <span class = "flex">
-            <span class="text-gray-300 text-center md:text-left">Providing opticians with access to professional branding solutions.</span>
+            <span class="font-helvetica-light text-gray-300 text-center md:text-left">Providing opticians with access to professional branding solutions.</span>
           </span>
         </div>
         <img class = "w-2/4" src="assets/specs.png"/>
@@ -36,21 +40,37 @@
 
       <div id="buttonDiv"
       class = "flex items-center justify-center relative py-24 md:py-32 lg:py-46">
-        <img src="assets/startNow2.png" class = "absolute z-0 w-max -mx-8"/>
-        <div id = "button"
-        class = "items-center justify-center w-full flex z-10 absolute">
-          <button class = "bg-my-blue px-4 py-2 transform transition-transform hover:scale-110 rounded-full font-bold font-Helvetica text-sm md:text-2xl lg:text-3xl">GET STARTED!</button>
-          <button class = "bg-my-blue/20 blur-sm absolute px-4 py-2 rounded-full text-my-blue font-bold  md:text-2xl">GET STARTED!</button>
-        </div>
+        <img src="assets/startNow2.png" class = "absolute w-max -mx-8"/>
+        <a id = "button" href="pages/setup.html"
+        class = "items-center justify-center w-full flex absolute">
+          <button id = "getStarted" class = "bg-my-blue px-4 py-2 transform transition-transform hover:scale-110 rounded-full font-bold font-helvetica-roman text-sm md:text-2xl z-10">GET STARTED!</button>
+          <button class = "bg-my-blue/20 blur-sm absolute px-4 py-2 rounded-full text-my-blue font-bold  md:text-2xl pointer-events-none z-0">GET STARTED!</button>
+        </a>
       </div>
 
       <div id = "examples"
       class = "flex flex-col items-start px-8 md:px-16 md:py-24">
       <span class = "flex">
-        <h1 class = "text-my-blue text-4xl font-bold">Our Work</h1>
+        <h1 class = "text-my-blue text-4xl font-bold font-helvetica-bold">Our Work</h1>
         <h1 class = "text-my-blue text-4xl absolute blur-md">Our Work</h1>
       </span>
       </div>
     </div>
+    
+
+    <hr>
+    <footer class = "flex flex-col justify-between px-12 py-4 text-white bg-black">
+      
+      <div class = "flex-row flex justify-between gap-4 py-4">
+        <img src="assets/logo.png" />
+        <div class = "flex flex-col items-end font-helvetica-light text-sm"> 
+          <span class ="font-bold text-2xl font-helvetica-bold">CONTACT US</span>
+          <a href="tel:+91-9311352507" class = "text-blue-500 ">+91-9311352507</a>
+          <a href="tel:+91-9086222000" class = "text-blue-500">+91-9086222000</a>
+        </div>
+        
+      </div>
+      
+    </footer>
   </body>
 </html>
