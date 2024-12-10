@@ -44,6 +44,7 @@ function checkRequired(event) {
     const input = event.target;
     const data = input.value;
     const submitButton = document.getElementById("submitButton");
+    const submitGlow = document.getElementById("submitGlow");
     if (data != "") {
         if (input.id == "name") {
             isFilled[0] = true;
@@ -58,14 +59,16 @@ function checkRequired(event) {
             console.log("c2 filled");
         }
         console.log(isFilled);
-        if (isFilled[0] && isFilled[1] && isFilled[2]) {
+        if (isFilled[0] && (isFilled[1] || isFilled[2])) {
             submitButton.classList.remove('bg-my-gray');
             submitButton.classList.add("bg-gradient-to-r", "from-[#524dee]", "via-[#0be1f7]", "to-[#524dee]");
+            submitGlow.classList.remove('hidden');
         }
         else {
             if (!submitButton.classList.contains("bg-my-gray")) {
                 submitButton.classList.remove('bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee]');
                 submitButton.classList.add('bg-my-gray');
+                submitGlow.classList.add('hidden');
             }
         }
     }
