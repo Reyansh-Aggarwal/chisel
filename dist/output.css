@@ -689,6 +689,18 @@ video {
   flex-basis: 20%;
 }
 
+.scale-\[2\] {
+  --tw-scale-x: 2;
+  --tw-scale-y: 2;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.scale-\[1\.2\] {
+  --tw-scale-x: 1.2;
+  --tw-scale-y: 1.2;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -862,6 +874,11 @@ video {
 
 .p-4 {
   padding: 1rem;
+}
+
+.px-16 {
+  padding-left: 4rem;
+  padding-right: 4rem;
 }
 
 .px-2 {
@@ -1168,10 +1185,6 @@ input[type="color"] {
   outline-color: #6b7280;
 }
 
-.group:hover .group-hover\:block {
-  display: block;
-}
-
 @media (min-width: 768px) {
   .md\:mx-16 {
     margin-left: 4rem;
@@ -1181,6 +1194,30 @@ input[type="color"] {
   .md\:my-36 {
     margin-top: 9rem;
     margin-bottom: 9rem;
+  }
+
+  .md\:scale-\[2\] {
+    --tw-scale-x: 2;
+    --tw-scale-y: 2;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .md\:scale-\[1\.2\] {
+    --tw-scale-x: 1.2;
+    --tw-scale-y: 1.2;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .md\:scale-\[1\.6\] {
+    --tw-scale-x: 1.6;
+    --tw-scale-y: 1.6;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .md\:scale-\[1\.4\] {
+    --tw-scale-x: 1.4;
+    --tw-scale-y: 1.4;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
   .md\:justify-between {
@@ -1259,6 +1296,12 @@ input[type="color"] {
   .lg\:my-2 {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+  }
+
+  .lg\:scale-\[1\.6\] {
+    --tw-scale-x: 1.6;
+    --tw-scale-y: 1.6;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
   .lg\:gap-6 {
