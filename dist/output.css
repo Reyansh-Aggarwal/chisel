@@ -599,40 +599,12 @@ video {
   margin-right: -2rem;
 }
 
-.my-72 {
-  margin-top: 18rem;
-  margin-bottom: 18rem;
-}
-
-.my-16 {
-  margin-top: 4rem;
+.mb-16 {
   margin-bottom: 4rem;
-}
-
-.my-24 {
-  margin-top: 6rem;
-  margin-bottom: 6rem;
-}
-
-.my-28 {
-  margin-top: 7rem;
-  margin-bottom: 7rem;
-}
-
-.mt-4 {
-  margin-top: 1rem;
-}
-
-.mt-16 {
-  margin-top: 4rem;
 }
 
 .mt-28 {
   margin-top: 7rem;
-}
-
-.mb-16 {
-  margin-bottom: 4rem;
 }
 
 .block {
@@ -675,6 +647,10 @@ video {
   width: 50%;
 }
 
+.w-5\/6 {
+  width: 83.333333%;
+}
+
 .w-8 {
   width: 2rem;
 }
@@ -701,10 +677,6 @@ video {
   width: 100vw;
 }
 
-.w-5\/6 {
-  width: 83.333333%;
-}
-
 .max-w-16 {
   max-width: 4rem;
 }
@@ -715,12 +687,6 @@ video {
 
 .basis-1\/5 {
   flex-basis: 20%;
-}
-
-.scale-\[0\.7\] {
-  --tw-scale-x: 0.7;
-  --tw-scale-y: 0.7;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .transform {
@@ -1114,7 +1080,7 @@ video {
 @font-face {
   font-family: 'helvetica-roman';
 
-  src: url('/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
+  src: url('https://reyansh-aggarwal.github.io/chisel/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
 
   font-weight: normal;
 
@@ -1124,7 +1090,7 @@ video {
 @font-face {
   font-family: 'helvetica-bold';
 
-  src: url('/assets/fonts/HelveticaNeueBold.otf') format('opentype');
+  src: url('https://reyansh-aggarwal.github.io/chisel/assets/fonts/HelveticaNeueBold.otf') format('opentype');
 
   font-weight: bold;
 
@@ -1134,7 +1100,7 @@ video {
 @font-face {
   font-family: 'helvetica-light';
 
-  src: url('/assets/fonts/HelveticaNeueLight.otf') format('opentype');
+  src: url('https://reyansh-aggarwal.github.io/chisel/assets/fonts/HelveticaNeueLight.otf') format('opentype');
 
   font-weight: light;
 
@@ -1213,10 +1179,6 @@ input[type="color"] {
 }
 
 @media (min-width: 768px) {
-  .md\:m-36 {
-    margin: 9rem;
-  }
-
   .md\:mx-16 {
     margin-left: 4rem;
     margin-right: 4rem;
@@ -1225,43 +1187,6 @@ input[type="color"] {
   .md\:my-36 {
     margin-top: 9rem;
     margin-bottom: 9rem;
-  }
-
-  .md\:mx-14 {
-    margin-left: 3.5rem;
-    margin-right: 3.5rem;
-  }
-
-  .md\:mx-36 {
-    margin-left: 9rem;
-    margin-right: 9rem;
-  }
-
-  .md\:mx-8 {
-    margin-left: 2rem;
-    margin-right: 2rem;
-  }
-
-  .md\:my-52 {
-    margin-top: 13rem;
-    margin-bottom: 13rem;
-  }
-
-  .md\:my-72 {
-    margin-top: 18rem;
-    margin-bottom: 18rem;
-  }
-
-  .md\:scale-\[1\] {
-    --tw-scale-x: 1;
-    --tw-scale-y: 1;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .md\:scale-\[0\.9\] {
-    --tw-scale-x: 0.9;
-    --tw-scale-y: 0.9;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
   .md\:justify-between {
@@ -1334,11 +1259,6 @@ input[type="color"] {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
-
-  .md\:text-8xl {
-    font-size: 6rem;
-    line-height: 1;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -1390,8 +1310,8 @@ input[type="color"] {
     line-height: 1;
   }
 
-  .lg\:text-6xl {
-    font-size: 3.75rem;
+  .lg\:text-7xl {
+    font-size: 4.5rem;
     line-height: 1;
   }
 
@@ -1413,10 +1333,5 @@ input[type="color"] {
   .lg\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
-  }
-
-  .lg\:text-7xl {
-    font-size: 4.5rem;
-    line-height: 1;
   }
 }
