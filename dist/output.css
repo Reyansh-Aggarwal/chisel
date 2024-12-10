@@ -1172,12 +1172,6 @@ input[type="color"] {
   display: block;
 }
 
-@media (min-width: 640px) {
-  .sm\:hidden {
-    display: none;
-  }
-}
-
 @media (min-width: 768px) {
   .md\:mx-16 {
     margin-left: 4rem;
