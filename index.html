@@ -8,25 +8,23 @@
     <link rel = "stylesheet" href = "./dist/output.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   </head>
-  <body id = "landingPage" class = "bg-black-grid bg-cover font-helvetica-roman overflow-x-hidden h-screen">
+  <body id = "landingPage" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0">
 
     <header class = "bg-background/80 backdrop-blur-sm top-0 z-20 fixed w-full">
-      <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between ">
-        <a href = "index.html">
-          <img src="assets/logo.png" 
+      <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
+        <a href = "../index.html">
+          <img src="../assets/logo.png" 
           class = "filter brightness-0 invert
           h-24 w-auto -p-4 md:-p-6"/>
           <button class = "text-white text-4xl md:text-4xl lg:text-5xl">
         </a>
-        <button class = "text-white text-4xl md:text-4xl lg:text-5xl">
           <i class="fa-solid fa-bars"></i>
         </button>    
       </div>
       <hr>
     </header>
-    
 
-    <div id = "mainSection" class = "flex flex-col gap-8 py-20 w-full z-10 transition">
+    <div id = "mainSection" class = "flex flex-col md:gap-4 py-20 w-full z-10 transition">
       
       <div id = "hero"
       class = "flex flex-row items-center justify-center md:justify-between  w-full px-8 md:px-16 lg:px-24">
@@ -34,7 +32,7 @@
         class = "flex flex-col gap-2 items-start py-6 md:py-0 font-helvetica-bold">       
           <span class = "flex">
             <h1 class = "text-my-blue text-4xl md:text-6xl lg:text-8xl font-bold">Chisel</h1>
-            <h1 class = "text-my-blue text-4xl md:text-6xl lg:text-8xl absolute blur-md">Chisel</h1>
+            <h1 class = "text-my-blue text-4xl md:text-6xl lg:text-8xl absolute blur-md animate-pulse">Chisel</h1>
           </span>
           <span class = "flex">
             <span class="font-helvetica-light text-gray-300 text-sm md:text-md lg:text-lg text-left">Providing opticians with access to professional branding solutions.</span>
@@ -44,8 +42,13 @@
       </div>
 
       <div id="buttonDiv"
-      class = "flex items-center justify-center relative py-24 md:py-32 lg:py-46">
-        <img src="assets/startNow2.png" class = "absolute w-max z-0 -mx-8"/>
+      class = "flex items-center justify-center relative py-12 md:py-32 lg:py-32">
+        <div class = "flex z-0 animate-marquee gap-4 items-center ">
+          <img src="assets/startNow2.png" class = "z-0"/>
+          <img src="assets/startNow2.png" class = " z-0"/>
+          <img src="assets/startNow2.png" class = " z-0"/>
+        </div>
+        
         <a id = "button" href="pages/setup.html"
         class = "items-center justify-center w-full flex absolute scale-[1.2] md:scale-[1.4] lg:scale-[1.6]">
           <button id = "getStarted" class = "bg-my-blue px-4 py-2 transform transition-transform hover:scale-110 rounded-full font-bold font-helvetica-roman text-sm md:text-2xl z-10">GET STARTED!</button>
@@ -53,20 +56,12 @@
         </a>
       </div>
 
-      <div id = "examples"
-      class = "flex flex-col items-start px-8 md:px-16 md:py-24">
-      <span class = "flex">
-        <h1 class = "text-my-blue text-4xl font-bold font-helvetica-bold">Our Work</h1>
-        <h1 class = "text-my-blue text-4xl absolute blur-md">Our Work</h1>
-      </span>
-      </div>
     </div>
     
 
-    <hr>
-    
+    <hr class = "">
     <footer class = "flex flex-col justify-between px-8 text-white bg-black w-full bottom-0 h-auto">
-        
+      
       <div class = "flex-row flex justify-between py-4">
         <div class = "basis-1/5">
           <img src="assets/trans-logo.png" class = "bg-gradient-to-r from-[#524dee]  via-[#0be1f7]  to-[#524dee] animate-gradient bg-[length:300%_300%] h-auto max-w-16"/>
