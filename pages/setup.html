@@ -12,7 +12,7 @@
 
     <body id = "setupPage" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0">
 
-      <header class = "bg-background/80 backdrop-blur-sm top-0 z-20 fixed w-full">
+      <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
         <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
           <a href = "../index.html">
             <img src="../assets/logo.png" 
@@ -85,7 +85,7 @@
                   
                   <!-- Image Upload and Preview Section-->
                   <div id = "imageDiv"
-                  class = "flex bg-my-gray w-full  rounded-lg items-center justify-center px-8 py-2 z-0">
+                  class = "flex bg-my-gray w-full rounded-lg items-center justify-center px-8 py-2 z-0">
   
                     <div id = "imageTemplate"
                     class = "flex flex-col w-full items-center justify-center">
@@ -93,11 +93,11 @@
                       <span class="text-lg md:text-xl lg:text-4xl text-black">Upload Media</span>
                     </div>
                     <div id = "imagePreviewDiv"
-                    class = "z-10 absolute">
+                    class = "w-fit px-8 absolute bg-my-gray bg-clip-content items-center flex ">
                       <img src="" id = "imagePreview"
-                      class = "w-auto h-full"/> 
+                      class = "w-auto h-full border-2 hidden z-0 relative"/>
                     </div>
-                    <input class = "hidden" type = "file" id = "imageInput" accept = "image/png" name = "logo" 
+                    <input class = "z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" 
                     onchange = "previewImage(event)">
                   </div>
   
@@ -138,8 +138,5 @@
             
           </footer>
         </div>
-
-        
-        
     </body>
 </html>
