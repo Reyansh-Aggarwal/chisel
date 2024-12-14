@@ -51,13 +51,21 @@ function previewImage(event: Event) {
 
     if(imgFile){
         const reader = new FileReader();
+        const prevDiv = document.getElementById("imagePreviewDiv") as HTMLDivElement;
         const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
+        const imgTemplate = document.getElementById("imageTemplate") as HTMLDivElement;
+        const imgDiv = document.getElementById("imageDiv") as HTMLDivElement;
 
         reader.readAsDataURL(imgFile);
         reader.onload = () => {
             imgPreview.src = reader.result as string;
             console.log(imgPreview.src);
+            prevDiv.classList.remove('absolute');
             imgPreview.classList.remove('hidden');
+            imgTemplate.classList.add('hidden');
+            imgPreview.classList.add('block');
+            imgDiv.classList.add('bg-transparent');
+            input.value = "";
         };
     }   
 }

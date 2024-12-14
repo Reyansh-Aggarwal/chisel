@@ -31,12 +31,20 @@ function previewImage(event) {
     const imgFile = input.files ? input.files[0] : null;
     if (imgFile) {
         const reader = new FileReader();
+        const prevDiv = document.getElementById("imagePreviewDiv");
         const imgPreview = document.getElementById("imagePreview");
+        const imgTemplate = document.getElementById("imageTemplate");
+        const imgDiv = document.getElementById("imageDiv");
         reader.readAsDataURL(imgFile);
         reader.onload = () => {
             imgPreview.src = reader.result;
             console.log(imgPreview.src);
+            prevDiv.classList.remove('absolute');
             imgPreview.classList.remove('hidden');
+            imgTemplate.classList.add('hidden');
+            imgPreview.classList.add('block');
+            imgDiv.classList.add('bg-transparent');
+            input.value = "";
         };
     }
 }
