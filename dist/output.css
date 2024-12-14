@@ -630,10 +630,6 @@ video {
   height: 100%;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .min-h-screen {
   min-height: 100vh;
 }
@@ -661,10 +657,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-screen {
-  width: 100vw;
 }
 
 .max-w-16 {
@@ -1191,10 +1183,6 @@ input[type="color"] {
   .md\:my-36 {
     margin-top: 9rem;
     margin-bottom: 9rem;
-  }
-
-  .md\:h-24 {
-    height: 6rem;
   }
 
   .md\:scale-\[1\.4\] {
