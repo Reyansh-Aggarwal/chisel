@@ -155,7 +155,7 @@ function checkRequired(event: Event){
             isFilled[0] = false;
             console.log("name not filled"); 
             makeGradient(submitButton, false);
-        } //others not needed because color cant be empty?? 
+        } //others not needed because color cant be empty?
     }
 
 }
