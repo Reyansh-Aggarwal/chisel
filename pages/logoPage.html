@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Chisel</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <script src="../dist/script.js" defer></script>
+    <link rel = "stylesheet" href = "../dist/output.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  </head>
+  <body id="logoPage" class = "h-full bg-black-grid">
+
+    <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
+      <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
+        <a href = "index.html">
+          <img src="../assets/logo.png" 
+          class = "filter brightness-0 invert
+          h-24 w-auto -p-4 md:-p-6"/>
+          <button class = "text-white text-4xl md:text-4xl lg:text-5xl">
+        </a>
+          <i class="fa-solid fa-bars"></i>
+        </button>    
+      </div>
+      <hr>
+    </header>
+
+    <main class = "flex py-32 px-8 z-10 text-white font-helvetica-roman">
+      
+      <form id = "logo" method = "post" 
+      class = "flex flex-col gap-12 md:gap-18 px-2">
+        <div id = "images"
+        class = "flex flex-row flex-wrap py-16">
+          <div id = "templateDiv"
+          class = "bg-white h-48 w-96 rounded-[50px] text-black
+          items-center flex justify-between p-16">
+            this is NOT complete...
+          </div>
+        </div>
+      </form>
+    </main>
+
+    
+    <footer class = "flex flex-col justify-between text-white bg-transparent w-full bottom-0 absolute h-auto block">
+     
+      <hr class = "">
+      <div class = "flex-row flex justify-between py-4 px-8 bg-black">
+        <div class = "basis-1/5">
+          <img src="../assets/trans-logo.png" class = "bg-gradient-to-r from-[#524dee]  via-[#0be1f7]  to-[#524dee] animate-gradient bg-[length:300%_300%] h-auto max-w-16"/>
+        </div>
+        <div class = "flex flex-col items-end font-helvetica-light text-sm flex-grow w-fit"> 
+          <span class ="font-helvetica-bold text-lg md:text-2xl lg:text-2xl">CONTACT US</span>
+          <a href="tel:+91-9311352507" class = "text-blue-500 md:text-md lg:text-lg">+91-9311352507</a>
+          <a href="tel:+91-9086222000" class = "text-blue-500 md:text-md lg:text-lg">+91-9086222000</a>
+        </div>
+      </div>
+      
+    </footer>
+
+  </body>
+</html>
