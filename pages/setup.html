@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <title>Chisel</title>
     <script src="../dist/script.js" defer></script>
-    <link rel="icon" type="image/png" href="/assets/trans-logo.png">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
     <link rel = "stylesheet" href = "../dist/output.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     </head>
@@ -14,7 +14,7 @@
 
       <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
         <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
-          <a href = "../index.html">
+          <a href = "index.html">
             <img src="../assets/logo.png" 
             class = "filter brightness-0 invert
             h-24 w-auto -p-4 md:-p-6"/>
@@ -26,7 +26,7 @@
         <hr>
       </header>
         
-        <div class = "flex flex-col justify-between min-h-screen overflow-x-hidden">
+        <main class = "flex flex-col justify-between min-h-screen overflow-x-hidden">
           <div class = "flex flex-col justify-between items-center text-white flex-grow w-full">
             <div id = "tile"
             class = "rounded-[60px] outline outline-white outline-1 bg-transparent 
@@ -54,7 +54,7 @@
                 <div id = "nameField"
                 class = "flex flex-col items-start w-full md:gap-4">
                   <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-4xl">Name</label>  
-                  <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" onchange = "checkRequired(event)"
+                  <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" 
                   class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl lg:text-3xl w-full
                   placeholder:text-black placeholder:font-helvetica-roman 
                   autofill:bg-my-gray autofill:text-white
@@ -133,6 +133,7 @@
             </div>
             
           </footer>
-        </div>
+        </main>
+      
     </body>
 </html>
