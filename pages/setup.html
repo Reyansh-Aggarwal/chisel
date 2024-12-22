@@ -54,7 +54,7 @@
                 <div id = "nameField"
                 class = "flex flex-col items-start w-full md:gap-4">
                   <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-4xl">Name</label>  
-                  <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" 
+                  <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" onchange = "checkRequired(event)"
                   class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl lg:text-3xl w-full
                   placeholder:text-black placeholder:font-helvetica-roman 
                   autofill:bg-my-gray autofill:text-white
@@ -97,8 +97,7 @@
                       <img src="" id = "imagePreview"
                       class = "w-auto h-full border-2 hidden z-0 relative"/>
                     </div>
-                    <input class = "z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" 
-                    onchange = "previewImage(event)">
+                    <input class = "z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo">
                   </div>
   
                   <span class = "lg:text-xl">*Image must have a <span class ="font-helvetica-bold text-[#524dee]">transparent background</span></span>
