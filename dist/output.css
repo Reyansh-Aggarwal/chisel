@@ -646,10 +646,6 @@ video {
   width: 2rem;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
 .w-auto {
   width: auto;
 }
@@ -839,15 +835,30 @@ video {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
+.from-\[\#0096ff\] {
+  --tw-gradient-from: #0096ff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(0 150 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-\[\#524dee\] {
   --tw-gradient-from: #524dee var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(82 77 238 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.via-\[\#00cefc\] {
+  --tw-gradient-to: rgb(0 206 252 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #00cefc var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
 .via-\[\#0be1f7\] {
   --tw-gradient-to: rgb(11 225 247 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), #0be1f7 var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.to-\[\#0096ff\] {
+  --tw-gradient-to: #0096ff var(--tw-gradient-to-position);
 }
 
 .to-\[\#524dee\] {
@@ -881,6 +892,10 @@ video {
 
 .p-4 {
   padding: 1rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .px-2 {
@@ -1030,6 +1045,11 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.text-purple-500 {
+  --tw-text-opacity: 1;
+  color: rgb(168 85 247 / var(--tw-text-opacity, 1));
 }
 
 .opacity-0 {
@@ -1213,6 +1233,10 @@ input[type="color"] {
     margin-bottom: 9rem;
   }
 
+  .md\:w-2\/5 {
+    width: 40%;
+  }
+
   .md\:scale-\[1\.4\] {
     --tw-scale-x: 1.4;
     --tw-scale-y: 1.4;
@@ -1227,8 +1251,16 @@ input[type="color"] {
     gap: 3.5rem;
   }
 
+  .md\:gap-20 {
+    gap: 5rem;
+  }
+
   .md\:gap-4 {
     gap: 1rem;
+  }
+
+  .md\:p-4 {
+    padding: 1rem;
   }
 
   .md\:p-6 {
@@ -1238,6 +1270,11 @@ input[type="color"] {
   .md\:px-16 {
     padding-left: 4rem;
     padding-right: 4rem;
+  }
+
+  .md\:px-36 {
+    padding-left: 9rem;
+    padding-right: 9rem;
   }
 
   .md\:px-6 {
@@ -1273,6 +1310,11 @@ input[type="color"] {
   .md\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .md\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
   }
 
   .md\:text-6xl {
@@ -1348,6 +1390,11 @@ input[type="color"] {
 
   .lg\:text-5xl {
     font-size: 3rem;
+    line-height: 1;
+  }
+
+  .lg\:text-6xl {
+    font-size: 3.75rem;
     line-height: 1;
   }
 
