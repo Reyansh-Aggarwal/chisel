@@ -38,11 +38,11 @@
               class = "flex flex-row justify-center overflow-hidden">
                 <span
                 class = "bg-clip-text bg-gradient-to-r from-[#524dee]  via-[#0be1f7]  to-[#524dee] animate-gradient bg-[length:200%_200%]
-                text-transparent font-helvetica-bold -tracking-wide text-4xl md:text-6xl lg:text-7xl z-10">
+                text-transparent font-helvetica-bold -tracking-wide text-4xl md:text-6xl lg:text-8xl z-10">
                   Business Details
                 </span>
                 <span id = "glowTitle"
-                class = "bg-clip-text bg-my-blue blur-lg text-transparent font-helvetica-bold -tracking-wide text-4xl md:text-6xl lg:text-7xl absolute z-0">
+                class = "bg-clip-text bg-my-blue blur-lg text-transparent font-helvetica-bold -tracking-wide text-4xl md:text-6xl lg:text-8xl absolute z-0">
                   Business Details
                 </span>
               </span>
@@ -53,17 +53,17 @@
   
                 <div id = "nameField"
                 class = "flex flex-col items-start w-full md:gap-4">
-                  <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-4xl">Name</label>  
+                  <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-5xl">Name</label>  
                   <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" onchange = "checkRequired(event)"
                   class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl lg:text-3xl w-full
                   placeholder:text-black placeholder:font-helvetica-roman 
                   autofill:bg-my-gray autofill:text-white
-                  focus:outline-solid focus:outline-2 focus:outline-gray-500" required/>
+                  focus:outline-solid focus:outline-2 focus:outline-gray-500 lg:text-3xl" required/>
                 </div>
   
                 <div id = "colorField"
                 class = "flex flex-col items-start w-full  gap-2 md:gap-4">
-                  <label for = "colorField" class = "font-medium text-2xl md:text-xl lg:text-3xl">Colours</label>
+                  <label for = "colorField" class = "font-medium text-2xl md:text-xl lg:text-5xl">Colours</label>
                   <div id = "primaryColorField" 
                   class = "flex flex-row gap-2">
                     <input name = "primaryColor" type = "color" id = "primaryColor" onchange = "checkRequired(event)"
@@ -80,7 +80,7 @@
   
                 <div id = "logoField"
                 class = "flex flex-col w-full h-auto gap-2 md:gap-4 lg:gap-6 relative">
-                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-3xl w-full">Logo ( Optional )
+                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>
                   </label>
                   
                   <!-- Image Upload and Preview Section-->
@@ -97,10 +97,9 @@
                       <img src="" id = "imagePreview"
                       class = "w-auto h-full border-2 hidden z-0 relative"/>
                     </div>
-                    <input class = "z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" onchange="imageInputChange()">
+                    <input class = "hidden z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" onchange="imageInputChange()">
                   </div>
-  
-                  <span class = "lg:text-xl">*Image must have a <span class ="font-helvetica-bold text-[#524dee]">transparent background</span></span>
+                  <span class = "lg:text-2xl"><span class = "text-[#524dee]">*</span>Image must have a <span class ="font-helvetica-bold text-[#524dee]">transparent background</span></span>
                 </div>
   
                 <div id = "buttonDiv"
@@ -108,7 +107,7 @@
                   <button id = "submitButton"
                   class=" bg-my-gray  
                   hover:animate-gradient bg-[length:300%_300%] transform transition-transform hover:scale-110
-                  text-black font-helvetica-bold text-2xl md:text-3xl lg:text-4xl rounded-full w-fit px-4 z-10"
+                  text-black font-helvetica-bold text-2xl md:text-4xl lg:text-5xl rounded-full w-fit px-4 z-10"
                   type="submit">
                     NEXT
                   </button>

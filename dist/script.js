@@ -7,12 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const primaryColorValue = localStorage.getItem("primaryColor");
         const secondaryColorValue = localStorage.getItem("secondaryColor");
         const logoImageValue = localStorage.getItem("logoImage");
+        const imgDiv = document.getElementById("imageDiv");
         const form = document.getElementById("details");
         const submitButton = document.getElementById("submitButton");
         //inputs
         const nameInput = document.getElementById("name");
         const primaryColorInput = document.getElementById("primaryColor");
         const secondaryColorInput = document.getElementById("secondaryColor");
+        const imgInput = document.getElementById("imageInput");
         const imgPreview = document.getElementById("imagePreview");
         //fill stored values
         console.log("page loaded");
@@ -39,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener('submit', (event) => {
             if (nameValue && primaryColorValue || secondaryColorValue) {
                 event.preventDefault();
-                let logoUrl = "";
                 console.log("Form submission detected");
                 const formData = new FormData(form);
                 const reader = new FileReader();
@@ -55,10 +56,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 //handling window changes seperately
                 if (imgPreview.src != "") {
-                    //window.location.href = "../pages/logoPage.html";
+                    window.location.href = "";
                 }
                 else if (imgPreview.src == "") {
-                    window.location.href = "";
+                    window.location.href = "../pages/logoPage.html";
                 }
                 // Store the values in localStorage
                 localStorage.setItem("nameBrand", nameBrand);
@@ -67,8 +68,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
         });
-    }
-    if (document.body.getAttribute('id') == "logoPage") {
+        imgDiv.addEventListener('click', () => {
+            if (!imgPreview.src) {
+                imgInput.click();
+                console.log("hello");
+            }
+            else {
+                imgInput.click();
+                console.log("hello3");
+            }
+            console.log("hello2");
+        });
     }
 });
 //cant put in main if statement (DOMContentLoader)
@@ -122,7 +132,7 @@ function checkRequired(event) {
             isFilled[0] = false;
             console.log("name not filled");
             makeGradient(submitButton, false);
-        } //others not needed because color cant be empty?? 
+        } //others not needed because color cant be empty?
     }
 }
 function makeGradient(item, bool) {
