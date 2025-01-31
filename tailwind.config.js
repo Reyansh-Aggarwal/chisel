@@ -3,6 +3,7 @@ const { transform } = require('typescript');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    "./*.html",
     "./pages/*.html",
   ],
   theme: {

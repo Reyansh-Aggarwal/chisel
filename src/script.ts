@@ -1,14 +1,15 @@
 let primaryColor = "#ff0000", 
     secondaryColor = "#ff0000", 
     nameBrand = "basic",
-    isFilled = [false,false,false];
+    isFilled = [false,false,false,false];
+    // 0- name; 1-primary color; 2- secondary color; 3- image;
 
 document.addEventListener("DOMContentLoaded", function () {
 
     
 
     if (document.body.getAttribute('id') == "setupPage") {
-        
+
         //need always
         const nameValue = localStorage.getItem("nameBrand");
         const primaryColorValue = localStorage.getItem("primaryColor");
@@ -18,21 +19,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const imgDiv = document.getElementById("imageDiv") as HTMLDivElement;
         const form = document.getElementById("details") as HTMLFormElement;
         const submitButton = document.getElementById("submitButton") as HTMLButtonElement;
+        const chImgButton = document.getElementById("changeImage") as HTMLButtonElement;
+        const remImgButton = document.getElementById("remImage") as HTMLButtonElement;
+        const prevDiv = document.getElementById("imagePreviewDiv") as HTMLDivElement;
+        const changeOverlay = document.getElementById("changeOverlay") as HTMLDivElement;
+        const imgTemplate = document.getElementById("imageTemplate") as HTMLDivElement;
+        const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
+
         //inputs
         const nameInput = document.getElementById("name") as HTMLInputElement;
         const primaryColorInput = document.getElementById("primaryColor") as HTMLInputElement;
         const secondaryColorInput = document.getElementById("secondaryColor") as HTMLInputElement;
         const imgInput = document.getElementById("imageInput") as HTMLInputElement;
-        const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
 
         //fill stored values
         
-        //console.log("page loaded");
         
         if (nameValue) {
             nameBrand = nameValue;
             nameInput.value = nameValue;
             makeGradient(submitButton, true);
+            isFilled[0] = true;
         }
         if (primaryColorValue) {
             primaryColor = primaryColorValue;
@@ -57,8 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 //console.log("Form submission detected");
                 const formData = new FormData(form);
-                    
-                const reader = new FileReader();
+    
                 //get form data
                 nameBrand = formData.get("name") as string || nameBrand;
                 primaryColor = formData.get("primaryColor") as string || primaryColor;
@@ -88,12 +94,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         imgDiv.addEventListener('click', () => {
+            
             if (!imgPreview.src) {
                 imgInput.click();
-                
-            } else{
-                
-            }
+            } 
+        });
+
+        chImgButton.addEventListener("click", () => {
+            imgInput.click();
+            console.log("clicked");
+        });
+        
+        remImgButton.addEventListener("click", () => {
+            imgPreview.src = "";
+            imgInput.src = "";
+            localStorage.removeItem("logoImage");
+
+            prevDiv.classList.add('absolute');
+            imgInput.classList.remove('hidden');
+            prevDiv.classList.add('hidden');
+            changeOverlay.classList.add('hidden');
+            imgTemplate.classList.remove('hidden');
+            imgDiv.classList.remove('bg-transparent');
         });
     }
 });
@@ -107,19 +129,23 @@ function previewImage(logoUrl : string) {
     const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
     const imgTemplate = document.getElementById("imageTemplate") as HTMLDivElement;
     const imgDiv = document.getElementById("imageDiv") as HTMLDivElement;
+    const changeOverlay = document.getElementById("changeOverlay") as HTMLDivElement;
+    const imgInput = document.getElementById("imageInput") as HTMLInputElement;
 
     imgPreview.src = logoUrl;
-        
+    localStorage.setItem("logoImage", logoUrl);
+
     //changing classes (tailwind) of divs for styling
     prevDiv.classList.remove('absolute');
-    imgPreview.classList.remove('hidden');
+    imgInput.classList.add('hidden');
+    prevDiv.classList.remove('hidden');
+    changeOverlay.classList.remove('hidden');
     imgTemplate.classList.add('hidden');
-    imgPreview.classList.add('block');
     imgDiv.classList.add('bg-transparent');
 
 }
 
-function imageInputChange(){
+function imageChange(){
     const imgInput = document.getElementById("imageInput") as HTMLInputElement;
     const imgFile = imgInput.files ?  imgInput.files[0] : null;
     if(imgFile){
@@ -128,9 +154,11 @@ function imageInputChange(){
         reader.onload = () => {
             previewImage(reader.result as string);
         };
+
+        isFilled[3] = true;
     }
-    //console.log("hello");
-    //emptying <input> so that the user can upload a new image
+
+    //emptying <input> so that the user can upload a new image later
     imgInput.value = "";
     
 }
@@ -140,7 +168,7 @@ function checkRequired(event: Event){
     const data = input.value;
     const submitButton = document.getElementById("submitButton") as HTMLButtonElement;
 
-    if(data!="" ){
+    if(data!=""){
         if (input.id == "name") {   
             isFilled[0] = true;
             //console.log("name filled");   
