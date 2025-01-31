@@ -1,5 +1,6 @@
 "use strict";
-let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false];
+let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false];
+// 0- name; 1-primary color; 2- secondary color; 3- image;
 document.addEventListener("DOMContentLoaded", function () {
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
@@ -10,18 +11,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const imgDiv = document.getElementById("imageDiv");
         const form = document.getElementById("details");
         const submitButton = document.getElementById("submitButton");
+        const chImgButton = document.getElementById("changeImage");
+        const remImgButton = document.getElementById("remImage");
+        const prevDiv = document.getElementById("imagePreviewDiv");
+        const changeOverlay = document.getElementById("changeOverlay");
+        const imgTemplate = document.getElementById("imageTemplate");
+        const imgPreview = document.getElementById("imagePreview");
         //inputs
         const nameInput = document.getElementById("name");
         const primaryColorInput = document.getElementById("primaryColor");
         const secondaryColorInput = document.getElementById("secondaryColor");
         const imgInput = document.getElementById("imageInput");
-        const imgPreview = document.getElementById("imagePreview");
         //fill stored values
-        console.log("page loaded");
         if (nameValue) {
             nameBrand = nameValue;
             nameInput.value = nameValue;
             makeGradient(submitButton, true);
+            isFilled[0] = true;
         }
         if (primaryColorValue) {
             primaryColor = primaryColorValue;
@@ -41,9 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener('submit', (event) => {
             if (nameValue && primaryColorValue || secondaryColorValue) {
                 event.preventDefault();
-                console.log("Form submission detected");
+                //console.log("Form submission detected");
                 const formData = new FormData(form);
-                const reader = new FileReader();
                 //get form data
                 nameBrand = formData.get("name") || nameBrand;
                 primaryColor = formData.get("primaryColor") || primaryColor;
@@ -52,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 //image handling
                 if (logoImage) {
                     localStorage.setItem("logoImage", logoImage);
-                    console.log("Uploaded successfully");
+                    //console.log("Uploaded successfully");
                 }
                 //handling window changes seperately
                 if (imgPreview.src != "") {
@@ -65,39 +70,52 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("nameBrand", nameBrand);
                 localStorage.setItem("primaryColor", primaryColor);
                 localStorage.setItem("secondaryColor", secondaryColor);
-                console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
+                //console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
         });
         imgDiv.addEventListener('click', () => {
             if (!imgPreview.src) {
                 imgInput.click();
-                console.log("hello");
             }
-            else {
-                imgInput.click();
-                console.log("hello3");
-            }
-            console.log("hello2");
+        });
+        chImgButton.addEventListener("click", () => {
+            imgInput.click();
+            console.log("clicked");
+        });
+        remImgButton.addEventListener("click", () => {
+            imgPreview.src = "";
+            imgInput.src = "";
+            localStorage.removeItem("logoImage");
+            prevDiv.classList.add('absolute');
+            imgInput.classList.remove('hidden');
+            prevDiv.classList.add('hidden');
+            changeOverlay.classList.add('hidden');
+            imgTemplate.classList.remove('hidden');
+            imgDiv.classList.remove('bg-transparent');
         });
     }
 });
 //cant put in main if statement (DOMContentLoader)
 function previewImage(logoUrl) {
     //telling that the image has been uploaded
-    console.log("image previewed");
+    //console.log("image previewed");
     const prevDiv = document.getElementById("imagePreviewDiv");
     const imgPreview = document.getElementById("imagePreview");
     const imgTemplate = document.getElementById("imageTemplate");
     const imgDiv = document.getElementById("imageDiv");
+    const changeOverlay = document.getElementById("changeOverlay");
+    const imgInput = document.getElementById("imageInput");
     imgPreview.src = logoUrl;
+    localStorage.setItem("logoImage", logoUrl);
     //changing classes (tailwind) of divs for styling
     prevDiv.classList.remove('absolute');
-    imgPreview.classList.remove('hidden');
+    imgInput.classList.add('hidden');
+    prevDiv.classList.remove('hidden');
+    changeOverlay.classList.remove('hidden');
     imgTemplate.classList.add('hidden');
-    imgPreview.classList.add('block');
     imgDiv.classList.add('bg-transparent');
 }
-function imageInputChange() {
+function imageChange() {
     const imgInput = document.getElementById("imageInput");
     const imgFile = imgInput.files ? imgInput.files[0] : null;
     if (imgFile) {
@@ -106,9 +124,9 @@ function imageInputChange() {
         reader.onload = () => {
             previewImage(reader.result);
         };
+        isFilled[3] = true;
     }
-    console.log("hello");
-    //emptying <input> so that the user can upload a new image
+    //emptying <input> so that the user can upload a new image later
     imgInput.value = "";
 }
 function checkRequired(event) {
@@ -118,19 +136,19 @@ function checkRequired(event) {
     if (data != "") {
         if (input.id == "name") {
             isFilled[0] = true;
-            console.log("name filled");
+            //console.log("name filled");   
         }
         else if (input.id == "primaryColor" || input.id == "secondaryColor") {
             isFilled[1] = true;
-            console.log("color filled");
+            //console.log("color filled"); 
         }
-        console.log(isFilled);
+        //console.log(isFilled);
         makeGradient(submitButton, true);
     }
     else if (!data) {
         if (input.id == "name") {
             isFilled[0] = false;
-            console.log("name not filled");
+            //console.log("name not filled"); 
             makeGradient(submitButton, false);
         } //others not needed because color cant be empty?
     }

@@ -14,7 +14,7 @@
 
       <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
         <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
-          <a href = "index.html">
+          <a href = "../index.html">
             <img src="../assets/logo.png" 
             class = "filter brightness-0 invert
             h-24 w-auto -p-4 md:-p-6"/>
@@ -90,14 +90,29 @@
                     <div id = "imageTemplate"
                     class = "flex flex-col w-full items-center justify-center">
                       <i class="fa-solid fa-cloud-arrow-up text-6xl lg:text-9xl text-black"></i>
-                      <span class="text-lg md:text-xl lg:text-4xl text-black">Upload Media</span>
+                      <span class="text-lg hidden md:text-xl lg:text-4xl text-black">Upload Media</span>
                     </div>
+
                     <div id = "imagePreviewDiv"
-                    class = "w-fit px-8 absolute bg-my-gray bg-clip-content items-center flex ">
+                    class = "w-fit px-8 relative inline-block bg-my-gray bg-clip-content items-center flex hidden">
                       <img src="" id = "imagePreview"
-                      class = "w-auto h-full border-2 hidden z-0 relative"/>
+                      class = "w-auto h-full border-2 z-0 relative"/>
+                      <div id = "changeOverlay" 
+                      class = "w-full h-full inset-0 bg-gray-900/50 z-20 absolute flex flex-col justify-center gap-8 lg:gap-18 items-center opacity-0 hover:opacity-100 transition duration-400 ease-in-out">
+                        
+                        <button id = "changeImage" type = "button" 
+                        class = "bg-green-600 py-4 text-3xl lg:text-4xl rounded-2xl flex-row justify-between w-2/5 overflow-hidden" >
+                          Change
+                        </button>
+                        
+                        <button id = "remImage"  type = "button" 
+                        class = "bg-red-600 p-4 text-3xl lg:text-4xl rounded-2xl w-2/5">
+                          Remove
+                        </button>
+                      </div>
                     </div>
-                    <input class = "hidden z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" onchange="imageInputChange()">
+
+                    <input class = "z-10 absolute w-full h-full opacity-0" type = "file" id = "imageInput" accept = "image/png" name = "logo" onchange="imageChange()">
                   </div>
                   <span class = "lg:text-2xl"><span class = "text-[#524dee]">*</span>Image must have a <span class ="font-helvetica-bold text-[#524dee]">transparent background</span></span>
                 </div>
@@ -116,6 +131,7 @@
               </form>
             </div>
           </div>
+
           <hr>
           <footer class = "flex flex-col justify-between px-8 text-white bg-black w-full bottom-0 h-auto">
         
