@@ -48,7 +48,7 @@
               </span>
               
               <!-- Actual Form w/ inp. fields and labels -->
-              <form id = "details" method = "post" 
+              <form id = "details" method = "POST" enctype="multipart/form-data"
               class = "flex flex-col gap-12 md:gap-18 px-2">
   
                 <div id = "nameField"
@@ -80,7 +80,7 @@
   
                 <div id = "logoField"
                 class = "flex flex-col w-full h-auto gap-2 md:gap-4 lg:gap-6 relative">
-                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>
+                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>  (Optional)
                   </label>
                   
                   <!-- Image Upload and Preview Section-->
@@ -101,12 +101,12 @@
                       class = "w-full h-full inset-0 py-2 bg-gray-900/50 z-20 absolute flex flex-col justify-center gap-8 lg:gap-18 items-center opacity-0 hover:opacity-100 transition duration-400 ease-in-out">
                         
                         <button id = "changeImage" type = "button" 
-                        class = "bg-green-600 py-2 md:py-4 text-xl md:text-3xl lg:text-4xl rounded-2xl flex-row justify-between w-2/5 overflow-hidden" >
+                        class = "bg-green-600 py-2 md:py-4 text-xl md:text-3xl lg:text-4xl rounded-2xl justify-between w-2/5 overflow-hidden" >
                           Change
                         </button>
                         
                         <button id = "remImage"  type = "button" 
-                        class = "bg-red-600 py-2 md:py-4 text-xl md:text-3xl lg:text-4xl rounded-2xl w-2/5">
+                        class = "bg-red-600 py-2 md:py-4 text-xl md:text-3xl lg:text-4xl rounded-2xl w-2/5 overflow-hidden">
                           Remove
                         </button>
                       </div>

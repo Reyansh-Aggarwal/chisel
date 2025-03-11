@@ -78,10 +78,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 } 
                 
                 //handling window changes seperately
-                if(imgPreview.src != ""){
+                if(!imgPreview.src){
                     window.location.href = "";
-                } else if (imgPreview.src == "") {
+                    console.log("no image");
+                } else {
                     window.location.href = "../pages/logoPage.html";
+                    console.log('yes image');
                 }
 
                 // Store the values in localStorage
