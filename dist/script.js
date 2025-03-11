@@ -60,11 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     //console.log("Uploaded successfully");
                 }
                 //handling window changes seperately
-                if (imgPreview.src != "") {
+                if (!imgPreview.src) {
                     window.location.href = "";
+                    console.log("no image");
                 }
-                else if (imgPreview.src == "") {
+                else {
                     window.location.href = "../pages/logoPage.html";
+                    console.log('yes image');
                 }
                 // Store the values in localStorage
                 localStorage.setItem("nameBrand", nameBrand);
