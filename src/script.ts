@@ -124,9 +124,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //cant put in main if statement (DOMContentLoader)
 function previewImage(logoUrl : string) {           
-    //telling that the image has been uploaded
 
-    //console.log("image previewed");
+    console.log("image previewed");
     const prevDiv = document.getElementById("imagePreviewDiv") as HTMLDivElement;
     const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
     const imgTemplate = document.getElementById("imageTemplate") as HTMLDivElement;
@@ -134,6 +133,7 @@ function previewImage(logoUrl : string) {
     const changeOverlay = document.getElementById("changeOverlay") as HTMLDivElement;
     const imgInput = document.getElementById("imageInput") as HTMLInputElement;
 
+    //settinbg values
     imgPreview.src = logoUrl;
     localStorage.setItem("logoImage", logoUrl);
 
@@ -150,15 +150,55 @@ function previewImage(logoUrl : string) {
 function imageChange(){
     const imgInput = document.getElementById("imageInput") as HTMLInputElement;
     const imgFile = imgInput.files ?  imgInput.files[0] : null;
-    if(imgFile){
-        const reader = new FileReader();
-        reader.readAsDataURL(imgFile);
-        reader.onload = () => {
-            previewImage(reader.result as string);
-        };
 
-        isFilled[3] = true;
+
+    if(imgFile) {
+        if (imgFile?.type.includes('png')){
+            const reader = new FileReader();
+            reader.readAsDataURL(imgFile);
+            reader.onload = () => {
+                const img = new Image();
+                img.src = reader.result as string;
+                img.onload = () => {
+                    const canvas = document.getElementById('imgCanvas') as HTMLCanvasElement;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    let transparentPixelFound = false;
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    console.log("img loaded");
+                    if(ctx){
+                        console.log("yay ctx");
+                        ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                    
+                        for (let i = 3; i < imageData.length; i += 4) {
+                            if (imageData[i] === 0) { // Alpha channel is 0 (fully transparent)
+                                transparentPixelFound = true;
+                                console.log("transparecny");
+                                break;
+                            } else {
+                                console.log("not found");
+                            }
+                        }
+                    }
+                    if (transparentPixelFound){
+                        previewImage(img.src);
+                    } else {
+                        console.log("none");
+                    }
+
+                }
+                
+                
+            };
+            
+            isFilled[3] = true;
+        } else {
+            console.log("no png");
+        }
     }
+    
 
     //emptying <input> so that the user can upload a new image later
     imgInput.value = "";

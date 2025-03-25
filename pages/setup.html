@@ -80,7 +80,7 @@
   
                 <div id = "logoField"
                 class = "flex flex-col w-full h-auto gap-2 md:gap-4 lg:gap-6 relative">
-                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>  (Optional)
+                  <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>
                   </label>
                   
                   <!-- Image Upload and Preview Section-->
@@ -92,7 +92,8 @@
                       <i class="fa-solid fa-cloud-arrow-up text-6xl lg:text-9xl text-black"></i>
                       <span class="text-lg hidden md:text-xl lg:text-4xl text-black">Upload Media</span>
                     </div>
-
+                    <canvas id = "imgCanvas" 
+                    class = "hidden"></canvas>
                     <div id = "imagePreviewDiv"
                     class = "w-fit px-8 relative inline-block bg-my-gray bg-clip-content items-center flex hidden">
                       <img src="" id = "imagePreview"

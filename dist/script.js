@@ -99,14 +99,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 //cant put in main if statement (DOMContentLoader)
 function previewImage(logoUrl) {
-    //telling that the image has been uploaded
-    //console.log("image previewed");
+    console.log("image previewed");
     const prevDiv = document.getElementById("imagePreviewDiv");
     const imgPreview = document.getElementById("imagePreview");
     const imgTemplate = document.getElementById("imageTemplate");
     const imgDiv = document.getElementById("imageDiv");
     const changeOverlay = document.getElementById("changeOverlay");
     const imgInput = document.getElementById("imageInput");
+    //settinbg values
     imgPreview.src = logoUrl;
     localStorage.setItem("logoImage", logoUrl);
     //changing classes (tailwind) of divs for styling
@@ -121,12 +121,47 @@ function imageChange() {
     const imgInput = document.getElementById("imageInput");
     const imgFile = imgInput.files ? imgInput.files[0] : null;
     if (imgFile) {
-        const reader = new FileReader();
-        reader.readAsDataURL(imgFile);
-        reader.onload = () => {
-            previewImage(reader.result);
-        };
-        isFilled[3] = true;
+        if (imgFile === null || imgFile === void 0 ? void 0 : imgFile.type.includes('png')) {
+            const reader = new FileReader();
+            reader.readAsDataURL(imgFile);
+            reader.onload = () => {
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = () => {
+                    const canvas = document.getElementById('imgCanvas');
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    let transparentPixelFound = false;
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    console.log("img loaded");
+                    if (ctx) {
+                        console.log("yay ctx");
+                        ctx.drawImage(img, 0, 0);
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                        for (let i = 3; i < imageData.length; i += 4) {
+                            if (imageData[i] === 0) { // Alpha channel is 0 (fully transparent)
+                                transparentPixelFound = true;
+                                console.log("transparecny");
+                                break;
+                            }
+                            else {
+                                console.log("not found");
+                            }
+                        }
+                    }
+                    if (transparentPixelFound) {
+                        previewImage(img.src);
+                    }
+                    else {
+                        console.log("none");
+                    }
+                };
+            };
+            isFilled[3] = true;
+        }
+        else {
+            console.log("no png");
+        }
     }
     //emptying <input> so that the user can upload a new image later
     imgInput.value = "";
