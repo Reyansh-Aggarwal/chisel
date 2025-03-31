@@ -5,6 +5,7 @@ module.exports = {
   content: [
     "./*.html",
     "./pages/*.html",
+    "./social-media/*.html"
   ],
   theme: {
     extend: {

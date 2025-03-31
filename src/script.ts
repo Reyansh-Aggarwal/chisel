@@ -6,8 +6,6 @@ let primaryColor = "#ff0000",
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    
-
     if (document.body.getAttribute('id') == "setupPage") {
 
         //need always
@@ -59,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         form.addEventListener('submit', (event: Event) => {
     
-            if (nameValue && primaryColorValue || secondaryColorValue) {
+            if (isFilled[0] && isFilled[3]) {
                 event.preventDefault(); 
 
                 //console.log("Form submission detected");
@@ -74,15 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 //image handling
                 if(logoImage){
                     localStorage.setItem("logoImage", logoImage);
-                    //console.log("Uploaded successfully");
-                } 
+                    console.log("Uploaded successfully");
+                }  
                 
                 //handling window changes seperately
-                if(!imgPreview.src){
-                    window.location.href = "";
-                    console.log("no image");
-                } else {
-                    window.location.href = "../pages/logoPage.html";
+                if(imgPreview.src){
+                    window.location.href = "../social-media/intro.html";
                     console.log('yes image');
                 }
 
@@ -113,16 +108,122 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.removeItem("logoImage");
 
             prevDiv.classList.add('absolute');
-            imgInput.classList.remove('hidden');
             prevDiv.classList.add('hidden');
             changeOverlay.classList.add('hidden');
             imgTemplate.classList.remove('hidden');
             imgDiv.classList.remove('bg-transparent');
         });
     }
+
+    else if (document.body.getAttribute('id') == "postPage"){
+        console.log("text");
+        const textbox = document.getElementById("textbox");
+        const img = document.getElementById("theImage") as HTMLImageElement;
+        const button = document.getElementById("downloadButton") as HTMLButtonElement;
+        
+        textbox?.addEventListener("change", () => {
+            console.log("ok");
+
+        });
+        img.onload = () => {
+
+            const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
+            const ctx = canvas?.getContext("2d");
+            const logo = document.createElement("img");
+            logo.src = localStorage.getItem("logoImage") || "";
+            canvas.height = img.height;
+            canvas.width = img.width;
+            
+            if (ctx && logo){
+                ctx.imageSmoothingEnabled = true;
+                ctx.drawImage(img, 0,0);
+                ctx.drawImage(logo, 200, 200,);
+                //downloading
+                const dataURL = canvas.toDataURL("image/png");
+
+                button?.addEventListener("click", () => {
+                    downloadThis(dataURL, "post.png");
+                });
+            }
+
+
+            
+        };
+    }
+    else if (document.body.getAttribute('id') == "feeds"){
+        const hueSlider = document.getElementById("hue") as HTMLInputElement;
+        const saturSlider = document.getElementById("saturation") as HTMLInputElement;
+        const tilesDiv = document.getElementById("tiles") as HTMLDivElement;
+        const resetButton = document.getElementById("reset");
+
+        let filter = ["209", "100", "209", "100"];  //[currHue, currSatur, defHue, defSatur]
+        const storedFilter = localStorage.getItem("filter");
+        
+        if (storedFilter){
+            filter = JSON.parse(storedFilter);
+
+            //setting apt slider values
+            hueSlider.value = filter[0];
+            saturSlider.value = filter[1];
+
+            applyFilters(tilesDiv, filter);
+        } 
+        
+        //Event listeners
+        hueSlider.addEventListener("input", () => {
+            filter[0] = hueSlider.value;
+            applyFilters(tilesDiv, filter);
+        
+        });
+        
+        saturSlider.addEventListener("input", () => {
+            filter[1] = saturSlider.value;
+            applyFilters(tilesDiv, filter);
+            
+        });
+
+        resetButton?.addEventListener("click", () => {
+            
+            hueSlider.value = filter[2];
+            saturSlider.value = filter[3];
+            applyFilters(tilesDiv, filter, true);
+            //console.log(filter[2], filter[3], true);
+        });
+    }
 });
 
 //cant put in main if statement (DOMContentLoader)
+function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
+    const allPosts = div.querySelectorAll<HTMLDivElement>('div');
+    var hue : number = parseInt(filter[2]);
+    var satur : number = parseInt(filter[3])
+    if (!reset) {
+        hue = parseInt(filter[0]);
+        satur = parseInt(filter[1]); 
+    }
+   
+    allPosts.forEach((post) => {
+        post.style.filter = `
+            hue-rotate(${hue - 209}deg)
+            saturate(${satur/100})
+        `;
+    });
+    
+    /*console.log("Current values:", {
+        hue: hue, 
+        saturation: satur
+    });*/
+
+    localStorage.setItem("filter", JSON.stringify(filter));
+}
+function downloadThis(dataURL : any, filename : string){
+
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = filename;
+    link.click();
+}
+
 function previewImage(logoUrl : string) {           
 
     console.log("image previewed");
@@ -139,7 +240,6 @@ function previewImage(logoUrl : string) {
 
     //changing classes (tailwind) of divs for styling
     prevDiv.classList.remove('absolute');
-    imgInput.classList.add('hidden');
     prevDiv.classList.remove('hidden');
     changeOverlay.classList.remove('hidden');
     imgTemplate.classList.add('hidden');
@@ -218,6 +318,8 @@ function checkRequired(event: Event){
         } else if (input.id == "primaryColor" || input.id == "secondaryColor") {
             isFilled[1] = true;
             //console.log("color filled"); 
+        } else if (input.id == "imageInput"){
+            isFilled[3] = true;
         }
         //console.log(isFilled);
         makeGradient(submitButton, true);
@@ -240,4 +342,8 @@ function makeGradient(item: HTMLButtonElement, bool: boolean){
         item.classList.add('bg-my-gray');
         item.classList.remove("bg-gradient-to-r", "from-[#524dee]", "via-[#0be1f7]", "to-[#524dee]");
     }
+}
+
+function redirectPage(dest : string){
+    window.location.href = dest;
 }

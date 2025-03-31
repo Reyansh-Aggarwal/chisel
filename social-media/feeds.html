@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <title>Chisel</title>
+        <script src="../dist/script.js" defer></script>
+        <link rel="icon" type="image/png" href="/assets/logo.png">
+        <link rel = "stylesheet" href = "../dist/output.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body id = "feeds" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen overflow-x-hidden flex flex-col">
+      <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
+          <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
+            <a href = "../index.html">
+              <img id = "chiselLogo" src="../assets/logo.png" 
+              class = " invert
+              h-24 w-auto -p-4 md:-p-6 md:h-16"/>
+            </a>  
+            <button class = "text-white text-4xl lg:text-5xl">
+              <i class="fa-solid fa-bars"></i>
+            </button>  
+          </div>
+          <hr>
+      </header>
+
+      <section id = "mainSec"
+      class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-24 justify-center md:justify-between lg:justify-center align-center items-center h-full w-screen p-8">
+        <div id="tiles" 
+        class="basis-1/2 md:basis-2/3 lg:basis-1/2 grid grid-rows-3 grid-cols-3 gap-2">
+           
+            <div id = "1-1" class = "hover:scale-110"> 
+            <img src = "../assets/social-media-1/1.png">
+            </div>
+            <div id = "1-2" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/2.png">
+            </div>
+            <div id = "1-3" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/3.png">
+            </div>
+            <div id = "2-1" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/4.png">
+            </div>
+            <div id = "2-2" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/5.png">
+            </div>
+            <div id = "2-3" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/6.png">
+            </div>
+            <div id = "3-1" class = "hover:scale-110"> 
+            <img src = "../assets/social-media-1/7.png">
+            </div>
+            <div id = "3-2" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/8.png">
+            </div>
+            <div id = "3-3" class = "hover:scale-110">
+            <img src = "../assets/social-media-1/9.png">
+            </div>
+        </div>
+        
+        <div id = "settings"
+        class = "flex flex-col md:p-8 h-full gap-4 justify-between items-center">
+            <div id = "Hue"
+            class = "flex flex-col items-center text-center gap-2 w-full basis-1/2">
+                <span class = "text-3xl md:text-4xl lg:text-6xl">Change <span class = "text-blue-500">Hue</span></span>
+                <input type = "range" id = "hue" name = "hue" class = "w-full" min = "0" max = "360" value = "209"/>
+            </div>
+            <div id = "Saturation"
+            class = "flex flex-col items-center text-center gap-2">
+                <span class = "text-3xl md:text-4xl lg:text-6xl">Change <span class = "text-blue-500">Saturation</span></span>
+                <input type = "range" id = "saturation" name = "saturation" class = "w-full" min="1"  max="200" value = "100"/>
+            </div>
+
+            <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold">Reset</button>
+        </div>
+      </section>
+      <div class = "flex flex-row gap-4 text-white text-md min-w-screen justify-center text-center py-2">
+        <span id = "1"
+        class = "text-blue-500"><i class="fa-solid fa-circle"></i></span>
+        <span id = "2"
+        class = "opacity-50"><i class="fa-solid fa-circle"></i></span>
+        <span id = "3"
+        class = "opacity-50"><i class="fa-solid fa-circle"></i></span>
+      </div>
+    <!-- Footer -->
+    <hr class = "w-screen">
+    <footer class=" bottom-0 px-8 text-white bg-black w-full">
+        <div class="flex justify-between py-4">
+        <div class="basis-1/5">
+        <img src="../assets/trans-logo.png" class="bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%] h-auto max-w-16"/>
+        </div>
+        <div class="flex flex-col items-end font-helvetica-light text-sm">
+        <span class="font-helvetica-bold text-lg md:text-2xl">CONTACT US</span>
+        <a href="tel:+91-9311352507" class="text-blue-500 md:text-md lg:text-lg">+91-9311352507</a>
+        <a href="tel:+91-9086222000" class="text-blue-500 md:text-md lg:text-lg">+91-9086222000</a>
+        </div>
+    </div>
+    </footer>
+    </body>
+    
+</html>

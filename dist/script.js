@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         //===================================================================
         form.addEventListener('submit', (event) => {
-            if (nameValue && primaryColorValue || secondaryColorValue) {
+            if (isFilled[0] && isFilled[3]) {
                 event.preventDefault();
                 //console.log("Form submission detected");
                 const formData = new FormData(form);
@@ -57,15 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 //image handling
                 if (logoImage) {
                     localStorage.setItem("logoImage", logoImage);
-                    //console.log("Uploaded successfully");
+                    console.log("Uploaded successfully");
                 }
                 //handling window changes seperately
-                if (!imgPreview.src) {
-                    window.location.href = "";
-                    console.log("no image");
-                }
-                else {
-                    window.location.href = "../pages/logoPage.html";
+                if (imgPreview.src) {
+                    window.location.href = "../social-media/intro.html";
                     console.log('yes image');
                 }
                 // Store the values in localStorage
@@ -89,15 +85,97 @@ document.addEventListener("DOMContentLoaded", function () {
             imgInput.src = "";
             localStorage.removeItem("logoImage");
             prevDiv.classList.add('absolute');
-            imgInput.classList.remove('hidden');
             prevDiv.classList.add('hidden');
             changeOverlay.classList.add('hidden');
             imgTemplate.classList.remove('hidden');
             imgDiv.classList.remove('bg-transparent');
         });
     }
+    else if (document.body.getAttribute('id') == "postPage") {
+        console.log("text");
+        const textbox = document.getElementById("textbox");
+        const img = document.getElementById("theImage");
+        const button = document.getElementById("downloadButton");
+        textbox === null || textbox === void 0 ? void 0 : textbox.addEventListener("change", () => {
+            console.log("ok");
+        });
+        img.onload = () => {
+            const canvas = document.getElementById("imgCanvas");
+            const ctx = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
+            const logo = document.createElement("img");
+            logo.src = localStorage.getItem("logoImage") || "";
+            canvas.height = img.height;
+            canvas.width = img.width;
+            if (ctx && logo) {
+                ctx.imageSmoothingEnabled = true;
+                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(logo, 200, 200);
+                //downloading
+                const dataURL = canvas.toDataURL("image/png");
+                button === null || button === void 0 ? void 0 : button.addEventListener("click", () => {
+                    downloadThis(dataURL, "post.png");
+                });
+            }
+        };
+    }
+    else if (document.body.getAttribute('id') == "feeds") {
+        const hueSlider = document.getElementById("hue");
+        const saturSlider = document.getElementById("saturation");
+        const tilesDiv = document.getElementById("tiles");
+        const resetButton = document.getElementById("reset");
+        let filter = ["209", "100", "209", "100"]; //[currHue, currSatur, defHue, defSatur]
+        const storedFilter = localStorage.getItem("filter");
+        if (storedFilter) {
+            filter = JSON.parse(storedFilter);
+            //setting apt slider values
+            hueSlider.value = filter[0];
+            saturSlider.value = filter[1];
+            applyFilters(tilesDiv, filter);
+        }
+        //Event listeners
+        hueSlider.addEventListener("input", () => {
+            filter[0] = hueSlider.value;
+            applyFilters(tilesDiv, filter);
+        });
+        saturSlider.addEventListener("input", () => {
+            filter[1] = saturSlider.value;
+            applyFilters(tilesDiv, filter);
+        });
+        resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => {
+            hueSlider.value = filter[2];
+            saturSlider.value = filter[3];
+            applyFilters(tilesDiv, filter, true);
+            //console.log(filter[2], filter[3], true);
+        });
+    }
 });
 //cant put in main if statement (DOMContentLoader)
+function applyFilters(div, filter, reset = false) {
+    const allPosts = div.querySelectorAll('div');
+    var hue = parseInt(filter[2]);
+    var satur = parseInt(filter[3]);
+    if (!reset) {
+        hue = parseInt(filter[0]);
+        satur = parseInt(filter[1]);
+    }
+    allPosts.forEach((post) => {
+        post.style.filter = `
+            hue-rotate(${hue - 209}deg)
+            saturate(${satur / 100})
+        `;
+    });
+    /*console.log("Current values:", {
+        hue: hue,
+        saturation: satur
+    });*/
+    localStorage.setItem("filter", JSON.stringify(filter));
+}
+function downloadThis(dataURL, filename) {
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = filename;
+    link.click();
+}
 function previewImage(logoUrl) {
     console.log("image previewed");
     const prevDiv = document.getElementById("imagePreviewDiv");
@@ -111,7 +189,6 @@ function previewImage(logoUrl) {
     localStorage.setItem("logoImage", logoUrl);
     //changing classes (tailwind) of divs for styling
     prevDiv.classList.remove('absolute');
-    imgInput.classList.add('hidden');
     prevDiv.classList.remove('hidden');
     changeOverlay.classList.remove('hidden');
     imgTemplate.classList.add('hidden');
@@ -179,6 +256,9 @@ function checkRequired(event) {
             isFilled[1] = true;
             //console.log("color filled"); 
         }
+        else if (input.id == "imageInput") {
+            isFilled[3] = true;
+        }
         //console.log(isFilled);
         makeGradient(submitButton, true);
     }
@@ -199,4 +279,7 @@ function makeGradient(item, bool) {
         item.classList.add('bg-my-gray');
         item.classList.remove("bg-gradient-to-r", "from-[#524dee]", "via-[#0be1f7]", "to-[#524dee]");
     }
+}
+function redirectPage(dest) {
+    window.location.href = dest;
 }
