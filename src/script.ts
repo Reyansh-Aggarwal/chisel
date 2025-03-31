@@ -275,17 +275,17 @@ function imageChange(){
                         for (let i = 3; i < imageData.length; i += 4) {
                             if (imageData[i] === 0) { // Alpha channel is 0 (fully transparent)
                                 transparentPixelFound = true;
-                                console.log("transparecny");
+                                //console.log("transparecny");
                                 break;
                             } else {
-                                console.log("not found");
+                                //console.log("not found");
                             }
                         }
                     }
                     if (transparentPixelFound){
                         previewImage(img.src);
                     } else {
-                        console.log("none");
+                        alert("The Image does NOT have a transparent background.");
                     }
 
                 }
