@@ -91,34 +91,50 @@ document.addEventListener("DOMContentLoaded", function () {
             imgDiv.classList.remove('bg-transparent');
         });
     }
-    else if (document.body.getAttribute('id') == "postPage") {
+    if (document.body.getAttribute('id') == "postPage") {
         console.log("text");
+        const urlParam = new URLSearchParams(window.location.search);
+        const postNum = urlParam.get("post");
+        if (postNum) {
+            const img = document.getElementById("postImg");
+            if (img) {
+                img.src = `../assets/social-media-1/${postNum}.png`;
+            }
+        }
         const textbox = document.getElementById("textbox");
         const img = document.getElementById("theImage");
         const button = document.getElementById("downloadButton");
-        textbox === null || textbox === void 0 ? void 0 : textbox.addEventListener("change", () => {
+        /*
+        textbox?.addEventListener("change", () => {
             console.log("ok");
+
         });
         img.onload = () => {
-            const canvas = document.getElementById("imgCanvas");
-            const ctx = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
+
+            const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
+            const ctx = canvas?.getContext("2d");
             const logo = document.createElement("img");
             logo.src = localStorage.getItem("logoImage") || "";
             canvas.height = img.height;
             canvas.width = img.width;
-            if (ctx && logo) {
+            
+            if (ctx && logo){
                 ctx.imageSmoothingEnabled = true;
-                ctx.drawImage(img, 0, 0);
-                ctx.drawImage(logo, 200, 200);
+                ctx.drawImage(img, 0,0);
+                ctx.drawImage(logo, 200, 200,);
                 //downloading
                 const dataURL = canvas.toDataURL("image/png");
-                button === null || button === void 0 ? void 0 : button.addEventListener("click", () => {
+
+                button?.addEventListener("click", () => {
                     downloadThis(dataURL, "post.png");
                 });
             }
-        };
+
+
+            
+        };*/
     }
-    else if (document.body.getAttribute('id') == "feeds") {
+    if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage") {
         const hueSlider = document.getElementById("hue");
         const saturSlider = document.getElementById("saturation");
         const tilesDiv = document.getElementById("tiles");
@@ -151,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 //cant put in main if statement (DOMContentLoader)
 function applyFilters(div, filter, reset = false) {
-    const allPosts = div.querySelectorAll('div');
+    const allPosts = div.querySelectorAll('img');
     var hue = parseInt(filter[2]);
     var satur = parseInt(filter[3]);
     if (!reset) {
@@ -282,4 +298,8 @@ function makeGradient(item, bool) {
 }
 function redirectPage(dest) {
     window.location.href = dest;
+}
+function redirectPost(postNum) {
+    window.location.href = `../social-media/postPage.html?post=${postNum}`;
+    console.log(postNum);
 }

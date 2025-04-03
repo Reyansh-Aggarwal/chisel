@@ -114,13 +114,24 @@ document.addEventListener("DOMContentLoaded", function () {
             imgDiv.classList.remove('bg-transparent');
         });
     }
-
-    else if (document.body.getAttribute('id') == "postPage"){
+    if (document.body.getAttribute('id') == "postPage"){
         console.log("text");
+        const urlParam = new URLSearchParams (window.location.search);
+        const postNum = urlParam.get("post");
+
+        if (postNum){
+            const img = document.getElementById("postImg") as HTMLImageElement;
+            if (img){
+                img.src = `../assets/social-media-1/${postNum}.png`;
+            }
+        }
+
         const textbox = document.getElementById("textbox");
         const img = document.getElementById("theImage") as HTMLImageElement;
         const button = document.getElementById("downloadButton") as HTMLButtonElement;
         
+
+        /*
         textbox?.addEventListener("change", () => {
             console.log("ok");
 
@@ -148,9 +159,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             
-        };
+        };*/
     }
-    else if (document.body.getAttribute('id') == "feeds"){
+    if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
         const tilesDiv = document.getElementById("tiles") as HTMLDivElement;
@@ -194,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //cant put in main if statement (DOMContentLoader)
 function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
-    const allPosts = div.querySelectorAll<HTMLDivElement>('div');
+    const allPosts = div.querySelectorAll<HTMLImageElement>('img');
     var hue : number = parseInt(filter[2]);
     var satur : number = parseInt(filter[3])
     if (!reset) {
@@ -216,6 +227,7 @@ function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
 
     localStorage.setItem("filter", JSON.stringify(filter));
 }
+
 function downloadThis(dataURL : any, filename : string){
 
     const link = document.createElement("a");
@@ -346,4 +358,9 @@ function makeGradient(item: HTMLButtonElement, bool: boolean){
 
 function redirectPage(dest : string){
     window.location.href = dest;
+}
+
+function redirectPost(postNum: number){
+    window.location.href = `../social-media/postPage.html?post=${postNum}`;
+    console.log(postNum);
 }
