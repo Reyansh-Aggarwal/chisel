@@ -31,8 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const imgInput = document.getElementById("imageInput") as HTMLInputElement;
 
         //fill stored values
-        
-        
         if (nameValue) {
             nameBrand = nameValue;
             nameInput.value = nameValue;
@@ -53,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             previewImage(logoImageValue);
             isFilled[3] = true;
         }
+
         //===================================================================
 
         form.addEventListener('submit', (event: Event) => {
@@ -115,21 +114,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     if (document.body.getAttribute('id') == "postPage"){
-        console.log("text");
-        const urlParam = new URLSearchParams (window.location.search);
-        const postNum = urlParam.get("post");
 
-        if (postNum){
-            const img = document.getElementById("postImg") as HTMLImageElement;
-            if (img){
-                img.src = `../assets/social-media-1/${postNum}.png`;
-            }
+        const params = new URLSearchParams(window.location.search);
+        const postNum = params.get("post") || "1"; // Default fallback
+        const feedNum = params.get("feed") || "1"; // Default fallback
+        const img = document.getElementById("postImg") as HTMLImageElement;
+
+        if (img && postNum && feedNum) {
+        const parsedPostNum = parseInt(postNum, 10);
+        const parsedFeedNum = parseInt(feedNum, 10);
+
+        if (!isNaN(parsedPostNum) && !isNaN(parsedFeedNum)) {
+            const newSrc = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
+            console.log("Setting image src to:", newSrc); // Debug log
+            img.src = newSrc;
+
+            // Fallback if image fails to load
+            img.onerror = () => {
+            console.error("Image failed to load:", newSrc);
+            img.src = "../assets/fallback.png";
+            };
         }
-
+        }
         const textbox = document.getElementById("textbox");
-        const img = document.getElementById("theImage") as HTMLImageElement;
         const button = document.getElementById("downloadButton") as HTMLButtonElement;
-        
 
         /*
         textbox?.addEventListener("change", () => {
@@ -156,19 +164,52 @@ document.addEventListener("DOMContentLoaded", function () {
                     downloadThis(dataURL, "post.png");
                 });
             }
-
-
             
         };*/
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
+        
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
         const tilesDiv = document.getElementById("tiles") as HTMLDivElement;
+        const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const resetButton = document.getElementById("reset");
+        const settingDiv = document.getElementById("settings") as HTMLDivElement;
+        var filter = ["","", "", ""];
+        const urlParam = new URLSearchParams (window.location.search).get("feed");
+        var feedNum = 1;
+        var storedFilter;
+        if (urlParam){
+            feedNum = parseInt(urlParam);
+        } else {
+            window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
+        }
+        if (document.body.getAttribute('id') == "feeds"){
+            loadFeed(tilesDiv, feedNum);
+            //setting trackers
+            const allTrackers = trackerDiv.querySelectorAll<HTMLImageElement>('span');
+            var trackerNum : number = 1;
+            allTrackers.forEach((tracker) => {
+                tracker.classList.add("opacity-50");
+                tracker.classList.remove("text-blue-500");
+                trackerNum++;
+            });
+            allTrackers[feedNum-1].classList.add("text-blue-500");
+            allTrackers[feedNum-1].classList.remove("opacity-50");
+            
+        }
 
-        let filter = ["209", "100", "209", "100"];  //[currHue, currSatur, defHue, defSatur]
-        const storedFilter = localStorage.getItem("filter");
+        if (feedNum){
+            if (storedFilter && feedNum == 1){
+                filter = ["209", "100", "209", "100"];  //[currHue, currSatur, defHue, defSatur]
+                storedFilter = localStorage.getItem("filter1");
+            } else if (feedNum == 2){
+                settingDiv.classList.add("hidden");
+            }
+
+            
+        }
+        
         
         if (storedFilter){
             filter = JSON.parse(storedFilter);
@@ -198,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hueSlider.value = filter[2];
             saturSlider.value = filter[3];
             applyFilters(tilesDiv, filter, true);
-            //console.log(filter[2], filter[3], true);
+            console.log(filter[2], filter[3]);
         });
     }
 });
@@ -207,10 +248,13 @@ document.addEventListener("DOMContentLoaded", function () {
 function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
     const allPosts = div.querySelectorAll<HTMLImageElement>('img');
     var hue : number = parseInt(filter[2]);
-    var satur : number = parseInt(filter[3])
+    var satur : number = parseInt(filter[3]);
     if (!reset) {
         hue = parseInt(filter[0]);
         satur = parseInt(filter[1]); 
+    } else if (reset) {
+        filter[0] = filter[2];
+        filter[1] = filter[3];
     }
    
     allPosts.forEach((post) => {
@@ -219,13 +263,18 @@ function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
             saturate(${satur/100})
         `;
     });
-    
-    /*console.log("Current values:", {
-        hue: hue, 
-        saturation: satur
-    });*/
+    if (filter[2] == "209"){
+        localStorage.setItem("filter1", JSON.stringify(filter));
+    }
+}
 
-    localStorage.setItem("filter", JSON.stringify(filter));
+function loadFeed (tilesDiv:HTMLDivElement, feedNum:number){
+    const allPosts = tilesDiv.querySelectorAll<HTMLImageElement>('img');
+    var tileNum : number = 1;
+    allPosts.forEach((tile) => {
+        tile.src = `../assets/social-media-${feedNum}/${tileNum}.png`;
+        tileNum++;
+    });
 }
 
 function downloadThis(dataURL : any, filename : string){
@@ -361,6 +410,15 @@ function redirectPage(dest : string){
 }
 
 function redirectPost(postNum: number){
-    window.location.href = `../social-media/postPage.html?post=${postNum}`;
+    const urlParam = new URLSearchParams (window.location.search).get("feed");
+    var feedNum : number = 1;
+    if (urlParam){
+        feedNum = parseInt(urlParam);
+    }
+    window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum}`;
     console.log(postNum);
+}
+
+function changeFeed(feedNum:number){
+    window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
 }
