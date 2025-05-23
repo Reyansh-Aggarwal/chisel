@@ -121,20 +121,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const img = document.getElementById("postImg") as HTMLImageElement;
 
         if (img && postNum && feedNum) {
-        const parsedPostNum = parseInt(postNum, 10);
-        const parsedFeedNum = parseInt(feedNum, 10);
+            const parsedPostNum = parseInt(postNum, 10);
+            const parsedFeedNum = parseInt(feedNum, 10);
 
-        if (!isNaN(parsedPostNum) && !isNaN(parsedFeedNum)) {
-            const newSrc = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
-            console.log("Setting image src to:", newSrc); // Debug log
-            img.src = newSrc;
-
-            // Fallback if image fails to load
-            img.onerror = () => {
-            console.error("Image failed to load:", newSrc);
-            img.src = "../assets/fallback.png";
-            };
-        }
+            if (!isNaN(parsedPostNum) && !isNaN(parsedFeedNum)) {
+                const newSrc = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
+                console.log("Setting image src to:", newSrc); // Debug log
+                img.src = newSrc;
+            }
         }
         const textbox = document.getElementById("textbox");
         const button = document.getElementById("downloadButton") as HTMLButtonElement;
@@ -179,11 +173,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const urlParam = new URLSearchParams (window.location.search).get("feed");
         var feedNum = 1;
         var storedFilter;
+        //getting feed number
         if (urlParam){
             feedNum = parseInt(urlParam);
         } else {
             window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
         }
+
         if (document.body.getAttribute('id') == "feeds"){
             loadFeed(tilesDiv, feedNum);
             //setting trackers
@@ -200,14 +196,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (feedNum){
-            if (storedFilter && feedNum == 1){
+            if (!storedFilter){
                 filter = ["209", "100", "209", "100"];  //[currHue, currSatur, defHue, defSatur]
-                storedFilter = localStorage.getItem("filter1");
-            } else if (feedNum == 2){
-                settingDiv.classList.add("hidden");
+                storedFilter = localStorage.getItem(`filter${feedNum}`);
             }
-
-            
+            if (feedNum == 2 || feedNum == 3){
+                settingDiv.classList.add("hidden");
+                //document.getElementById("mainSec")?.classList.remove("flex");
+            }
         }
         
         
@@ -225,12 +221,14 @@ document.addEventListener("DOMContentLoaded", function () {
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             applyFilters(tilesDiv, filter);
+            console.log("hue:", filter[0]);
         
         });
         
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             applyFilters(tilesDiv, filter);
+            console.log("saturation:", filter[1]);
             
         });
 
@@ -247,12 +245,19 @@ document.addEventListener("DOMContentLoaded", function () {
 //cant put in main if statement (DOMContentLoader)
 function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
     const allPosts = div.querySelectorAll<HTMLImageElement>('img');
+    const urlParam = new URLSearchParams (window.location.search).get("feed");
+    var feedNum : number = 1;
+    if (urlParam){
+        feedNum = parseInt(urlParam);
+    } else{
+        feedNum = 1;
+    }
     var hue : number = parseInt(filter[2]);
     var satur : number = parseInt(filter[3]);
     if (!reset) {
         hue = parseInt(filter[0]);
         satur = parseInt(filter[1]); 
-    } else if (reset) {
+    } else if (reset){
         filter[0] = filter[2];
         filter[1] = filter[3];
     }
@@ -263,9 +268,7 @@ function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
             saturate(${satur/100})
         `;
     });
-    if (filter[2] == "209"){
-        localStorage.setItem("filter1", JSON.stringify(filter));
-    }
+    localStorage.setItem(`filter${feedNum}`, JSON.stringify(filter));
 }
 
 function loadFeed (tilesDiv:HTMLDivElement, feedNum:number){
@@ -420,5 +423,21 @@ function redirectPost(postNum: number){
 }
 
 function changeFeed(feedNum:number){
+    //getting feed number
+    var currfeedNum = 1
+    const mainSection = document.getElementById("mainSec") as HTMLElement;
+    const urlParam = new URLSearchParams (window.location.search).get("feed");
+    if (urlParam){
+        currfeedNum = parseInt(urlParam);
+    }
+    
+    if (feedNum < currfeedNum){
+        mainSection.classList.add("animate-swipe-right");    
+    } else if (feedNum > currfeedNum){
+        console.log("test");
+        //mainSection.classList.add("animate-swipe-left");    
+    }
+    setTimeout(()=> {
     window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
+    }, 700);
 }

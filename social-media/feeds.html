@@ -27,8 +27,7 @@
       <section id = "mainSec"
       class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-24 justify-center md:justify-between lg:justify-center align-center items-center h-full w-screen p-8">
         <div id="tiles" 
-        class="basis-1/2 md:basis-2/3 lg:basis-1/2 grid grid-rows-3 grid-cols-3 gap-2">
-           
+        class="basis-1/2 md:basis-2/3 lg:basis-1/2 grid grid-rows-3 grid-cols-3 gap-2 ">
             <div id = "1-1" class = "hover:scale-110"> 
             <img src = "" onclick = "redirectPost(1)">
             </div>
@@ -85,7 +84,9 @@
       </div>
     <!-- Footer -->
     <hr class = "w-screen">
-    <footer class=" bottom-0 px-8 text-white bg-black w-full">
+    <footer class=" bottom-0 else if (feedNum > currfeedNum){
+        //mainSection.classList.add("animate-swipe-left");    
+    } px-8 text-white bg-black w-full">
         <div class="flex justify-between py-4">
         <div class="basis-1/5">
         <img src="../assets/trans-logo.png" class="bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%] h-auto max-w-16"/>

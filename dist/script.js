@@ -103,11 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const newSrc = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
                 console.log("Setting image src to:", newSrc); // Debug log
                 img.src = newSrc;
-                // Fallback if image fails to load
-                img.onerror = () => {
-                    console.error("Image failed to load:", newSrc);
-                    img.src = "../assets/fallback.png";
-                };
             }
         }
         const textbox = document.getElementById("textbox");
@@ -151,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const urlParam = new URLSearchParams(window.location.search).get("feed");
         var feedNum = 1;
         var storedFilter;
+        //getting feed number
         if (urlParam) {
             feedNum = parseInt(urlParam);
         }
@@ -171,12 +167,13 @@ document.addEventListener("DOMContentLoaded", function () {
             allTrackers[feedNum - 1].classList.remove("opacity-50");
         }
         if (feedNum) {
-            if (storedFilter && feedNum == 1) {
+            if (!storedFilter) {
                 filter = ["209", "100", "209", "100"]; //[currHue, currSatur, defHue, defSatur]
-                storedFilter = localStorage.getItem("filter1");
+                storedFilter = localStorage.getItem(`filter${feedNum}`);
             }
-            else if (feedNum == 2) {
+            if (feedNum == 2 || feedNum == 3) {
                 settingDiv.classList.add("hidden");
+                //document.getElementById("mainSec")?.classList.remove("flex");
             }
         }
         if (storedFilter) {
@@ -190,10 +187,12 @@ document.addEventListener("DOMContentLoaded", function () {
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             applyFilters(tilesDiv, filter);
+            console.log("hue:", filter[0]);
         });
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             applyFilters(tilesDiv, filter);
+            console.log("saturation:", filter[1]);
         });
         resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => {
             hueSlider.value = filter[2];
@@ -206,6 +205,14 @@ document.addEventListener("DOMContentLoaded", function () {
 //cant put in main if statement (DOMContentLoader)
 function applyFilters(div, filter, reset = false) {
     const allPosts = div.querySelectorAll('img');
+    const urlParam = new URLSearchParams(window.location.search).get("feed");
+    var feedNum = 1;
+    if (urlParam) {
+        feedNum = parseInt(urlParam);
+    }
+    else {
+        feedNum = 1;
+    }
     var hue = parseInt(filter[2]);
     var satur = parseInt(filter[3]);
     if (!reset) {
@@ -222,9 +229,7 @@ function applyFilters(div, filter, reset = false) {
             saturate(${satur / 100})
         `;
     });
-    if (filter[2] == "209") {
-        localStorage.setItem("filter1", JSON.stringify(filter));
-    }
+    localStorage.setItem(`filter${feedNum}`, JSON.stringify(filter));
 }
 function loadFeed(tilesDiv, feedNum) {
     const allPosts = tilesDiv.querySelectorAll('img');
@@ -357,5 +362,21 @@ function redirectPost(postNum) {
     console.log(postNum);
 }
 function changeFeed(feedNum) {
-    window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
+    //getting feed number
+    var currfeedNum = 1;
+    const mainSection = document.getElementById("mainSec");
+    const urlParam = new URLSearchParams(window.location.search).get("feed");
+    if (urlParam) {
+        currfeedNum = parseInt(urlParam);
+    }
+    if (feedNum < currfeedNum) {
+        mainSection.classList.add("animate-swipe-right");
+    }
+    else if (feedNum > currfeedNum) {
+        console.log("test");
+        //mainSection.classList.add("animate-swipe-left");    
+    }
+    setTimeout(() => {
+        window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
+    }, 700);
 }
