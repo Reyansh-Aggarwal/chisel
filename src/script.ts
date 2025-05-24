@@ -3,7 +3,7 @@ let primaryColor = "#ff0000",
     nameBrand = "basic",
     isFilled = [false,false,false,false];
     // 0- name; 1-primary color; 2- secondary color; 3- image;
-
+    var filter = ["","", "", ""];
 document.addEventListener("DOMContentLoaded", function () {
 
     if (document.body.getAttribute('id') == "setupPage") {
@@ -119,47 +119,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const postNum = params.get("post") || "1"; // Default fallback
         const feedNum = params.get("feed") || "1"; // Default fallback
         const img = document.getElementById("postImg") as HTMLImageElement;
+        const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
+        const downloadButton = document.getElementById("download") as HTMLButtonElement;
+        const hueSlider = document.getElementById("hue") as HTMLInputElement;
+        const saturSlider = document.getElementById("saturation") as HTMLInputElement;
 
         if (img && postNum && feedNum) {
             const parsedPostNum = parseInt(postNum, 10);
             const parsedFeedNum = parseInt(feedNum, 10);
 
             if (!isNaN(parsedPostNum) && !isNaN(parsedFeedNum)) {
-                const newSrc = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
-                console.log("Setting image src to:", newSrc); // Debug log
-                img.src = newSrc;
+                img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
             }
         }
-        const textbox = document.getElementById("textbox");
-        const button = document.getElementById("downloadButton") as HTMLButtonElement;
-
-        /*
-        textbox?.addEventListener("change", () => {
-            console.log("ok");
-
-        });
-        img.onload = () => {
-
-            const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
-            const ctx = canvas?.getContext("2d");
-            const logo = document.createElement("img");
-            logo.src = localStorage.getItem("logoImage") || "";
-            canvas.height = img.height;
-            canvas.width = img.width;
-            
-            if (ctx && logo){
-                ctx.imageSmoothingEnabled = true;
-                ctx.drawImage(img, 0,0);
-                ctx.drawImage(logo, 200, 200,);
-                //downloading
-                const dataURL = canvas.toDataURL("image/png");
-
-                button?.addEventListener("click", () => {
-                    downloadThis(dataURL, "post.png");
-                });
-            }
-            
-        };*/
+        const textbox = document.getElementById("textbox") as HTMLInputElement;
+        
+        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(postNum);};
+        downloadButton.onclick = () => {downloadThis(canvas.toDataURL("image/png"),`post${postNum}.png`)};
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
         
@@ -169,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("settings") as HTMLDivElement;
-        var filter = ["","", "", ""];
+        
         const urlParam = new URLSearchParams (window.location.search).get("feed");
         var feedNum = 1;
         var storedFilter;
@@ -181,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (document.body.getAttribute('id') == "feeds"){
-            loadFeed(tilesDiv, feedNum);
+
             //setting trackers
             const allTrackers = trackerDiv.querySelectorAll<HTMLImageElement>('span');
             var trackerNum : number = 1;
@@ -192,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             allTrackers[feedNum-1].classList.add("text-blue-500");
             allTrackers[feedNum-1].classList.remove("opacity-50");
-            
+    
         }
 
         if (feedNum){
@@ -202,34 +178,32 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (feedNum == 2 || feedNum == 3){
                 settingDiv.classList.add("hidden");
-                //document.getElementById("mainSec")?.classList.remove("flex");
             }
         }
-        
-        
         if (storedFilter){
             filter = JSON.parse(storedFilter);
-
             //setting apt slider values
             hueSlider.value = filter[0];
             saturSlider.value = filter[1];
-
-            applyFilters(tilesDiv, filter);
         } 
-        
+        //loading feed at first
+        loadFeed(tilesDiv, feedNum, true);
         //Event listeners
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
-            applyFilters(tilesDiv, filter);
+            //applyFilters(tilesDiv, filter);
             console.log("hue:", filter[0]);
-        
-        });
-        
+            if (document.body.id == "feeds"){
+                loadFeed(tilesDiv, feedNum);
+            }
+        });      
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
-            applyFilters(tilesDiv, filter);
+            //applyFilters(tilesDiv, filter);
             console.log("saturation:", filter[1]);
-            
+            if (document.body.id == "feeds"){
+                loadFeed(tilesDiv, feedNum);
+            }
         });
 
         resetButton?.addEventListener("click", () => {
@@ -269,19 +243,21 @@ function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
         `;
     });
     localStorage.setItem(`filter${feedNum}`, JSON.stringify(filter));
+    console.log("applied");
 }
 
-function loadFeed (tilesDiv:HTMLDivElement, feedNum:number){
-    const allPosts = tilesDiv.querySelectorAll<HTMLImageElement>('img');
-    var tileNum : number = 1;
-    allPosts.forEach((tile) => {
-        tile.src = `../assets/social-media-${feedNum}/${tileNum}.png`;
-        tileNum++;
-    });
+function loadFeed (tilesDiv:HTMLDivElement, feedNum:number, first =false){
+    for (let i = 1; i <= 9; i++){
+        var tile = document.getElementById(i.toString()) as HTMLImageElement;
+        if (first){
+            tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+        }
+        render(i.toString(), `cvs${i}`, tile.id);
+    }
 }
 
 function downloadThis(dataURL : any, filename : string){
-
+    
     const link = document.createElement("a");
     link.href = dataURL;
     link.download = filename;
@@ -309,6 +285,52 @@ function previewImage(logoUrl : string) {
     imgTemplate.classList.add('hidden');
     imgDiv.classList.add('bg-transparent');
 
+}
+
+function render(postNum = "1", canvasID = "imgCanvas", imgID = "postImg") {
+    const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    const img = document.getElementById(imgID) as HTMLImageElement;
+    const logo = new Image();
+    logo.src = localStorage.getItem("logoImage") || "";
+    var logoCoords = [0,0];
+    console.log(postNum, canvasID, imgID);
+    const hueSlider = document.getElementById("hue") as HTMLInputElement;
+    const satSlider = document.getElementById("saturation") as HTMLInputElement;
+    const captionInput = document.getElementById("textbox") as HTMLInputElement;
+    const hue = parseInt(hueSlider.value);
+    const saturate = parseInt(satSlider.value);
+    const caption = captionInput.value;
+
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Apply filter before drawing image
+    ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+    filter[0] = hue.toString();
+    filter[1] = saturate.toString();
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    localStorage.setItem(`filter1`, JSON.stringify(filter));
+    //draw logo
+    if (logo.complete) {
+        if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8"){
+            logoCoords = [0,0];
+        } else if (postNum == "2" || postNum == "7" || postNum == "9"){
+            logoCoords = [0, canvas.height-275];
+        }
+        ctx.drawImage(logo, logoCoords[0], logoCoords[1], 250, 250);
+    }
+
+    if (caption) {
+        ctx.font = "30px helvetica-roman";
+        ctx.fillStyle = "green";
+        ctx.fillText(caption, 200, canvas.height - 30);
+        console.log(caption, "caption");
+    }
+    console.log("rendered");
 }
 
 function imageChange(){
@@ -419,7 +441,7 @@ function redirectPost(postNum: number){
         feedNum = parseInt(urlParam);
     }
     window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum}`;
-    console.log(postNum);
+    console.log(postNum, "rideiredt");
 }
 
 function changeFeed(feedNum:number){

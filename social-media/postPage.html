@@ -25,25 +25,43 @@
     </header>
 
     <section id = "mainSec"
-    class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-24 justify-center md:justify-between lg:justify-center align-center items-center h-full w-screen p-8">
+    class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-24 justify-center md:justify-between lg:justify-center align-center items-center h-full w-screen p-4">
       <div id="tiles" 
       class="basis-1/2 md:basis-2/3 lg:basis-1/2">
-        <img id = "postImg" src = "">
+      <canvas id = "imgCanvas" class = "w-full h-full"></canvas>
+      <img id = "postImg" src = "" class = "hidden">
       </div>
       
       <div id = "settings"
-      class = "flex flex-col md:p-8 h-full gap-4 justify-between items-center">
-          <div id = "Hue"
-          class = "flex flex-col items-center text-center gap-2 w-full basis-1/2">
-              <span class = "text-3xl md:text-4xl lg:text-6xl">Change <span class = "text-blue-500">Color</span></span>
-              <input type = "range" id = "hue" name = "hue" class = "w-full" min = "0" max = "360" value = "209"/>
+        class = "flex flex-row md:flex-col md:p-8 h-full md:gap-16 lg:gap-24 justify-between items-center">
+          <div class = "flex flex-col gap-6 lg:gap-12">
+            <div id = "Hue"
+              class = "flex flex-col items-center text-center gap-4 w-full basis-1/2">
+                <span class = "text-2xl md:text-3xl lg:text-4xl">Change <span class = "text-blue-500">Color</span></span>
+                <input type = "range" id = "hue" name = "hue" class = "w-full" min = "0" max = "360" value = "209"/>
+            </div>
+            <div id = "Saturation"
+            class = "flex flex-col items-center text-center gap-4">
+                <span class = "text-2xl md:text-3xl lg:text-4xl">Change <span class = "text-blue-500">Saturation</span></span>
+                <input type = "range" id = "saturation" name = "saturation" class = "w-full" min="1"  max="200" value = "100"/>
+            </div>
+          </div> 
+          <div id = "Text"
+            class = "flex flex-col items-center text-center gap-4">
+              <span class = "text-2xl md:text-3xl lg:text-4xl">Edit <span class = "text-blue-500">Text</span></span>
+              <input type = "text" id = "textbox" class = "text-blue-500 w-full bg-black outline-blue-500 outline rounded-full p-2 font-helvetica-roman"/>
           </div>
-          <div id = "Saturation"
-          class = "flex flex-col items-center text-center gap-2">
-              <span class = "text-3xl md:text-4xl lg:text-6xl">Change <span class = "text-blue-500">Saturation</span></span>
-              <input type = "range" id = "saturation" name = "saturation" class = "w-full" min="1"  max="200" value = "100"/>
-          </div>
-          <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold text-black">Reset</button>
+          <div id = "buttons"
+            class = "flex flex-row gap-4">
+              <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold text-black flex flex-row gap-2">
+                Reset <i class="fa-solid fa-arrows-rotate self-center"></i>
+              </button>
+              <button id="download"
+              class = "bg-black outline-blue-500 outline rounded-full w-fit p-4 text-2xl text-blue-500 font-helvetica-bold flex flex-row gap-2"> 
+              Download <i class="fa-solid fa-arrow-down self-center"></i>
+              </button>
+          </div> 
+             
       </div>
     </section>
     
