@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         const textbox = document.getElementById("textbox");
-        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(postNum); };
+        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(parseInt(feedNum), postNum); };
         downloadButton.onclick = () => { downloadThis(canvas.toDataURL("image/png"), `post${postNum}.png`); };
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage") {
@@ -118,7 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const tilesDiv = document.getElementById("tiles");
         const trackerDiv = document.getElementById("trackers");
         const resetButton = document.getElementById("reset");
-        const settingDiv = document.getElementById("settings");
+        const settingDiv = document.getElementById("colorSettings");
+        const downloadButton = document.getElementById("download");
         const urlParam = new URLSearchParams(window.location.search).get("feed");
         var feedNum = 1;
         var storedFilter;
@@ -157,14 +158,14 @@ document.addEventListener("DOMContentLoaded", function () {
             saturSlider.value = filter[1];
         }
         //loading feed at first
-        loadFeed(tilesDiv, feedNum, true);
+        loadFeed(feedNum, true);
         //Event listeners
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
             console.log("hue:", filter[0]);
             if (document.body.id == "feeds") {
-                loadFeed(tilesDiv, feedNum);
+                loadFeed(feedNum);
             }
         });
         saturSlider.addEventListener("input", () => {
@@ -172,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //applyFilters(tilesDiv, filter);
             console.log("saturation:", filter[1]);
             if (document.body.id == "feeds") {
-                loadFeed(tilesDiv, feedNum);
+                loadFeed(feedNum);
             }
         });
         resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => {
@@ -181,6 +182,11 @@ document.addEventListener("DOMContentLoaded", function () {
             applyFilters(tilesDiv, filter, true);
             console.log(filter[2], filter[3]);
         });
+        downloadButton.onclick = () => {
+            if (document.body.id == "feeds") {
+                downloadFeed();
+            }
+        };
     }
 });
 //cant put in main if statement (DOMContentLoader)
@@ -213,13 +219,11 @@ function applyFilters(div, filter, reset = false) {
     localStorage.setItem(`filter${feedNum}`, JSON.stringify(filter));
     console.log("applied");
 }
-function loadFeed(tilesDiv, feedNum, first = false) {
+function downloadFeed() {
+    var canvas;
     for (let i = 1; i <= 9; i++) {
-        var tile = document.getElementById(i.toString());
-        if (first) {
-            tile.src = `../assets/social-media-${feedNum}/${i}.png`;
-        }
-        render(i.toString(), `cvs${i}`, tile.id);
+        canvas = document.getElementById(`cvs${i}`);
+        downloadThis(canvas.toDataURL("image/png"), `post${i}.png`);
     }
 }
 function downloadThis(dataURL, filename) {
@@ -246,14 +250,23 @@ function previewImage(logoUrl) {
     imgTemplate.classList.add('hidden');
     imgDiv.classList.add('bg-transparent');
 }
-function render(postNum = "1", canvasID = "imgCanvas", imgID = "postImg") {
+function loadFeed(feedNum, first = false) {
+    for (let i = 1; i <= 9; i++) {
+        var tile = document.getElementById(i.toString());
+        if (first) {
+            tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+        }
+        render(feedNum, i.toString(), `cvs${i}`, tile.id);
+    }
+}
+function render(feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg") {
     const canvas = document.getElementById(canvasID);
     const ctx = canvas.getContext("2d");
     const img = document.getElementById(imgID);
     const logo = new Image();
     logo.src = localStorage.getItem("logoImage") || "";
     var logoCoords = [0, 0];
-    console.log(postNum, canvasID, imgID);
+    console.log(feedNum, postNum, canvasID, imgID);
     const hueSlider = document.getElementById("hue");
     const satSlider = document.getElementById("saturation");
     const captionInput = document.getElementById("textbox");
@@ -264,19 +277,16 @@ function render(postNum = "1", canvasID = "imgCanvas", imgID = "postImg") {
     canvas.height = img.naturalHeight;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Apply filter before drawing image
-    ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
-    filter[0] = hue.toString();
-    filter[1] = saturate.toString();
+    if (feedNum == 1) {
+        ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+        filter[0] = hue.toString();
+        filter[1] = saturate.toString();
+    }
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     localStorage.setItem(`filter1`, JSON.stringify(filter));
     //draw logo
     if (logo.complete) {
-        if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8") {
-            logoCoords = [0, 0];
-        }
-        else if (postNum == "2" || postNum == "7" || postNum == "9") {
-            logoCoords = [0, canvas.height - 275];
-        }
+        logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width);
         ctx.drawImage(logo, logoCoords[0], logoCoords[1], 250, 250);
     }
     if (caption) {
@@ -362,6 +372,34 @@ function checkRequired(event) {
             makeGradient(submitButton, false);
         } //others not needed because color cant be empty?
     }
+}
+function getLogoPos(postNum, feedNum, height, width) {
+    var logoPos = [0, 0];
+    switch (feedNum) {
+        case 1:
+            if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8") {
+                logoPos = [0, 0];
+            }
+            else if (postNum == "2" || postNum == "7" || postNum == "9") {
+                logoPos = [0, height - 275];
+            }
+            break;
+        case 2:
+            if (postNum == "1" || postNum == "4") {
+                logoPos = [0, height - 275];
+            }
+            else if (postNum == "6" || postNum == "7" || postNum == "9") {
+                logoPos = [width - 275, 0];
+            }
+            else if (postNum == "5" || postNum == "8") {
+                logoPos = [width - 275, height - 275];
+            }
+            else if (postNum == "2" || postNum == "3") {
+                logoPos = [0, 0];
+            }
+            break;
+    }
+    return logoPos;
 }
 function makeGradient(item, bool) {
     if (bool) {
