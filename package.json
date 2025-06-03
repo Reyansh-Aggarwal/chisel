@@ -4,16 +4,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+    "build": "npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Reyansh Aggarwal",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.8",
+    "tailwindcss": "^4.1.8"
   }
 }

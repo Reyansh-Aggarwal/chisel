@@ -207,10 +207,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         resetButton?.addEventListener("click", () => {
-            
+            filter[2] = "360";
+            filter[3] = "200";
             hueSlider.value = filter[2];
             saturSlider.value = filter[3];
-            applyFilters(tilesDiv, filter, true);
+            loadFeed(feedNum);
             console.log(filter[2], filter[3]);
         });
         downloadButton.onclick = () => {
