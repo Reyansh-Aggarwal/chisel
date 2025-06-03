@@ -107,7 +107,7 @@
 }
 
 /*
-! tailwindcss v3.4.15 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -554,6 +554,40 @@ video {
   display: none;
 }
 
+.container {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
 .fixed {
   position: fixed;
 }
@@ -574,12 +608,16 @@ video {
   bottom: 0px;
 }
 
-.top-0 {
-  top: 0px;
-}
-
 .left-0 {
   left: 0px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.top-0 {
+  top: 0px;
 }
 
 .z-0 {
@@ -634,12 +672,16 @@ video {
   height: 6rem;
 }
 
-.h-32 {
-  height: 8rem;
-}
-
 .h-8 {
   height: 2rem;
+}
+
+.h-\[12dvh\] {
+  height: 12dvh;
+}
+
+.h-\[14dvh\] {
+  height: 14dvh;
 }
 
 .h-auto {
@@ -648,6 +690,14 @@ video {
 
 .h-full {
   height: 100%;
+}
+
+.max-h-\[50dvh\] {
+  max-height: 50dvh;
+}
+
+.min-h-dvh {
+  min-height: 100dvh;
 }
 
 .min-h-screen {
@@ -664,10 +714,6 @@ video {
 
 .w-2\/5 {
   width: 40%;
-}
-
-.w-32 {
-  width: 8rem;
 }
 
 .w-5\/6 {
@@ -763,6 +809,10 @@ video {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.resize {
+  resize: both;
+}
+
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -817,6 +867,12 @@ video {
 
 .gap-8 {
   gap: 2rem;
+}
+
+.space-y-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
 }
 
 .self-center {
@@ -1007,6 +1063,10 @@ video {
   padding-bottom: 1.5rem;
 }
 
+.pb-24 {
+  padding-bottom: 6rem;
+}
+
 .pt-24 {
   padding-top: 6rem;
 }
@@ -1119,6 +1179,11 @@ video {
   color: rgb(209 213 219 / var(--tw-text-opacity, 1));
 }
 
+.text-my-gray {
+  --tw-text-opacity: 1;
+  color: rgb(41 41 41 / var(--tw-text-opacity, 1));
+}
+
 .text-transparent {
   color: transparent;
 }
@@ -1144,6 +1209,10 @@ video {
 
 .outline {
   outline-style: solid;
+}
+
+.outline-dashed {
+  outline-style: dashed;
 }
 
 .outline-1 {

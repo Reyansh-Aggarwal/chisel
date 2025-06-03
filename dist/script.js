@@ -188,6 +188,37 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
     }
+    if (document.body.getAttribute('id') == "branding") {
+        const container = document.getElementById("scrollContainer");
+        const circles = container.querySelectorAll('div');
+        let circlesPos = [[0, 0], [50, 0], [0, 0], [50, 0], [0, 0]];
+        const circleCount = 5; // Dynamically get the number of circles
+        const radius = 100; // Adjusted radius for better visibility
+        let scrollOffset = container.scrollTop;
+        function positionCircles(startAngle, endAngle) {
+            circles.forEach((circle, index) => {
+                // Compute evenly spaced angle for each circle on the arc [startAngle, endAngle]
+                let angle;
+                angle = index * (Math.PI / 6);
+                console.log(angle);
+                var x = Math.cos(angle) * radius;
+                var y = Math.sin(angle) * radius;
+                console.log("X:", x, "y:", y);
+                if (index > 2) {
+                    x *= -1;
+                }
+                if (index == 0 || index == 4) {
+                    x = 0;
+                    console.log("test");
+                }
+                console.log("test X:", x, "y:", y);
+                y = 0;
+                circle.style.transform = `translate(${x}px, ${y + scrollOffset}px)`;
+            });
+        }
+        // Initial positioning of circles
+        positionCircles(0, Math.PI);
+    }
 });
 //cant put in main if statement (DOMContentLoader)
 function applyFilters(div, filter, reset = false) {

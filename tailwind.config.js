@@ -27,7 +27,9 @@ module.exports = {
         gradient: 'gradient 3s ease infinite',
         marquee: 'marquee 10s linear infinite',
         'swipe-right': 'swipe-right 0.5s ease-in-out forwards',
-        //'swipe-left': 'swipe-left 0.5s ease-in-out forwards',
+        'swipe-left': 'swipe-left 0.5s ease-in-out forwards',
+        'slow-spin': 'slow-spin 30s linear infinite',
+
       },
       keyframes: {
         gradient: {
@@ -43,10 +45,14 @@ module.exports = {
           '0%': {transform: 'translateX(0)'},
           '100%': {transform: 'translateX(100%)'}
         },
-        /*'swipe-left': {
+        'swipe-left': {
           '0%': {transform: 'translateY(0)'},
           '100%': {transform: 'translateY(100%)'}
-        }*/
+        },
+        'slow-spin': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        }
       },
       letterSpacing: {
         tightest: '-0.75em'
