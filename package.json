@@ -1,20 +1,28 @@
 {
-  "name": "website",
+  "name": "chisel",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "homepage": "https://github.com/Reyansh-Aggarwal/chisel#readme",
+  "bugs": {
+    "url": "https://github.com/Reyansh-Aggarwal/chisel/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reyansh-Aggarwal/chisel.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "tailwind.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --watch"
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
   },
-  "keywords": [],
-  "author": "Reyansh Aggarwal",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
     "@tailwindcss/cli": "^4.1.8",
     "tailwindcss": "^4.1.8"
+  },
+  "dependencies": {
+    "typescript": "^5.8.3"
   }
 }

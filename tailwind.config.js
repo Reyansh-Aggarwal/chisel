@@ -1,4 +1,4 @@
-const { transform } = require('typescript');
+console.log("✅ Tailwind config loaded");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -46,8 +46,8 @@ module.exports = {
           '100%': {transform: 'translateX(100%)'}
         },
         'swipe-left': {
-          '0%': {transform: 'translateY(0)'},
-          '100%': {transform: 'translateY(100%)'}
+          '0%': {transform: 'translateX(0)'},
+          '100%': {transform: 'translateX(100%)'}
         },
         'slow-spin': {
           from: { transform: 'rotate(0deg)' },
@@ -60,6 +60,5 @@ module.exports = {
 
     },
   },
-  plugins: [],
 }
 

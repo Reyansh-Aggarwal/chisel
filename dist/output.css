@@ -351,8 +351,20 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .animate-gradient {
+    animation: gradient 3s ease infinite;
+  }
+  .animate-marquee {
+    animation: marquee 10s linear infinite;
+  }
   .animate-pulse {
     animation: var(--animate-pulse);
+  }
+  .animate-swipe-left {
+    animation: swipe-left 0.5s ease-in-out forwards;
+  }
+  .animate-swipe-right {
+    animation: swipe-right 0.5s ease-in-out forwards;
   }
   .grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -446,6 +458,12 @@
   .bg-green-600 {
     background-color: var(--color-green-600);
   }
+  .bg-my-blue {
+    background-color: #06c3ff;
+  }
+  .bg-my-gray {
+    background-color: #292929;
+  }
   .bg-red-600 {
     background-color: var(--color-red-600);
   }
@@ -455,6 +473,9 @@
   .bg-gradient-to-r {
     --tw-gradient-position: to right in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .bg-black-grid {
+    background-image: url('https://reyansh-aggarwal.github.io/chisel/assets/blackGrid.png');
   }
   .from-\[\#524dee\] {
     --tw-gradient-from: #524dee;
@@ -550,6 +571,15 @@
   .text-start {
     text-align: start;
   }
+  .font-helvetica-bold {
+    font-family: helvetica-bold, sans-serif;
+  }
+  .font-helvetica-light {
+    font-family: helvetica-light, sans-serif;
+  }
+  .font-helvetica-roman {
+    font-family: helvetica-roman, sans-serif;
+  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -609,6 +639,9 @@
   }
   .text-gray-300 {
     color: var(--color-gray-300);
+  }
+  .text-my-gray {
+    color: #292929;
   }
   .text-transparent {
     color: transparent;
@@ -682,9 +715,19 @@
     --tw-outline-style: dashed;
     outline-style: dashed;
   }
+  .placeholder\:font-helvetica-roman {
+    &::placeholder {
+      font-family: helvetica-roman, sans-serif;
+    }
+  }
   .placeholder\:text-black {
     &::placeholder {
       color: var(--color-black);
+    }
+  }
+  .autofill\:bg-my-gray {
+    &:autofill {
+      background-color: #292929;
     }
   }
   .autofill\:text-white {
@@ -699,6 +742,13 @@
         --tw-scale-y: 110%;
         --tw-scale-z: 110%;
         scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
+  .hover\:animate-gradient {
+    &:hover {
+      @media (hover: hover) {
+        animation: gradient 3s ease infinite;
       }
     }
   }
@@ -1304,6 +1354,41 @@ input[type="color"] {
 @keyframes pulse {
   50% {
     opacity: 0.5;
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(2%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes swipe-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes swipe-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 @layer properties {

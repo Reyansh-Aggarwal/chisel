@@ -1,8 +1,5 @@
 @import "tailwindcss";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../tailwind.config.js";
 
 @font-face {
     font-family: 'helvetica-roman';
@@ -11,14 +8,12 @@
     font-style: normal;
 }
 
-
 @font-face {
     font-family: 'helvetica-bold';
     src: url('https://reyansh-aggarwal.github.io/chisel/assets/fonts/HelveticaNeueBold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
-
 
 @font-face {
     font-family: 'helvetica-light';
