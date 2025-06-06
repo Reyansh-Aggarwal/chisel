@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let feedNum = localStorage.getItem("feed-number");
-        if (!feedNum){feedNum = "2";}
+        if (!feedNum){feedNum = "3";}
 
         const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
         const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
@@ -337,9 +337,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const logoHeight = 1000;
                 const padding = 80;
                 const fontSize = 700;
+
+                let textColor = "#3b82f6";
                 let mainFont = "helvetica-bold";
                 if (feedNum == "2"){
                     mainFont = "phagspa";
+                    textColor = "white";
+                } else if (feedNum == "3"){
+                    mainFont = "Times New Roman";
+
+                    if (activeCircleNum != 2){
+                        textColor = "#834e00";
+                    } else {
+                        textColor = "white";
+                    }
                 }
                 logoTextCtx.font =  `${fontSize}px  ${mainFont}, Arial, sans-serif`;
                 const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
@@ -360,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Apply blend with blue to colorize the image
                 offCtx.globalCompositeOperation = "source-in";
-                offCtx.fillStyle = "#3b82f6";
+                offCtx.fillStyle = textColor;
                 offCtx.fillRect(0, 0, logoWidth, logoHeight);
                 offCtx.globalCompositeOperation = "source-over";
 
@@ -369,7 +380,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Draw text
                 logoTextCtx.font =  `${fontSize}px ${mainFont}, Arial, sans-serif`;
-                logoTextCtx.fillStyle = "#3b82f6";
+                logoTextCtx.fillStyle = textColor;
+                
                 logoTextCtx.textBaseline = "middle";
                 logoTextCtx.textAlign = "left";
                 console.log("Font used:", logoTextCtx.font);

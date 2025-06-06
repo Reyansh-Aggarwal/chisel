@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         let feedNum = localStorage.getItem("feed-number");
         if (!feedNum) {
-            feedNum = "2";
+            feedNum = "3";
         }
         const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
         const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
@@ -282,7 +282,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 const logoHeight = 1000;
                 const padding = 80;
                 const fontSize = 700;
-                logoTextCtx.font = `${fontSize}px  helvetica-bold, Arial, sans-serif`;
+                let textColor = "#3b82f6";
+                let mainFont = "helvetica-bold";
+                if (feedNum == "2") {
+                    mainFont = "phagspa";
+                    textColor = "white";
+                }
+                else if (feedNum == "3") {
+                    mainFont = "Times New Roman";
+                    if (activeCircleNum != 2) {
+                        textColor = "#834e00";
+                    }
+                    else {
+                        textColor = "white";
+                    }
+                }
+                logoTextCtx.font = `${fontSize}px  ${mainFont}, Arial, sans-serif`;
                 const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
                 // Set canvas dimensions to fit logo + padding + text
                 logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
@@ -297,14 +312,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
                 // Apply blend with blue to colorize the image
                 offCtx.globalCompositeOperation = "source-in";
-                offCtx.fillStyle = "#3b82f6";
+                offCtx.fillStyle = textColor;
                 offCtx.fillRect(0, 0, logoWidth, logoHeight);
                 offCtx.globalCompositeOperation = "source-over";
                 logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
                 logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
                 // Draw text
-                logoTextCtx.font = `${fontSize}px helvetica-bold, Arial, sans-serif`;
-                logoTextCtx.fillStyle = "#3b82f6";
+                logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                logoTextCtx.fillStyle = textColor;
                 logoTextCtx.textBaseline = "middle";
                 logoTextCtx.textAlign = "left";
                 console.log("Font used:", logoTextCtx.font);
