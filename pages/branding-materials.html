@@ -9,7 +9,7 @@
         <link rel = "stylesheet" href = "../dist/output.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     </head>
-    <body id = "branding" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen">
+    <body id = "branding" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen overflow-x-hidden">
       <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
           <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
             <a href = "../index.html">
@@ -24,23 +24,27 @@
           <hr>
       </header>
       <section id = "mainSec"
-      class = "flex flex-row justify-between align-center w-screen min-h-dvh pt-32 overflow-x-hidden font-helvetica-roman">
-        <div class = "flex flex-col basis-1/2 items-center p-16">
-          <img id = "matImg" class = "max-h-[50dvh] w-full"/>
-          <p id = "matLabel">Case</p>
-          <button id = "downloadButton" class = "bg-blue-500 text-my-gray p-4 text-xl rounded-full font-helvetica-bold">Download</button>
+      class = "flex flex-col md:flex-row justify-between align-center w-screen min-h-dvh pt-24 md:pt-28 lg:pt-32 pb-32 overflow-x-hidden font-helvetica-roman gap-32 md:gap-0">
+        <div id = "content"
+        class = "flex flex-col basis-1/2 items-center gap-4 overflow-hidden p-8">
+          <img id = "matImg" class = "h-[44dvh] md:max-h-[52dvh]"/>
+          <canvas id = "matCanvas" class = "h-[44dvh]  md:max-h-[52dvh] border border-white absolute"></canvas>
+          <p id = "matLabel" class = "font-helvetica-roman text-2xl md:text-4xl">Business Card</p>
+          <hr class = "w-full my-4">
+          <button id = "downloadButton" class = "bg-blue-500 text-my-gray p-4 text-xl md:text-2xl rounded-full font-helvetica-bold">Download All</button>
         </div>
-        <div id="scrollContainer" aria-label="Semicircle scroll container" class="scroll-container  flex flex-col basis-1/2 z-10 space-y-5">
-          <div class="circle bg-blue-500 rounded-full h-[12dvh] aspect-square" id="bag"><img src="../assets/icon/bag.png" alt="Bag icon" /></div>
-          <div class="circle bg-blue-500 rounded-full h-[12dvh] aspect-square" id="case"><img src="../assets/icon/case.png" alt="Case icon" /></div>
-          <div class="circle bg-blue-500 rounded-full h-[12dvh] aspect-square" id="bns-card"><img src="../assets/icon/bns-card.png" alt="BNS Card icon"/></div>
-          <div class="circle bg-blue-500 rounded-full h-[12dvh] aspect-square" id="cloth"><img src="../assets/icon/cloth.png" alt="Cloth icon" /></div>
-          <div class="circle bg-blue-500 rounded-full h-[12dvh] aspect-square" id="spray"><img src="../assets/icon/spray.png" alt="Spray icon" /></div>
+        <div id="scrollContainer" class="scroll-container flex flex-col basis-1/2 z-10 space-y-5 relative items-center md:items-end md:justify-center md:origin-right transition-transform duration-200 ease-out py-4 translate-y-10">
+          <div class="circle bg-blue-500 rounded-full h-[12dvh] md:h-[16dvh] xl:h-[12dvh]  aspect-square absolute" id="bag" ><img src="../assets/icon/bag.png" alt="Bag icon" /></div>
+          <div class="circle bg-blue-500 rounded-full h-[12dvh] md:h-[16dvh] xl:h-[12dvh] aspect-square absolute" id="case"><img src="../assets/icon/case.png" alt="Case icon" /></div>
+          <div class="circle bg-blue-500 rounded-full h-[12dvh] md:h-[16dvh] xl:h-[12dvh] aspect-square absolute" id="bns-card"><img src="../assets/icon/bns-card.png" alt="BNS Card icon"/></div>
+          <div class="circle bg-blue-500 rounded-full h-[12dvh] md:h-[16dvh] xl:h-[12dvh] aspect-square absolute" id="cloth"><img src="../assets/icon/cloth.png" alt="Cloth icon" /></div>
+          <div class="circle bg-blue-500 rounded-full h-[12dvh] md:h-[16dvh] xl:h-[12dvh] aspect-square absolute" id="spray"><img src="../assets/icon/spray.png" alt="Spray icon" /></div>
         </div>
-
-        <div id = "marker" class = "flex-col pb-24 justify-center hidden ">
-          <div class="circle bg-transparent outline-dashed outline-blue-500 rounded-full h-[14dvh] aspect-square self-center" id="case"></div>
+        <div class = " flex flex-col relative items-center md:items-end md:justify-center md:origin-right -mt-24 md:mt-0">
+          <div id = "marker" class="circle bg-transparent outline-dashed outline-blue-500 rounded-full h-[14dvh] md:h-[18dvh] xl:h-[12dvh] aspect-square absolute marker-transition" id="marker"></div>
         </div>
+        
+        
       </section>
     
     </body>

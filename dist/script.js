@@ -2,6 +2,10 @@
 let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false];
 // 0- name; 1-primary color; 2- secondary color; 3- image;
 var filter = ["", "", "", ""];
+/* todo
+- define logo coords for diff materials
+- draw
+*/
 document.addEventListener("DOMContentLoaded", function () {
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
@@ -193,33 +197,170 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.body.getAttribute('id') == "branding") {
         const container = document.getElementById("scrollContainer");
         const circles = container.querySelectorAll('div');
-        let circlesPos = [[0, 0], [50, 0], [0, 0], [50, 0], [0, 0]];
+        const markerCircle = document.getElementById("marker");
+        let circlesPos = [];
+        let cAngle = [0, 0, 0, 0, 0];
         const circleCount = 5; // Dynamically get the number of circles
-        const radius = 100; // Adjusted radius for better visibility
-        let scrollOffset = container.scrollTop;
-        function positionCircles(startAngle, endAngle) {
-            circles.forEach((circle, index) => {
-                // Compute evenly spaced angle for each circle on the arc [startAngle, endAngle]
-                let angle;
-                angle = index * (Math.PI / 6);
-                console.log(angle);
-                var x = Math.cos(angle) * radius;
-                var y = Math.sin(angle) * radius;
-                console.log("X:", x, "y:", y);
-                if (index > 2) {
-                    x *= -1;
-                }
-                if (index == 0 || index == 4) {
-                    x = 0;
-                    console.log("test");
-                }
-                console.log("test X:", x, "y:", y);
-                y = 0;
-                circle.style.transform = `translate(${x}px, ${y + scrollOffset}px)`;
-            });
+        let radius = 200; // Adjusted radius for better visibility
+        let markerAngle = 180;
+        let xOffset = 0;
+        let activeCircleNum = 2;
+        var startAngle = 180;
+        var endAngle = 360;
+        if (window.matchMedia("(min-width: 800px)").matches) {
+            console.log("matched");
+            radius = 300;
+            startAngle -= 90;
+            endAngle -= 90;
+            xOffset = 25;
         }
+        let feedNum = localStorage.getItem("feed-number");
+        if (!feedNum) {
+            feedNum = "2";
+        }
+        const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
+        const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
+        const matLabel = document.getElementById("matLabel");
+        const dwnldButton = document.getElementById("downloadButton");
+        const img = document.getElementById("matImg");
+        function positionCircles(startAngle, endAngle) {
+            const angleStep = (endAngle - startAngle) / (circleCount - 1);
+            circles.forEach((circle, index) => {
+                const angle = startAngle + index * angleStep;
+                const angleRad = angle * (Math.PI / 180); // Convert degrees to radians
+                const x = Math.cos(angleRad) * radius - xOffset;
+                const y = Math.sin(angleRad) * radius;
+                circlesPos[index] = [x, y];
+                cAngle[index] = angle;
+                // Since we want the LEFT semicircle, mirror the X to negative
+                circle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+            //initial pos of marker as well
+            //markerCircle.style.transform = `translate(${circlesPos[2][0]+7}px, ${circlesPos[2][1]}px)`;
+            positionMarker(2);
+            console.log("main circle", activeCircleNum);
+            //console.log(circlesPos); //debug
+        }
+        function positionMarker(cNum) {
+            const markerParent = markerCircle.parentElement;
+            const circle = circles[cNum];
+            const circleRect = circle.getBoundingClientRect();
+            const parentRect = markerParent.getBoundingClientRect();
+            const relativeX = circleRect.left - parentRect.left + circleRect.width / 2;
+            const relativeY = circleRect.top - parentRect.top + circleRect.height / 2;
+            // Set position and center the marker using translate
+            markerCircle.style.left = `${relativeX}px`;
+            markerCircle.style.top = `${relativeY}px`;
+            markerCircle.style.transform = `translate(-50%, -50%)`;
+            activeCircleNum = cNum;
+            changeMaterial();
+        }
+        function changeMaterial() {
+            if (matLabel) {
+                matLabel.textContent = matNames[activeCircleNum];
+                img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[activeCircleNum]}.png`;
+                img.onload = () => {
+                    renderMaterial();
+                };
+            }
+        }
+        function renderMaterial() {
+            const canvas = document.getElementById("matCanvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            console.log(canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //drawing logo
+            const logo = new Image();
+            logo.src = localStorage.getItem("logoImage") || "";
+            logo.onload = () => {
+                const caption = localStorage.getItem("nameBrand") || "hello world";
+                const logoTextCanvas = document.createElement("canvas");
+                const logoTextCtx = logoTextCanvas.getContext("2d");
+                const logoWidth = 1000;
+                const logoHeight = 1000;
+                const padding = 80;
+                const fontSize = 700;
+                logoTextCtx.font = `${fontSize}px  helvetica-bold, Arial, sans-serif`;
+                const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
+                // Set canvas dimensions to fit logo + padding + text
+                logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
+                logoTextCanvas.height = logoHeight + padding * 2;
+                // Draw logo 
+                // Create an offscreen canvas for coloring the image
+                const offCanvas = document.createElement("canvas");
+                offCanvas.width = logoWidth;
+                offCanvas.height = logoHeight;
+                const offCtx = offCanvas.getContext("2d");
+                // Draw logo in offscreen canvas
+                offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
+                // Apply blend with blue to colorize the image
+                offCtx.globalCompositeOperation = "source-in";
+                offCtx.fillStyle = "#3b82f6";
+                offCtx.fillRect(0, 0, logoWidth, logoHeight);
+                offCtx.globalCompositeOperation = "source-over";
+                logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
+                logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
+                // Draw text
+                logoTextCtx.font = `${fontSize}px helvetica-bold, Arial, sans-serif`;
+                logoTextCtx.fillStyle = "#3b82f6";
+                logoTextCtx.textBaseline = "middle";
+                logoTextCtx.textAlign = "left";
+                console.log("Font used:", logoTextCtx.font);
+                console.log("Text width:", textWidth);
+                logoTextCtx.fillText(caption, padding + logoWidth, // x position (after logo + spacing)
+                padding + logoHeight / 2 // y position (middle of logo)
+                );
+                var logoCoords = [];
+                logoCoords = [[1000, 1600], [350, 1025], [1000, 1320], [350, 2300], [1175, 1600]];
+                let scale = 0.3;
+                if (activeCircleNum == 4) {
+                    scale = 0.23;
+                }
+                const ltfinalWidth = logoTextCanvas.width * scale;
+                const ltfinalHeight = logoTextCanvas.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(logoTextCanvas, logoCoords[activeCircleNum][0], logoCoords[activeCircleNum][1], ltfinalWidth, ltfinalHeight);
+                console.log(caption, "caption");
+            };
+            console.log("rendered");
+        }
+        //event listeners
+        circles.forEach((circle, index) => {
+            circle.onclick = () => {
+                positionMarker(index);
+                console.log(index);
+            };
+        });
+        //we dont need this but I spent an hour on it so im keeping it 
+        /*
+        container.addEventListener("wheel", (event) => {
+            event.preventDefault(); // prevent actual scroll
+
+            const delta = event.deltaY > 0 ? 10 : -10;
+            // DeltaY is positive for scroll down, negative for scroll up
+            if (event.deltaY > 0) {
+                console.log("Scroll down");
+                markerAngle += delta;
+            } else {
+                console.log("Scroll up");
+                markerAngle += delta;
+            }
+
+            //limiting values
+            if (markerAngle < 90){
+                markerAngle = 90;
+            } else if (markerAngle > 270){
+                markerAngle = 270;
+            }
+
+            console.log(markerAngle);
+            positionMarker();
+        
+        }, { passive: false });*/
         // Initial positioning of circles
-        positionCircles(0, Math.PI);
+        positionCircles(startAngle, endAngle);
     }
 });
 //cant put in main if statement (DOMContentLoader)
@@ -257,6 +398,10 @@ function downloadFeed() {
     for (let i = 1; i <= 9; i++) {
         canvas = document.getElementById(`cvs${i}`);
         downloadThis(canvas.toDataURL("image/png"), `post${i}.png`);
+    }
+    const urlParam = new URLSearchParams(window.location.search).get("feed");
+    if (urlParam) {
+        localStorage.setItem("feed-number", urlParam);
     }
 }
 function downloadThis(dataURL, filename) {
