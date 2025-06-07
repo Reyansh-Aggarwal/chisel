@@ -415,21 +415,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         async function downloadMaterials(){
             const zip = new JSZip();
-            var res;
-            var blob;
+            var res, 
+                blob,
+                canvasBlob;
             //canvas files
             if (feedNum == "3"){
-                drawLogoText("#834e00");
+                await drawLogoText("#834e00");
                 canvasBlob =await new Promise(resolve =>
                 logoTextCanvas.toBlob(resolve, "image/png")
                 );
                 zip.file("logoText2.png", canvasBlob);
-                drawLogoText("white");
+                await drawLogoText("#ffffff");
+                canvasBlob = await new Promise(resolve =>
+                    logoTextCanvas.toBlob(resolve, "image/png")
+                );
+                zip.file("logoText.png", canvasBlob);
+            } else {
+                canvasBlob = await new Promise(resolve =>
+                    logoTextCanvas.toBlob(resolve, "image/png")
+                );
             }
-            var canvasBlob = await new Promise(resolve =>
-                logoTextCanvas.toBlob(resolve, "image/png")
-            );
-            zip.file("logoText.png", canvasBlob);
+            
+            
 
             //getting texture and bns-card files
             for (let i = 0; i < 3; i++){

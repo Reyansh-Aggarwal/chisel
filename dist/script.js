@@ -369,17 +369,19 @@ document.addEventListener("DOMContentLoaded", function () {
         function downloadMaterials() {
             return __awaiter(this, void 0, void 0, function* () {
                 const zip = new JSZip();
-                var res;
-                var blob;
+                var res, blob, canvasBlob;
                 //canvas files
                 if (feedNum == "3") {
-                    drawLogoText("#834e00");
+                    yield drawLogoText("#834e00");
                     canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
                     zip.file("logoText2.png", canvasBlob);
-                    drawLogoText("white");
+                    yield drawLogoText("#ffffff");
+                    canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
+                    zip.file("logoText.png", canvasBlob);
                 }
-                var canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
-                zip.file("logoText.png", canvasBlob);
+                else {
+                    canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
+                }
                 //getting texture and bns-card files
                 for (let i = 0; i < 3; i++) {
                     res = yield fetch(`../assets/branding-materials/${feedNum}/download/${downPath[i]}`);
