@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false];
 // 0- name; 1-primary color; 2- secondary color; 3- image;
 var filter = ["", "", "", ""];
@@ -220,9 +229,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
         const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
+        const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
         const matLabel = document.getElementById("matLabel");
         const dwnldButton = document.getElementById("downloadButton");
         const img = document.getElementById("matImg");
+        const logoTextCanvas = document.createElement("canvas"); //need to be availabe for dwnld function
+        const canvas = document.getElementById("matCanvas");
         function positionCircles(startAngle, endAngle) {
             const angleStep = (endAngle - startAngle) / (circleCount - 1);
             circles.forEach((circle, index) => {
@@ -255,92 +267,131 @@ document.addEventListener("DOMContentLoaded", function () {
             activeCircleNum = cNum;
             changeMaterial();
         }
-        function changeMaterial() {
+        function changeMaterial(cNum = activeCircleNum) {
             if (matLabel) {
                 matLabel.textContent = matNames[activeCircleNum];
-                img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[activeCircleNum]}.png`;
+                img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[cNum]}.png`;
                 img.onload = () => {
                     renderMaterial();
                 };
             }
         }
         function renderMaterial() {
-            const canvas = document.getElementById("matCanvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            console.log(canvas.width, canvas.height);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            //drawing logo
-            const logo = new Image();
-            logo.src = localStorage.getItem("logoImage") || "";
-            logo.onload = () => {
-                const caption = localStorage.getItem("nameBrand") || "hello world";
-                const logoTextCanvas = document.createElement("canvas");
-                const logoTextCtx = logoTextCanvas.getContext("2d");
-                const logoWidth = 1000;
-                const logoHeight = 1000;
-                const padding = 80;
-                const fontSize = 700;
-                let textColor = "#3b82f6";
-                let mainFont = "helvetica-bold";
-                if (feedNum == "2") {
-                    mainFont = "phagspa";
+            return __awaiter(this, void 0, void 0, function* () {
+                const ctx = canvas.getContext("2d");
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                console.log(canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                //drawing logo
+                let textColor = "black";
+                if (feedNum == "1") {
+                    textColor = "#3b82f6";
+                }
+                else if (feedNum == "2") {
                     textColor = "white";
                 }
                 else if (feedNum == "3") {
-                    mainFont = "Times New Roman";
-                    if (activeCircleNum != 2) {
-                        textColor = "#834e00";
-                    }
-                    else {
+                    if (activeCircleNum == 2) {
                         textColor = "white";
                     }
+                    else {
+                        textColor = "#834e00";
+                    }
                 }
-                logoTextCtx.font = `${fontSize}px  ${mainFont}, Arial, sans-serif`;
-                const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
-                // Set canvas dimensions to fit logo + padding + text
-                logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
-                logoTextCanvas.height = logoHeight + padding * 2;
-                // Draw logo 
-                // Create an offscreen canvas for coloring the image
-                const offCanvas = document.createElement("canvas");
-                offCanvas.width = logoWidth;
-                offCanvas.height = logoHeight;
-                const offCtx = offCanvas.getContext("2d");
-                // Draw logo in offscreen canvas
-                offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
-                // Apply blend with blue to colorize the image
-                offCtx.globalCompositeOperation = "source-in";
-                offCtx.fillStyle = textColor;
-                offCtx.fillRect(0, 0, logoWidth, logoHeight);
-                offCtx.globalCompositeOperation = "source-over";
-                logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
-                logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
-                // Draw text
-                logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
-                logoTextCtx.fillStyle = textColor;
-                logoTextCtx.textBaseline = "middle";
-                logoTextCtx.textAlign = "left";
-                console.log("Font used:", logoTextCtx.font);
-                console.log("Text width:", textWidth);
-                logoTextCtx.fillText(caption, padding + logoWidth, // x position (after logo + spacing)
-                padding + logoHeight / 2 // y position (middle of logo)
-                );
-                var logoCoords = [];
-                logoCoords = [[1000, 1600], [350, 1025], [1000, 1320], [350, 2300], [1175, 1600]];
+                console.log("feed ", feedNum);
+                yield drawLogoText(textColor);
+                var logoCoords = [[1000, 1600], [350, 1025], [1000, 1320], [350, 2300], [1200, 1625]];
                 let scale = 0.3;
                 if (activeCircleNum == 4) {
-                    scale = 0.23;
+                    scale = 0.2;
                 }
                 const ltfinalWidth = logoTextCanvas.width * scale;
                 const ltfinalHeight = logoTextCanvas.height * scale;
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 ctx.drawImage(logoTextCanvas, logoCoords[activeCircleNum][0], logoCoords[activeCircleNum][1], ltfinalWidth, ltfinalHeight);
-                console.log(caption, "caption");
-            };
-            console.log("rendered");
+                console.log("rendered");
+            });
         }
+        ;
+        function drawLogoText(txtColor) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const logo = new Image();
+                logo.src = localStorage.getItem("logoImage") || "";
+                yield new Promise((resolve) => {
+                    logo.onload = () => {
+                        const caption = localStorage.getItem("nameBrand") || "hello world";
+                        const logoTextCtx = logoTextCanvas.getContext("2d");
+                        const logoWidth = 1000;
+                        const logoHeight = 1000;
+                        const padding = 80;
+                        const fontSize = 700;
+                        let mainFont = "helvetica-bold";
+                        if (feedNum == "2") {
+                            mainFont = "phagspa";
+                        }
+                        else if (feedNum == "3") {
+                            mainFont = "Times New Roman";
+                        }
+                        logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                        const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
+                        logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
+                        logoTextCanvas.height = logoHeight + padding * 2;
+                        // Draw logo with color overlay
+                        const offCanvas = document.createElement("canvas");
+                        offCanvas.width = logoWidth;
+                        offCanvas.height = logoHeight;
+                        const offCtx = offCanvas.getContext("2d");
+                        offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
+                        offCtx.globalCompositeOperation = "source-in";
+                        offCtx.fillStyle = txtColor;
+                        offCtx.fillRect(0, 0, logoWidth, logoHeight);
+                        offCtx.globalCompositeOperation = "source-over";
+                        logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
+                        logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
+                        // Draw text
+                        logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                        logoTextCtx.fillStyle = txtColor;
+                        console.log("font", logoTextCtx.font, "fill", logoTextCtx.fillStyle);
+                        logoTextCtx.textBaseline = "middle";
+                        logoTextCtx.textAlign = "left";
+                        logoTextCtx.fillText(caption, padding + logoWidth, padding + logoHeight / 2);
+                        console.log("Drawn");
+                        resolve(); // ✅ now we say this part is done!
+                    };
+                    logo.onerror = () => {
+                        console.error("Failed to load logo image.");
+                        resolve(); // or reject, depending on your preference
+                    };
+                });
+            });
+        }
+        function downloadMaterials() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const zip = new JSZip();
+                var res;
+                var blob;
+                //canvas files
+                if (feedNum == "3") {
+                    drawLogoText("#834e00");
+                    canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
+                    zip.file("logoText2.png", canvasBlob);
+                    drawLogoText("white");
+                }
+                var canvasBlob = yield new Promise(resolve => logoTextCanvas.toBlob(resolve, "image/png"));
+                zip.file("logoText.png", canvasBlob);
+                //getting texture and bns-card files
+                for (let i = 0; i < 3; i++) {
+                    res = yield fetch(`../assets/branding-materials/${feedNum}/download/${downPath[i]}`);
+                    blob = yield res.blob();
+                    zip.file(downPath[i], blob);
+                }
+                //Downloading zip
+                const zipBlob = yield zip.generateAsync({ type: "blob" });
+                saveAs(zipBlob, "branding-materials.zip");
+            });
+        }
+        dwnldButton.onclick = downloadMaterials;
         //event listeners
         circles.forEach((circle, index) => {
             circle.onclick = () => {
