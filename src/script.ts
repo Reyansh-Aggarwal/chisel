@@ -237,13 +237,15 @@ document.addEventListener("DOMContentLoaded", function () {
         let circlesPos: [number, number][] = [];
         let cAngle = [0,0,0,0,0];
         const circleCount = 5; // Dynamically get the number of circles
-        let radius = 200; // Adjusted radius for better visibility
+        let radius = 150; // Adjusted radius for better visibility
         let markerAngle = 180;
         let xOffset = 0;
         let activeCircleNum = 2;
         var startAngle = 180;
         var endAngle = 360;
-
+        if (window.matchMedia("(min-width: 500px)").matches){
+            radius=200;
+        }
         if (window.matchMedia("(min-width: 800px)").matches){
             console.log("matched");
             radius = 300;
@@ -426,17 +428,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
                 zip.file("logoText2.png", canvasBlob);
                 await drawLogoText("#ffffff");
-                canvasBlob = await new Promise(resolve =>
-                    logoTextCanvas.toBlob(resolve, "image/png")
-                );
-                zip.file("logoText.png", canvasBlob);
             } else {
                 canvasBlob = await new Promise(resolve =>
                     logoTextCanvas.toBlob(resolve, "image/png")
                 );
             }
-            
-            
+            canvasBlob = await new Promise(resolve =>
+                    logoTextCanvas.toBlob(resolve, "image/png")
+                );
+            zip.file("logoText.png", canvasBlob);
 
             //getting texture and bns-card files
             for (let i = 0; i < 3; i++){
