@@ -19,9 +19,9 @@ module.exports = {
         'my-gray': '#292929'
       },
       backgroundImage: {
-        'black-grid': "url('https://reyansh-aggarwal.github.io/chisel/assets/blackGrid.png')",
-        "start-now": "url('https://reyansh-aggarwal.github.io/chisel/assets/startNow2.png')",
-        'landing': "url('https://reyansh-aggarwal.github.io/chisel/assets/landingBg.ong')"
+        'black-grid': "url('../assets/blackGrid.png')",
+        "start-now": "url('../assets/startNow2.png')",
+        'landing': "url('../assets/landingBg.png')"
 
       },
       animation: {
