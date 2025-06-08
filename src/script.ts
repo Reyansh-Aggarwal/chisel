@@ -142,15 +142,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         const textbox = document.getElementById("textbox") as HTMLInputElement;
-        
-        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum);};
+        const logo = new Image();
+        logo.src = localStorage.getItem("logoImage") || "";
+        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum, canvas.id, img.id, logo);};
         downloadButton.onclick = () => {downloadThis(canvas.toDataURL("image/png"),`post${postNum}.png`)};
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
         
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
-        const tilesDiv = document.getElementById("tiles") as HTMLDivElement;
+        const textbox = document.getElementById("textbox") as HTMLInputElement;
         const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings") as HTMLDivElement;
@@ -179,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
             allTrackers[feedNum-1].classList.remove("opacity-50");
     
         }
-
+        //setup
         if (feedNum){
             if (!storedFilter){
                 filter = ["209", "100", "209", "100"];  //[currHue, currSatur, defHue, defSatur]
@@ -195,6 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
             hueSlider.value = filter[0];
             saturSlider.value = filter[1];
         } 
+        textbox.value = localStorage.getItem("nameBrand") || "404";
+
         //loading feed at first
         loadFeed(feedNum, true);
 
@@ -204,6 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //applyFilters(tilesDiv, filter);
             console.log("hue:", filter[0]);
             if (document.body.id == "feeds"){
+                console.log("loading");
                 loadFeed(feedNum);
             }
         });      
@@ -212,6 +216,15 @@ document.addEventListener("DOMContentLoaded", function () {
             //applyFilters(tilesDiv, filter);
             console.log("saturation:", filter[1]);
             if (document.body.id == "feeds"){
+                console.log("loading");
+                loadFeed(feedNum);
+            }
+        });
+        textbox.addEventListener("input", () => {
+            //applyFilters(tilesDiv, filter);
+            console.log("saturation:", filter[1]);
+            if (document.body.id == "feeds"){
+                console.log("loading");
                 loadFeed(feedNum);
             }
         });
@@ -220,7 +233,10 @@ document.addEventListener("DOMContentLoaded", function () {
             filter[3] = "200";
             hueSlider.value = filter[2];
             saturSlider.value = filter[3];
-            loadFeed(feedNum);
+            if (document.body.id == "feeds"){
+                console.log("loading");
+                loadFeed(feedNum);
+            }
             console.log(filter[2], filter[3]);
         });
         downloadButton.onclick = () => {
@@ -282,7 +298,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 
             });
             //initial pos of marker as well
-            //markerCircle.style.transform = `translate(${circlesPos[2][0]+7}px, ${circlesPos[2][1]}px)`;
             positionMarker(2);
             console.log("main circle", activeCircleNum);
             //console.log(circlesPos); //debug
@@ -307,14 +322,15 @@ document.addEventListener("DOMContentLoaded", function () {
             changeMaterial();
         }
 
-        function changeMaterial(cNum = activeCircleNum): void {
+        async function changeMaterial(cNum = activeCircleNum){
 
             if (matLabel){
                 matLabel.textContent = matNames[activeCircleNum];
                 img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[cNum]}.png`;
                 img.onload = () => {
                     renderMaterial();
-                }
+                };
+                
 
             }
         }
@@ -495,34 +511,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //cant put in main if statement (DOMContentLoader)
-function applyFilters(div: HTMLDivElement, filter : string[], reset = false) {
-    const allPosts = div.querySelectorAll<HTMLImageElement>('img');
-    const urlParam = new URLSearchParams (window.location.search).get("feed");
-    var feedNum : number = 1;
-    if (urlParam){
-        feedNum = parseInt(urlParam);
-    } else{
-        feedNum = 1;
-    }
-    var hue : number = parseInt(filter[2]);
-    var satur : number = parseInt(filter[3]);
-    if (!reset) {
-        hue = parseInt(filter[0]);
-        satur = parseInt(filter[1]); 
-    } else if (reset){
-        filter[0] = filter[2];
-        filter[1] = filter[3];
-    }
-   
-    allPosts.forEach((post) => {
-        post.style.filter = `
-            hue-rotate(${hue - 209}deg)
-            saturate(${satur/100})
-        `;
-    });
-    localStorage.setItem(`filter${feedNum}`, JSON.stringify(filter));
-    console.log("applied");
-}
 
 function downloadFeed(){
     var canvas;
@@ -569,59 +557,78 @@ function previewImage(logoUrl : string) {
 }
 
 function loadFeed (feedNum:number, first =false){
+    const logo = new Image();
+    logo.src = localStorage.getItem("logoImage") || "";
+    
     for (let i = 1; i <= 9; i++){
         var tile = document.getElementById(i.toString()) as HTMLImageElement;
         if (first){
             tile.src = `../assets/social-media-${feedNum}/${i}.png`;
         }
-        render(feedNum, i.toString(), `cvs${i}`, tile.id);
+       render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
     }
 }
 
 
-function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg") {
+async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo: HTMLImageElement) {
     const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     const img = document.getElementById(imgID) as HTMLImageElement;
-    const logo = new Image();
-    logo.src = localStorage.getItem("logoImage") || "";
     var logoCoords = [0,0];
-    console.log(feedNum, postNum, canvasID, imgID);
+    //console.log(feedNum, postNum, canvasID, imgID);
     const hueSlider = document.getElementById("hue") as HTMLInputElement;
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
     const captionInput = document.getElementById("textbox") as HTMLInputElement;
     const hue = parseInt(hueSlider.value);
     const saturate = parseInt(satSlider.value);
     const caption = captionInput.value;
+    var loaded:Boolean = false;
 
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log("waiting");
+   
+    await new Promise<void>((resolve) => {
+        if (img.complete) {
+            console.log("complete");
+            loaded = true;
+            resolve();
+        } else {
+            img.onload = () => {
+                console.log("jsload");
+                loaded = true;
+                resolve();
+            };
+        }
+    });
+        
+    if (loaded){
+        console.log("loaded");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
 
-    // Apply filter before drawing image
-    if (feedNum == 1){
-        ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
-        filter[0] = hue.toString();
-        filter[1] = saturate.toString();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (feedNum == 1) {
+            ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+            filter[0] = hue.toString();
+            filter[1] = saturate.toString();
+        }
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        localStorage.setItem(`filter1`, JSON.stringify(filter));
+
+        if (logo.complete) {
+            logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width);
+            ctx.drawImage(logo, logoCoords[0], logoCoords[1], 200, 200);
+        }
+
+        if (caption && feedNum == 1) {
+            ctx.font = `200px helvetica-roman`;
+            ctx.fillStyle = "white";
+            ctx.fillText(caption, 200, canvas.height - 30);
+            console.log(caption, "caption");
+        }
+        console.log("rendered");
     }
-
-
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    localStorage.setItem(`filter1`, JSON.stringify(filter));
-    //draw logo
-    if (logo.complete) {
-        logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width);
-        ctx.drawImage(logo, logoCoords[0], logoCoords[1], 250, 250);
-    }
-
-    if (caption) {
-        ctx.font = "30px helvetica-roman";
-        ctx.fillStyle = "green";
-        ctx.fillText(caption, 200, canvas.height - 30);
-        console.log(caption, "caption");
-    }
-    console.log("rendered");
 }
 
 function imageChange(){
@@ -731,6 +738,14 @@ function getLogoPos (postNum : string, feedNum : number, height: number, width: 
                     logoPos = [0,0];
                 }
                 break;
+            case 3:
+                if (postNum == "1" || postNum == "2" || postNum == "3" || postNum == "8"){
+                    logoPos = [0,0];
+                } else if (postNum == "7"){
+                    logoPos = [0, height-275];
+                } else {
+                    logoPos = [width-275, 0];
+                }
         }
         return logoPos;
 }
@@ -772,8 +787,7 @@ function changeFeed(feedNum:number){
     if (feedNum < currfeedNum){
         mainSection.classList.add("animate-swipe-right");    
     } else if (feedNum > currfeedNum){
-        console.log("test");
-        //mainSection.classList.add("animate-swipe-left");    
+        mainSection.classList.add("animate-swipe-left");    
     }
     setTimeout(()=> {
     window.location.href = `../social-media/feeds.html?feed=${feedNum}`;

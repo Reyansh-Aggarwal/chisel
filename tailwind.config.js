@@ -21,13 +21,14 @@ module.exports = {
       backgroundImage: {
         'black-grid': "url('https://reyansh-aggarwal.github.io/chisel/assets/blackGrid.png')",
         "start-now": "url('https://reyansh-aggarwal.github.io/chisel/assets/startNow2.png')",
+        'landing': "url('https://reyansh-aggarwal.github.io/chisel/assets/landingBg.ong')"
 
       },
       animation: {
         gradient: 'gradient 3s ease infinite',
         marquee: 'marquee 10s linear infinite',
         'swipe-right': 'swipe-right 0.5s ease-in-out forwards',
-        'swipe-left': 'swipe-left 0.5s ease-in-out forwards',
+        'swipe-left': 'swipe-left 0.5s ease-out forwards',
         'slow-spin': 'slow-spin 30s linear infinite',
 
       },
@@ -47,7 +48,7 @@ module.exports = {
         },
         'swipe-left': {
           '0%': {transform: 'translateX(0)'},
-          '100%': {transform: 'translateX(100%)'}
+          '100%': {transform: 'translateX(-100%)'}
         },
         'slow-spin': {
           from: { transform: 'rotate(0deg)' },
