@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const downloadButton = document.getElementById("download") as HTMLButtonElement;
         const urlParam = new URLSearchParams (window.location.search).get("feed");
         var feedNum = 1;
-        var storedFilter;
+        var storedFilter, startX:number, endX:number;
         //getting feed number
         if (urlParam){
             feedNum = parseInt(urlParam);
@@ -202,6 +202,13 @@ document.addEventListener("DOMContentLoaded", function () {
         loadFeed(feedNum, true);
 
         //Event listeners
+        this.body.addEventListener("touchstart",(event) => {
+            startX = event.changedTouches[0].screenX;
+        } );
+        this.body.addEventListener("touchend",(event) => {
+            endX = event.changedTouches[0].screenX;
+            handleSwipe();
+        } );
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
@@ -245,6 +252,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             
         };
+
+        function handleSwipe() {
+            if(startX > endX && (startX - endX > 50)){
+                //swiped left
+                changeFeed(feedNum + 1);
+            } else if (startX < endX && (endX - startX > 50)) {
+                //swipe right
+                changeFeed(feedNum - 1);
+            }
+        }
     }
     if (document.body.getAttribute('id') == "branding"){
         const container = document.getElementById("scrollContainer") as HTMLDivElement;
@@ -510,8 +527,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-//cant put in main if statement (DOMContentLoader)
-
 function downloadFeed(){
     var canvas;
     for (let i = 1; i<= 9; i++){
@@ -575,6 +590,7 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
     const ctx = canvas.getContext("2d")!;
     const img = document.getElementById(imgID) as HTMLImageElement;
     var logoCoords = [0,0];
+    var captCoords = [0,0];
     //console.log(feedNum, postNum, canvasID, imgID);
     const hueSlider = document.getElementById("hue") as HTMLInputElement;
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
@@ -583,7 +599,7 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
     const saturate = parseInt(satSlider.value);
     const caption = captionInput.value;
     var loaded:Boolean = false;
-
+    var fontSize = 150;
     console.log("waiting");
    
     await new Promise<void>((resolve) => {
@@ -621,10 +637,14 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
             ctx.drawImage(logo, logoCoords[0], logoCoords[1], 200, 200);
         }
 
-        if (caption && feedNum == 1) {
-            ctx.font = `200px helvetica-roman`;
+        if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
+            if(postNum == "6"){
+                fontSize = 63;
+                captCoords = [ 325 ,canvas.height/2 + 30];
+            }
+            ctx.font = `${fontSize}px helvetica-bold`;
             ctx.fillStyle = "white";
-            ctx.fillText(caption, 200, canvas.height - 30);
+            ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
             console.log(caption, "caption");
         }
         console.log("rendered");
