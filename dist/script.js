@@ -564,8 +564,8 @@ function render(feedNum_1) {
             }
             if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
                 if (postNum == "6") {
-                    fontSize = 63;
-                    captCoords = [325, canvas.height / 2 + 30];
+                    fontSize = 60;
+                    captCoords = [323, canvas.height / 2 + 25];
                 }
                 ctx.font = `${fontSize}px helvetica-bold`;
                 ctx.fillStyle = "white";
@@ -710,7 +710,7 @@ function redirectPost(postNum) {
         feedNum = parseInt(urlParam);
     }
     window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum}`;
-    console.log(postNum, "rideiredt");
+    //console.log(postNum, "rideiredt");
 }
 function changeFeed(feedNum) {
     //getting feed number

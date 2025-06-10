@@ -49,16 +49,16 @@
               
               <!-- Actual Form w/ inp. fields and labels -->
               <form id = "details" method = "POST" enctype="multipart/form-data"
-              class = "flex flex-col gap-12 md:gap-18 px-2">
+              class = "flex flex-col gap-12 md:gap-18 px-2 items-center">
   
                 <div id = "nameField"
                 class = "flex flex-col items-start w-full md:gap-4">
                   <label for = "name" class = "font-medium text-2xl md:text-xl lg:text-5xl">Name</label>  
                   <input name = "name" type = "text" id = "name" placeholder="Enter Name..." autocomplete="on" onchange = "checkRequired(event)"
-                  class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl lg:text-3xl w-full
+                  class = "bg-my-gray rounded-md px-2 py-2 text-white text-xl md:text-4xl lg:text-3xl w-full
                   placeholder:text-black placeholder:font-helvetica-roman 
                   autofill:bg-my-gray autofill:text-white
-                  focus:outline-solid focus:outline-2 focus:outline-gray-500 lg:text-3xl" required/>
+                  focus:outline-solid focus:outline-2 focus:outline-gray-500" required/>
                 </div>
   
                 <div id = "colorField"
@@ -68,18 +68,18 @@
                   class = "flex flex-row gap-2">
                     <input name = "primaryColor" type = "color" id = "primaryColor" onchange = "checkRequired(event)"
                     class = "bg-clip-content w-8 h-8 p-0 border-2 bg-transparent" required/>  
-                    <label for = "primaryColor" class = " text-xl md:text-2xl lg:text-3xl">Primary Colour</labeL>
+                    <label for = "primaryColor" class = " text-xl md:text-4xl lg:text-3xl">Primary Colour</labeL>
                   </div>
                   <div id = "secondaryColorField" 
                   class = "flex flex-row gap-2">
                     <input name = "secondaryColor" type = "color" id = "secondaryColor" onchange = "checkRequired(event)"
                     class = "bg-clip-content w-8 h-8 p-0 border-2 bg-transparent " required/>  
-                    <label for = "secondaryColor" class = "text-xl md:text-2xl lg:text-3xl">Secondary Colour</labeL>
+                    <label for = "secondaryColor" class = "text-xl md:text-4xl lg:text-3xl">Secondary Colour</labeL>
                   </div>
                 </div>
   
                 <div id = "logoField"
-                class = "flex flex-col w-full h-auto gap-2 md:gap-4 lg:gap-6 relative">
+                class = "flex flex-col w-full max-w-[60dvw] max-h-auto h-auto gap-2 md:gap-4 lg:gap-6 relative">
                   <label for = "logo" class = "text-start font-medium text-2xl md:text-xl lg:text-5xl w-full">Logo<span class = "text-[#524dee]">*</span>
                   </label>
                   

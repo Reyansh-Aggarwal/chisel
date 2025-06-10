@@ -27,8 +27,8 @@ module.exports = {
       animation: {
         gradient: 'gradient 3s ease infinite',
         marquee: 'marquee 10s linear infinite',
-        'swipe-right': 'swipe-right 0.5s ease-in-out forwards',
-        'swipe-left': 'swipe-left 0.5s ease-out forwards',
+        'swipe-right': 'swipe-right 0.4s ease-in-out forwards',
+        'swipe-left': 'swipe-left 0.4s ease-out forwards',
         'slow-spin': 'slow-spin 30s linear infinite',
 
       },
@@ -44,11 +44,11 @@ module.exports = {
         },
         'swipe-right': {
           '0%': {transform: 'translateX(0)'},
-          '100%': {transform: 'translateX(100%)'}
+          '100%': {transform: 'translateX(85%)'}
         },
         'swipe-left': {
           '0%': {transform: 'translateX(0)'},
-          '100%': {transform: 'translateX(-100%)'}
+          '100%': {transform: 'translateX(-85%)'}
         },
         'slow-spin': {
           from: { transform: 'rotate(0deg)' },
