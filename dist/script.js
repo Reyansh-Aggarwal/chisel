@@ -9,13 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false];
-// 0- name; 1-primary color; 2- secondary color; 3- image;
-var filter = ["", "", "", ""];
-/* todo
-- define logo coords for diff materials
-- draw
-*/
+var filter;
 document.addEventListener("DOMContentLoaded", function () {
+    const menuButton = document.getElementById("menu");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    menuButton.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+    });
+    // Optional: close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!menuButton.contains(target) && !dropdownMenu.contains(target)) {
+            dropdownMenu.classList.add("hidden");
+        }
+    });
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
         const nameValue = localStorage.getItem("nameBrand");
@@ -136,8 +143,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const settingDiv = document.getElementById("colorSettings");
         const downloadButton = document.getElementById("download");
         const urlParam = new URLSearchParams(window.location.search).get("feed");
+        filter = ["360", "123"];
         var feedNum = 1;
-        var storedFilter, startX, endX;
+        let storedFilter, startX, endX;
         //getting feed number
         if (urlParam) {
             feedNum = parseInt(urlParam);
@@ -159,9 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         //setup
         if (feedNum) {
-            if (!storedFilter) {
-                filter = ["209", "100", "209", "100"]; //[currHue, currSatur, defHue, defSatur]
-                storedFilter = localStorage.getItem(`filter${feedNum}`);
+            storedFilter = localStorage.getItem(`filter`);
+            if (storedFilter) {
+                filter = JSON.parse(storedFilter);
             }
             if (feedNum == 2 || feedNum == 3) {
                 settingDiv.classList.add("hidden");
@@ -211,15 +219,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => {
-            filter[2] = "360";
-            filter[3] = "200";
-            hueSlider.value = filter[2];
-            saturSlider.value = filter[3];
+            hueSlider.value = "360";
+            saturSlider.value = "200";
             if (document.body.id == "feeds") {
                 console.log("loading");
                 loadFeed(feedNum);
             }
-            console.log(filter[2], filter[3]);
         });
         downloadButton.onclick = () => {
             if (document.body.id == "feeds") {
@@ -260,10 +265,8 @@ document.addEventListener("DOMContentLoaded", function () {
             endAngle -= 90;
             xOffset = 25;
         }
-        let feedNum = localStorage.getItem("feed-number");
-        if (!feedNum) {
-            feedNum = "3";
-        }
+        let feedNum = localStorage.getItem("feed-num") || "1";
+        console.log("hehehe", feedNum);
         const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
         const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
         const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
@@ -326,10 +329,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (feedNum == "1") {
                     textColor = "#3b82f6";
                 }
-                else if (feedNum == "2") {
+                else if (feedNum == "3") {
                     textColor = "white";
                 }
-                else if (feedNum == "3") {
+                else if (feedNum == "2") {
                     if (activeCircleNum == 2) {
                         textColor = "white";
                     }
@@ -468,6 +471,112 @@ document.addEventListener("DOMContentLoaded", function () {
         // Initial positioning of circles
         positionCircles(startAngle, endAngle);
     }
+    if (document.body.getAttribute('id') == "street-banner") {
+        const img = document.getElementById("bannerImg");
+        const feedNum = localStorage.getItem("feed-num") || "1";
+        const canvas = document.getElementById("imgCanvas");
+        const dwnldButton = document.getElementById("download");
+        const mainSection = document.getElementById("mainSec");
+        let storedFilter = localStorage.getItem("filter");
+        const urlParam = new URLSearchParams(window.location.search).get("num");
+        var bannerNum = 1;
+        console.log("helo", localStorage.getItem("feed-num"));
+        if (urlParam) {
+            bannerNum = parseInt(urlParam);
+        }
+        else {
+            window.location.href = `../pages/street-banner.html?num=${bannerNum}`;
+        }
+        if (bannerNum == 2) {
+            mainSection.classList.remove("md:flex-row");
+            mainSection.classList.add("md:flex-col");
+        }
+        const trackerDiv = document.getElementById("trackers");
+        const allTrackers = trackerDiv.querySelectorAll('span');
+        var trackerNum = 1;
+        allTrackers.forEach((tracker) => {
+            tracker.classList.add("opacity-50");
+            tracker.classList.remove("text-blue-500");
+            trackerNum++;
+        });
+        allTrackers[bannerNum - 1].classList.add("text-blue-500");
+        allTrackers[bannerNum - 1].classList.remove("opacity-50");
+        let filter;
+        if (storedFilter) {
+            filter = JSON.parse(storedFilter);
+            console.log("filter = ", filter);
+        }
+        else {
+            filter = ["360", "200"];
+            console.log("hello world");
+        }
+        if (img) {
+            img.src = `../assets/banner/${feedNum}-${bannerNum}.png` || "";
+        }
+        function renderBanner() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ctx = canvas.getContext('2d');
+                var caption = localStorage.getItem("nameBrand");
+                console.log(filter);
+                var hue = filter[0], saturate = filter[1];
+                var fontSize = 220;
+                var captCoords;
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (feedNum == "1") {
+                    ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+                }
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                localStorage.setItem(`filter`, JSON.stringify(filter));
+                if (caption) {
+                    caption = "hello world";
+                    ctx.font = `${fontSize}px helvetica-bold`;
+                    ctx.fillStyle = "white";
+                    if (feedNum == "2") {
+                        ctx.fillStyle = "#4b200f";
+                    }
+                    ctx.textAlign = "center";
+                    captCoords = [canvas.width / 2, 2216];
+                    ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
+                    console.log(caption, "caption");
+                }
+            });
+        }
+        function handleSwipe() {
+            if (startX > endX && (startX - endX > 50)) {
+                //swiped left
+                if (bannerNum > 2) {
+                    changeFeed(bannerNum + 1);
+                }
+            }
+            else if (startX < endX && (endX - startX > 50)) {
+                //swipe right
+                if (bannerNum > 1) {
+                    changeFeed(bannerNum - 1);
+                }
+            }
+        }
+        dwnldButton.onclick = () => {
+            localStorage.setItem("banner-num", bannerNum.toString());
+            downloadThis(canvas.toDataURL("image/png"), "banner.png");
+        };
+        if (img.complete) {
+            renderBanner();
+        }
+        else {
+            img.onload = renderBanner;
+        }
+        var startX = 0;
+        var endX = 0;
+        this.body.addEventListener("touchstart", (event) => {
+            startX = event.changedTouches[0].screenX;
+        });
+        this.body.addEventListener("touchend", (event) => {
+            endX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    }
 });
 function downloadFeed() {
     var canvas;
@@ -477,7 +586,7 @@ function downloadFeed() {
     }
     const urlParam = new URLSearchParams(window.location.search).get("feed");
     if (urlParam) {
-        localStorage.setItem("feed-number", urlParam);
+        localStorage.setItem("feed-num", urlParam);
     }
 }
 function downloadThis(dataURL, filename) {
@@ -528,10 +637,11 @@ function render(feedNum_1) {
         const captionInput = document.getElementById("textbox");
         const hue = parseInt(hueSlider.value);
         const saturate = parseInt(satSlider.value);
-        const caption = captionInput.value;
+        var caption = captionInput.value;
         var loaded = false;
         var fontSize = 150;
-        console.log("waiting");
+        var textWidth;
+        //checking if image has loaded 
         yield new Promise((resolve) => {
             if (img.complete) {
                 console.log("complete");
@@ -547,7 +657,7 @@ function render(feedNum_1) {
             }
         });
         if (loaded) {
-            console.log("loaded");
+            //console.log("loaded");
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -557,7 +667,7 @@ function render(feedNum_1) {
                 filter[1] = saturate.toString();
             }
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            localStorage.setItem(`filter1`, JSON.stringify(filter));
+            localStorage.setItem(`filter`, JSON.stringify(filter));
             if (logo.complete) {
                 logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width);
                 ctx.drawImage(logo, logoCoords[0], logoCoords[1], 200, 200);
@@ -566,9 +676,39 @@ function render(feedNum_1) {
                 if (postNum == "6") {
                     fontSize = 60;
                     captCoords = [323, canvas.height / 2 + 25];
+                    ctx.fillStyle = "white";
+                }
+                else {
+                    //caption = "helloooo9";
+                    fontSize = 145;
+                    ctx.font = `${fontSize}px helvetica-bold`;
+                    captCoords = [850, 830];
+                    textWidth = ctx.measureText(caption.toUpperCase()).width;
+                    var textLength = caption.length;
+                    console.log(textWidth);
+                    if (textWidth > 483) {
+                        //fontSize -= (textWidth-483)/483 * 3.33;
+                        //
+                    }
+                    if (textLength > 4) { // 50 60
+                        /*fontSize -= (textLength)*(textLength-4) +30;
+                        console.log("textlen", textLength);
+                        */
+                    }
+                    console.log("start");
+                    for (var i = fontSize; i > 0; i--) {
+                        console.log("done");
+                        ctx.font = `${i}px helvetica-bold`;
+                        if (!(ctx.measureText(caption.toUpperCase()).width > 383)) {
+                            fontSize = i;
+                            captCoords[1] += (fontSize - 120) / 2;
+                            break;
+                        }
+                    }
+                    console.log(fontSize);
+                    ctx.fillStyle = '#51afff';
                 }
                 ctx.font = `${fontSize}px helvetica-bold`;
-                ctx.fillStyle = "white";
                 ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
                 console.log(caption, "caption");
             }
@@ -729,4 +869,23 @@ function changeFeed(feedNum) {
     setTimeout(() => {
         window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
     }, 700);
+}
+function changeBanner(num) {
+    const mainSection = document.getElementById("mainSec");
+    const storedNum = localStorage.getItem("banner-num");
+    var bannerNum = 1;
+    if (storedNum) {
+        bannerNum = parseInt(storedNum);
+    }
+    if (num < bannerNum) {
+        mainSection.classList.add("animate-swipe-right");
+    }
+    else if (num > bannerNum) {
+        mainSection.classList.add("animate-swipe-left");
+    }
+    console.log("swiped");
+    bannerNum = num;
+    setTimeout(() => {
+        window.location.href = `../pages/street-banner.html?num=${bannerNum}`;
+    }, 300);
 }

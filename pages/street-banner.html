@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <title>Chisel</title>
+        <script src="../dist/script.js" defer></script>
+        <link rel="icon" type="image/png" href="/assets/logo.png">
+        <link rel = "stylesheet" href = "../dist/output.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body id = "street-banner" 
+    class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen overflow-x-hidden flex flex-col">
+      <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full ">
+          <div class="px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full items-center">
+            <a href="index.html" class="flex flex-row">
+              <img id="chiselLogo" src="../assets/logo.png"
+                class="invert w-auto p-0 md:p-0 h-12" />
+              <p class="self-center text-white text-lg ml-2">Chisel</p>
+            </a>
+
+            <div class="relative">
+              <button id="menu" class="text-white text-2xl lg:text-4xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+              </button>
+
+              <!-- Dropdown menu -->
+              <div id="dropdownMenu"
+                class="absolute right-0 mt-2 w-40 bg-black rounded-lg shadow-lg py-2 hidden z-50 text-white outline ">
+                <a href="../social-media/intro.html" class="block px-4 py-2 hover:bg-gray-800">Social Media</a>
+                <a href="../pages/branding-materials.html" class="block px-4 py-2 hover:bg-gray-800">Branding Materials</a>
+                <a href="../pages/street-banner.html" class="block px-4 py-2 hover:bg-gray-800">Street Banners</a>
+              </div>
+            </div>
+          </div>
+          <hr>
+    </header>
+
+      <section id = "mainSec"
+      class = "flex-grow flex flex-col md:flex-row py-8 md:py-24 lg:py-8 items-center justify-center h-full w-screen px-8">
+        <div id="tile" 
+        class="basis-1/2 md:basis-3/5 lg:basis-1/2">
+            <canvas id = "imgCanvas" class = "w-full h-full"></canvas>
+            <img id = "bannerImg" src = "" class = "hidden">
+        </div>
+        <div id = "settings"
+        class = "flex flex-col md:p-8 h-full gap-8 md:gap-16 lg:gap-24 justify-between items-center">
+        
+          <div id = "buttons"
+            class = "flex flex-row gap-4">
+              <button id="download"
+              class = "bg-black outline-blue-500 outline rounded-full w-fit p-4 text-2xl text-blue-500 font-helvetica-bold flex flex-row gap-2"> 
+              Download <i class="fa-solid fa-arrow-down self-center"></i>
+              </button>
+          </div>
+        </div>
+      </section>
+      <div id = "trackers"
+      class = "flex flex-row gap-4 text-white text-md min-w-screen justify-center text-center py-2 ">
+        <span id = "tr1" onclick = "changeBanner(1)"
+        class = "text-blue-500"><i class="fa-solid fa-circle"></i></span>
+        <span id = "tr2" onclick = "changeBanner(2)"
+        class = "opacity-50"><i class="fa-solid fa-circle"></i></span>
+      </div>
+    <!-- Footer -->
+    <hr class = "w-screen">
+    <footer class="bottom-0 px-8 text-white bg-black w-full">
+      <div class="flex justify-between py-4">
+        <div class="basis-1/5">
+        <img src="../assets/trans-logo.png" class="bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%] h-auto max-w-16"/>
+        </div>
+        <div class="flex flex-col items-end font-helvetica-light text-sm">
+        <span class="font-helvetica-bold text-lg md:text-2xl">CONTACT US</span>
+        <a href="tel:+91-9311352507" class="text-blue-500 md:text-md lg:text-lg">+91-9311352507</a>
+        <a href="tel:+91-9086222000" class="text-blue-500 md:text-md lg:text-lg">+91-9086222000</a>
+        </div>
+    </div>
+    </footer>
+    </body>
+    
+</html>

@@ -10,18 +10,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   </head>
   <body id = "postPage" class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen overflow-x-hidden flex flex-col">
-    <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full">
-      <div class = "px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full ">
-        <a href = "../index.html">
-          <img id = "chiselLogo" src="../assets/logo.png" 
-          class = " invert
-          h-24 w-auto -p-4 md:-p-6 md:h-16"/>
-        </a>  
-        <button class = "text-white text-4xl lg:text-5xl">
-          <i class="fa-solid fa-bars"></i>
-        </button>  
-      </div>
-      <hr>
+    <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full ">
+          <div class="px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full items-center">
+            <a href="index.html" class="flex flex-row">
+              <img id="chiselLogo" src="../assets/logo.png"
+                class="invert w-auto p-0 md:p-0 h-12" />
+              <p class="self-center text-white text-lg ml-2">Chisel</p>
+            </a>
+
+            <div class="relative">
+              <button id="menu" class="text-white text-2xl lg:text-4xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+              </button>
+
+              <!-- Dropdown menu -->
+              <div id="dropdownMenu"
+                class="absolute right-0 mt-2 w-40 bg-black rounded-lg shadow-lg py-2 hidden z-50 text-white outline ">
+                <a href="../social-media/intro.html" class="block px-4 py-2 hover:bg-gray-800">Social Media</a>
+                <a href="../pages/branding-materials.html" class="block px-4 py-2 hover:bg-gray-800">Branding Materials</a>
+                <a href="../pages/street-banner.html" class="block px-4 py-2 hover:bg-gray-800">Street Banners</a>
+              </div>
+            </div>
+          </div>
+          <hr>
     </header>
 
     <section id = "mainSec"
@@ -33,17 +44,17 @@
       </div>
       
       <div id = "settings"
-        class = "flex flex-row md:flex-col md:p-8 h-full gap-8 md:gap-16 lg:gap-24 justify-between items-center">
-          <div class = "flex flex-col gap-6 lg:gap-12">
+        class = "flex flex-col md:p-8 h-full gap-8 md:gap-16 lg:gap-24 justify-between items-center">
+          <div id = "colorSettings" class = "flex md:flex-col gap-6 lg:gap-12">
             <div id = "Hue"
               class = "flex flex-col items-center text-center gap-4 w-full basis-1/2">
-                <span class = "text-2xl md:text-3xl lg:text-4xl">Change <span class = "text-blue-500">Color</span></span>
-                <input type = "range" id = "hue" name = "hue" class = "w-full" min = "0" max = "360" value = "209"/>
+                <span class = "text-2xl md:text-3xl lg:text-4xl">Change <br> <span class = "text-blue-500">Color</span></span>
+                <input type = "range" id = "hue" name = "hue" class = "w-full" min = "0" max = "360" value = "360"/>
             </div>
             <div id = "Saturation"
             class = "flex flex-col items-center text-center gap-4">
                 <span class = "text-2xl md:text-3xl lg:text-4xl">Change <span class = "text-blue-500">Saturation</span></span>
-                <input type = "range" id = "saturation" name = "saturation" class = "w-full" min="1"  max="200" value = "100"/>
+                <input type = "range" id = "saturation" name = "saturation" class = "w-full" min="1"  max="200" value = "200"/>
             </div>
           </div> 
           <div id = "Text"
@@ -53,12 +64,15 @@
           </div>
           <div id = "buttons"
             class = "flex flex-row gap-4">
+              <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold text-black flex flex-row gap-2">
+                Reset <i class="fa-solid fa-arrows-rotate self-center"></i>
+              </button>
               <button id="download"
               class = "bg-black outline-blue-500 outline rounded-full w-fit p-4 text-2xl text-blue-500 font-helvetica-bold flex flex-row gap-2"> 
               Download <i class="fa-solid fa-arrow-down self-center"></i>
               </button>
-          </div>       
-      </div>
+          </div>
+        </div>
     </section>
     
     <!-- Footer -->
