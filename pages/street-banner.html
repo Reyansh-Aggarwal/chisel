@@ -13,7 +13,7 @@
     class = "font-helvetica-roman bg-black-grid bg-cover m-0 p-0 text-white min-h-screen overflow-x-hidden flex flex-col">
       <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full ">
           <div class="px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full items-center">
-            <a href="index.html" class="flex flex-row">
+            <a href="../index.html" class="flex flex-row">
               <img id="chiselLogo" src="../assets/logo.png"
                 class="invert w-auto p-0 md:p-0 h-12" />
               <p class="self-center text-white text-lg ml-2">Chisel</p>
@@ -34,15 +34,19 @@
             </div>
           </div>
           <hr>
-    </header>
-
+      </header>
+      <div id = "donePop"
+          class = "text-xl flex flex-row gap-4 bg-background/90 backdrop-blur-sm outline w-fit p-4 rounded-b-2xl absolute right-8 translate-y-[-100%] top-15 transition-all duration-500 ease-out z-10 fixed hidden">
+            Done <i class="fa-solid fa-check self-center"></i>
+      </div>
       <section id = "mainSec"
-      class = "flex-grow flex flex-col md:flex-row py-8 md:py-24 lg:py-8 items-center justify-center h-full w-screen px-8">
+      class = "flex-grow flex flex-col md:flex-row py-16 md:py-24 lg:py-8 items-center justify-around h-full w-screen px-8">
         <div id="tile" 
         class="basis-1/2 md:basis-3/5 lg:basis-1/2">
-            <canvas id = "imgCanvas" class = "w-full h-full"></canvas>
+            <canvas id = "imgCanvas" class = "w-full h-full border "></canvas>
             <img id = "bannerImg" src = "" class = "hidden">
         </div>
+        <hr class = "text-white w-60/100 md:hidden" />
         <div id = "settings"
         class = "flex flex-col md:p-8 h-full gap-8 md:gap-16 lg:gap-24 justify-between items-center">
         

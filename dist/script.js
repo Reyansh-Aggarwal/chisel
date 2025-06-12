@@ -26,8 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
         const nameValue = localStorage.getItem("nameBrand");
-        const primaryColorValue = localStorage.getItem("primaryColor");
-        const secondaryColorValue = localStorage.getItem("secondaryColor");
         const logoImageValue = localStorage.getItem("logoImage");
         const imgDiv = document.getElementById("imageDiv");
         const form = document.getElementById("details");
@@ -40,8 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const imgPreview = document.getElementById("imagePreview");
         //inputs
         const nameInput = document.getElementById("name");
-        const primaryColorInput = document.getElementById("primaryColor");
-        const secondaryColorInput = document.getElementById("secondaryColor");
         const imgInput = document.getElementById("imageInput");
         //fill stored values
         if (nameValue) {
@@ -49,16 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
             nameInput.value = nameValue;
             makeGradient(submitButton, true);
             isFilled[0] = true;
-        }
-        if (primaryColorValue) {
-            primaryColor = primaryColorValue;
-            primaryColorInput.value = primaryColorValue;
-            isFilled[1] = true;
-        }
-        if (secondaryColorValue) {
-            secondaryColor = secondaryColorValue;
-            secondaryColorInput.value = secondaryColorValue;
-            isFilled[2] = true;
         }
         if (logoImageValue) {
             previewImage(logoImageValue);
@@ -72,8 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const formData = new FormData(form);
                 //get form data
                 nameBrand = formData.get("name") || nameBrand;
-                primaryColor = formData.get("primaryColor") || primaryColor;
-                secondaryColor = formData.get("secondaryColor") || secondaryColor;
                 const logoImage = imgPreview.src;
                 //image handling
                 if (logoImage) {
@@ -87,8 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 // Store the values in localStorage
                 localStorage.setItem("nameBrand", nameBrand);
-                localStorage.setItem("primaryColor", primaryColor);
-                localStorage.setItem("secondaryColor", secondaryColor);
                 //console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
         });
@@ -142,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings");
         const downloadButton = document.getElementById("download");
+        const hNextButton = document.getElementById("headNext");
         const urlParam = new URLSearchParams(window.location.search).get("feed");
         filter = ["360", "123"];
         var feedNum = 1;
@@ -226,19 +209,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadFeed(feedNum);
             }
         });
-        downloadButton.onclick = () => {
+        downloadButton.onclick = () => __awaiter(this, void 0, void 0, function* () {
             if (document.body.id == "feeds") {
-                downloadFeed();
+                hNextButton.classList.remove('hidden');
+                setTimeout(() => {
+                    hNextButton.classList.remove('translate-y-[-100%]');
+                }, 25);
+                //hNextButton.classList.add('translate-y-0');
+                yield downloadFeed();
             }
-        };
+        });
         function handleSwipe() {
             if (startX > endX && (startX - endX > 50)) {
                 //swiped left
-                changeFeed(feedNum + 1);
+                if (feedNum < 3) {
+                    changeFeed(feedNum + 1);
+                }
             }
             else if (startX < endX && (endX - startX > 50)) {
                 //swipe right
-                changeFeed(feedNum - 1);
+                if (feedNum > 1) {
+                    changeFeed(feedNum - 1);
+                }
             }
         }
     }
@@ -272,6 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
         const matLabel = document.getElementById("matLabel");
         const dwnldButton = document.getElementById("downloadButton");
+        const hNextButton = document.getElementById("headNext");
         const img = document.getElementById("matImg");
         const logoTextCanvas = document.createElement("canvas"); //need to be availabe for dwnld function
         const canvas = document.getElementById("matCanvas");
@@ -311,9 +304,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (matLabel) {
                     matLabel.textContent = matNames[activeCircleNum];
                     img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[cNum]}.png`;
-                    img.onload = () => {
-                        renderMaterial();
-                    };
+                    yield new Promise((resolve) => {
+                        img.onload = () => {
+                            renderMaterial();
+                        };
+                    });
                 }
             });
         }
@@ -434,7 +429,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 saveAs(zipBlob, "branding-materials.zip");
             });
         }
-        dwnldButton.onclick = downloadMaterials;
+        dwnldButton.onclick = () => {
+            downloadMaterials();
+            hNextButton.classList.remove('hidden');
+            setTimeout(() => {
+                hNextButton.classList.remove('translate-y-[-100%]');
+            }, 25);
+        };
         //event listeners
         circles.forEach((circle, index) => {
             circle.onclick = () => {
@@ -475,6 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const img = document.getElementById("bannerImg");
         const feedNum = localStorage.getItem("feed-num") || "1";
         const canvas = document.getElementById("imgCanvas");
+        const popUp = document.getElementById("donePop");
         const dwnldButton = document.getElementById("download");
         const mainSection = document.getElementById("mainSec");
         let storedFilter = localStorage.getItem("filter");
@@ -546,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function handleSwipe() {
             if (startX > endX && (startX - endX > 50)) {
                 //swiped left
-                if (bannerNum > 2) {
+                if (bannerNum < 2) {
                     changeFeed(bannerNum + 1);
                 }
             }
@@ -559,7 +561,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         dwnldButton.onclick = () => {
             localStorage.setItem("banner-num", bannerNum.toString());
+            popUp.classList.remove('hidden');
+            setTimeout(() => {
+                popUp.classList.remove('translate-y-[-100%]');
+            }, 25);
             downloadThis(canvas.toDataURL("image/png"), "banner.png");
+            setTimeout(() => {
+                console.log("hello world");
+                popUp.classList.add('translate-y-[-100%]');
+                setTimeout(() => {
+                    popUp.classList.add('hidden');
+                }, 400);
+            }, 3000);
         };
         if (img.complete) {
             renderBanner();
@@ -579,15 +592,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 function downloadFeed() {
-    var canvas;
-    for (let i = 1; i <= 9; i++) {
-        canvas = document.getElementById(`cvs${i}`);
-        downloadThis(canvas.toDataURL("image/png"), `post${i}.png`);
-    }
-    const urlParam = new URLSearchParams(window.location.search).get("feed");
-    if (urlParam) {
-        localStorage.setItem("feed-num", urlParam);
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        const zip = new JSZip();
+        var canvas, canvasBlob;
+        for (let i = 1; i <= 9; i++) {
+            canvas = document.getElementById(`cvs${i}`);
+            canvasBlob = yield new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+            zip.file(`post-${i}.png`, canvasBlob);
+            //downloadThis(canvas.toDataURL("image/png"),`post${i}.png`)
+        }
+        //Downloading zip
+        const zipBlob = yield zip.generateAsync({ type: "blob" });
+        saveAs(zipBlob, "socialMediaFeed.zip");
+        const urlParam = new URLSearchParams(window.location.search).get("feed");
+        if (urlParam) {
+            localStorage.setItem("feed-num", urlParam);
+        }
+    });
 }
 function downloadThis(dataURL, filename) {
     const link = document.createElement("a");
@@ -613,16 +634,23 @@ function previewImage(logoUrl) {
     imgTemplate.classList.add('hidden');
     imgDiv.classList.add('bg-transparent');
 }
-function loadFeed(feedNum, first = false) {
-    const logo = new Image();
-    logo.src = localStorage.getItem("logoImage") || "";
-    for (let i = 1; i <= 9; i++) {
-        var tile = document.getElementById(i.toString());
-        if (first) {
-            tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+function loadFeed(feedNum_1) {
+    return __awaiter(this, arguments, void 0, function* (feedNum, first = false) {
+        const logo = new Image();
+        logo.src = localStorage.getItem("logoImage") || "";
+        for (let i = 1; i <= 9; i++) {
+            var tile = document.getElementById(i.toString());
+            if (first) {
+                tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+            }
+            yield new Promise((resolve) => {
+                tile.onload = () => {
+                    render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                    resolve();
+                };
+            });
         }
-        render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
-    }
+    });
 }
 function render(feedNum_1) {
     return __awaiter(this, arguments, void 0, function* (feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo) {

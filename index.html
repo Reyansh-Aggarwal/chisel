@@ -12,7 +12,7 @@
     <body id = "home" class = "font-helvetica-light bg-landing bg-cover m-0 p-0 text-white min-h-dvh overflow-x-hidden">
         <header class = "bg-background/90 backdrop-blur-sm top-0 z-20 fixed w-full ">
           <div class="px-4 md:px-6 lg:px-8 md:py-2 lg:py-2 flex flex-row justify-between w-full items-center">
-            <a href="index.html" class="flex flex-row">
+            <a href="" class="flex flex-row">
               <img id="chiselLogo" src="assets/logo.png"
                 class="invert w-auto p-0 md:p-0 h-12" />
               <p class="self-center text-white text-lg ml-2">Chisel</p>
@@ -34,15 +34,20 @@
           </div>
           <hr>
         </header>
-        <section class = "flex flex-col md:flex-row w-screen min-h-dvh pt-24 md:pt-1 pb-32 overflow-x-hidden font-helvetica-roman gap-0">
-            <img src = "assets/landingHero.png" class = "basis-1/2 w-1/2 h-fit self-center">
-            <div class = "flex flex-col justify-center font-helvetica-light basis-1/2 items-center md:items-end pr-8 gap-12 md:gap-16">
-                <div class = "text-center md:text-end text-[7dvw] md:text-[4.5dvw]">
+        <section class = "flex flex-col md:flex-row w-screen min-h-dvh pt-24 md:pt-1 pb-32 overflow-x-hidden font-helvetica-roman gap-0 items-center">
+            <img src = "assets/landingHero.png" class = "basis-1/2 w-4/5 md:w-1/2 h-fit self-center order-2 md:order-1">
+            <div class = "flex flex-col justify-center font-helvetica-light basis-1/2 items-center md:items-start pl-8 gap-12 md:gap-16">
+                <div class = "text-center md:text-start text-[7dvw] md:text-[4.5dvw]">
                     Easy free branding <br> solutions for <span class = "bg-clip-text text-transparent bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%]">Opticians.</span>
                 </div>
-                <button class = "tracking-tight font-helvetica-light rounded-full border border-white p-2 lg:p-6 gap-[1dvw] flex flex-row text-[4dvw] md:text-[2dvw]"
-                onclick = "redirectPage('pages/setup.html')">
-                    Get Started <i class="fa-solid fa-arrow-right self-center"></i>
+                <button onclick = "redirectPage('pages/setup.html')"
+                class="inline-block p-[2px] rounded-full bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%]">
+                    <div class="bg-black rounded-full px-6 py-2 flex items-center gap-[1dvw]">
+                        <span class="bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] bg-clip-text text-transparent animate-gradient bg-[length:300%_300%] tracking-tight font-helvetica-light text-[4dvw] md:text-[2dvw]">
+                            Get Started
+                        </span>
+                        <i class="fa-solid fa-arrow-right text-transparent bg-clip-text bg-gradient-to-r from-[#524dee] via-[#0be1f7] to-[#524dee] animate-gradient bg-[length:300%_300%] text-[4dvw] md:text-[2dvw]"></i>
+                    </div>
                 </button>
             </div>
         </section>

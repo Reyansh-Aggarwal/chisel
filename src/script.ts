@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         //need always
         const nameValue = localStorage.getItem("nameBrand");
-        const primaryColorValue = localStorage.getItem("primaryColor");
-        const secondaryColorValue = localStorage.getItem("secondaryColor");
         const logoImageValue = localStorage.getItem("logoImage");
 
         const imgDiv = document.getElementById("imageDiv") as HTMLDivElement;
@@ -45,8 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         //inputs
         const nameInput = document.getElementById("name") as HTMLInputElement;
-        const primaryColorInput = document.getElementById("primaryColor") as HTMLInputElement;
-        const secondaryColorInput = document.getElementById("secondaryColor") as HTMLInputElement;
         const imgInput = document.getElementById("imageInput") as HTMLInputElement;
 
         //fill stored values
@@ -56,16 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
             makeGradient(submitButton, true);
             isFilled[0] = true;
         }
-        if (primaryColorValue) {
-            primaryColor = primaryColorValue;
-            primaryColorInput.value = primaryColorValue;
-            isFilled[1] = true;
-        }
-        if (secondaryColorValue) {
-            secondaryColor = secondaryColorValue;
-            secondaryColorInput.value = secondaryColorValue;
-            isFilled[2] = true;
-        } 
         if (logoImageValue) {
             previewImage(logoImageValue);
             isFilled[3] = true;
@@ -83,8 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
                 //get form data
                 nameBrand = formData.get("name") as string || nameBrand;
-                primaryColor = formData.get("primaryColor") as string || primaryColor;
-                secondaryColor = formData.get("secondaryColor") as string || secondaryColor;
                 const logoImage = imgPreview.src;
 
                 //image handling
@@ -101,8 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Store the values in localStorage
                 localStorage.setItem("nameBrand", nameBrand);
-                localStorage.setItem("primaryColor", primaryColor);
-                localStorage.setItem("secondaryColor", secondaryColor);
                 
                 //console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
@@ -166,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings") as HTMLDivElement;
         const downloadButton = document.getElementById("download") as HTMLButtonElement;
+        const hNextButton = document.getElementById("headNext") as HTMLButtonElement;
         const urlParam = new URLSearchParams (window.location.search).get("feed");
         filter = ["360","123"];
         var feedNum = 1;
@@ -254,9 +237,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadFeed(feedNum);
             }
         });
-        downloadButton.onclick = () => {
+        downloadButton.onclick = async () => {
             if (document.body.id == "feeds"){
-                downloadFeed();
+                hNextButton.classList.remove('hidden');
+                setTimeout(()=> {
+                    hNextButton.classList.remove('translate-y-[-100%]');
+                }, 25);
+                
+                //hNextButton.classList.add('translate-y-0');
+                await downloadFeed();
             }
             
         };
@@ -264,10 +253,14 @@ document.addEventListener("DOMContentLoaded", function () {
         function handleSwipe() {
             if(startX > endX && (startX - endX > 50)){
                 //swiped left
-                changeFeed(feedNum + 1);
+                if (feedNum < 3){
+                    changeFeed(feedNum + 1);
+                }
             } else if (startX < endX && (endX - startX > 50)) {
                 //swipe right
-                changeFeed(feedNum - 1);
+                if (feedNum > 1){
+                    changeFeed(feedNum - 1);
+                }
             }
         }
     }
@@ -302,6 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
         const matLabel = document.getElementById("matLabel");
         const dwnldButton = document.getElementById("downloadButton") as HTMLButtonElement;
+        const hNextButton = document.getElementById("headNext") as HTMLButtonElement;
         const img = document.getElementById("matImg") as HTMLImageElement;
         const logoTextCanvas = document.createElement("canvas"); //need to be availabe for dwnld function
         const canvas = document.getElementById("matCanvas") as HTMLCanvasElement;
@@ -351,9 +345,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (matLabel){
                 matLabel.textContent = matNames[activeCircleNum];
                 img.src = `../assets/branding-materials/${feedNum}/display/${matAlias[cNum]}.png`;
-                img.onload = () => {
-                    renderMaterial();
-                };
+                await new Promise<void>((resolve) => {
+                    img.onload = () => {
+                        renderMaterial();
+                    };
+                });
+                
                 
 
             }
@@ -490,7 +487,13 @@ document.addEventListener("DOMContentLoaded", function () {
             saveAs(zipBlob, "branding-materials.zip");
         }
 
-        dwnldButton.onclick = downloadMaterials;
+        dwnldButton.onclick = () => {
+            downloadMaterials();
+            hNextButton.classList.remove('hidden');
+                setTimeout(()=> {
+                    hNextButton.classList.remove('translate-y-[-100%]');
+            }, 25);
+        };
 
         //event listeners
         circles.forEach((circle, index) => {
@@ -537,7 +540,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const img = document.getElementById("bannerImg") as HTMLImageElement;
         const feedNum = localStorage.getItem("feed-num") || "1";
         const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
-        
+        const popUp = document.getElementById("donePop") as HTMLDivElement;
         const dwnldButton = document.getElementById("download") as HTMLButtonElement;
         const mainSection = document.getElementById("mainSec") as HTMLElement;
         let storedFilter = localStorage.getItem("filter");
@@ -619,12 +622,12 @@ document.addEventListener("DOMContentLoaded", function () {
         function handleSwipe() {
             if(startX > endX && (startX - endX > 50)){
                 //swiped left
-                if (bannerNum > 2){
+                if (bannerNum < 2){
                     changeFeed(bannerNum + 1);
                 }
             } else if (startX < endX && (endX - startX > 50)) {
                 //swipe right
-                if (bannerNum >1){
+                if (bannerNum > 1){
                     changeFeed(bannerNum - 1);
                 }
                 
@@ -633,7 +636,21 @@ document.addEventListener("DOMContentLoaded", function () {
         
         dwnldButton.onclick = () => {
             localStorage.setItem("banner-num", bannerNum.toString());
+            popUp.classList.remove('hidden');
+            setTimeout(()=> {
+                popUp.classList.remove('translate-y-[-100%]');
+            }, 25);
+            
             downloadThis(canvas.toDataURL("image/png"), "banner.png");
+            setTimeout(()=> {
+                console.log("hello world");
+                popUp.classList.add('translate-y-[-100%]');
+                setTimeout(()=> {
+                    popUp.classList.add('hidden');
+                }, 400);
+            }, 3000);
+            
+            
         };
 
         if (img.complete){
@@ -655,12 +672,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-function downloadFeed(){
-    var canvas;
+async function downloadFeed(){
+    const zip = new JSZip();
+    var canvas: HTMLCanvasElement,
+        canvasBlob;
     for (let i = 1; i<= 9; i++){
         canvas = document.getElementById(`cvs${i}`) as HTMLCanvasElement;
-        downloadThis(canvas.toDataURL("image/png"),`post${i}.png`)
+        canvasBlob = await new Promise(resolve =>
+                canvas.toBlob(resolve, "image/png")
+        );
+        zip.file(`post-${i}.png`, canvasBlob);
+        //downloadThis(canvas.toDataURL("image/png"),`post${i}.png`)
     }
+    //Downloading zip
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, "socialMediaFeed.zip");
+        
     const urlParam = new URLSearchParams (window.location.search).get("feed");
     if (urlParam){
         localStorage.setItem("feed-num", urlParam);
@@ -699,7 +726,7 @@ function previewImage(logoUrl : string) {
 
 }
 
-function loadFeed (feedNum:number, first =false){
+async function loadFeed (feedNum:number, first =false){
     const logo = new Image();
     logo.src = localStorage.getItem("logoImage") || "";
     
@@ -708,7 +735,13 @@ function loadFeed (feedNum:number, first =false){
         if (first){
             tile.src = `../assets/social-media-${feedNum}/${i}.png`;
         }
-       render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+        await new Promise<void>((resolve) => {
+            tile.onload = () => {
+                render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                resolve();
+            };
+        });
+       
     }
 }
 
