@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var caption = localStorage.getItem("nameBrand");
             console.log(filter);
             var hue = filter[0], saturate = filter[1];
-            var fontSize = 220;
+            var fontSize;
             var captCoords:number[];
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
@@ -605,15 +605,19 @@ document.addEventListener("DOMContentLoaded", function () {
            
 
             if (caption) {
-                caption = "hello world";
-                ctx.font = `${fontSize}px helvetica-bold`;
                 ctx.fillStyle = "white";
                 if (feedNum == "2"){
                     ctx.fillStyle = "#4b200f";
                 }
-                
-                ctx.textAlign = "center";
                 captCoords = [canvas.width/2,2216];
+                fontSize = 220;
+                if (bannerNum == 2){
+                    fontSize = 440;
+                    captCoords = [canvas.width/2 + 1200 ,canvas.height/2 + 600];
+                }
+                
+                ctx.font = `${fontSize}px helvetica-bold`;
+                ctx.textAlign = "center";
                 ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
                 
                 console.log(caption, "caption");
@@ -623,12 +627,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if(startX > endX && (startX - endX > 50)){
                 //swiped left
                 if (bannerNum < 2){
-                    changeFeed(bannerNum + 1);
+                    changeBanner(bannerNum + 1);
                 }
             } else if (startX < endX && (endX - startX > 50)) {
                 //swipe right
                 if (bannerNum > 1){
-                    changeFeed(bannerNum - 1);
+                    changeBanner(bannerNum - 1);
                 }
                 
             }
@@ -649,8 +653,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     popUp.classList.add('hidden');
                 }, 400);
             }, 3000);
-            
-            
         };
 
         if (img.complete){
