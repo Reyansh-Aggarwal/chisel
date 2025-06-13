@@ -361,7 +361,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         const logoWidth = 1000;
                         const logoHeight = 1000;
                         const padding = 80;
-                        const fontSize = 700;
+                        var fontSize = 700;
+                        var captCoords = [padding + logoWidth, padding + logoHeight / 2];
                         let mainFont = "helvetica-bold";
                         if (feedNum == "2") {
                             mainFont = "phagspa";
@@ -370,6 +371,16 @@ document.addEventListener("DOMContentLoaded", function () {
                             mainFont = "Times New Roman";
                         }
                         logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                        for (var i = fontSize; i > 0; i--) {
+                            console.log("done", logoTextCtx.measureText(caption.toUpperCase()));
+                            logoTextCtx.font = `${i}px helvetica-bold`;
+                            if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)) {
+                                fontSize = i;
+                                captCoords[1] += (fontSize - 120) / 2;
+                                break;
+                            }
+                        }
+                        captCoords = [2 * padding + logoWidth, padding + logoHeight / 2 + 30];
                         const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
                         logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
                         logoTextCanvas.height = logoHeight + padding * 2;
@@ -391,7 +402,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log("font", logoTextCtx.font, "fill", logoTextCtx.fillStyle);
                         logoTextCtx.textBaseline = "middle";
                         logoTextCtx.textAlign = "left";
-                        logoTextCtx.fillText(caption, padding + logoWidth, padding + logoHeight / 2);
+                        logoTextCtx.fillText(caption, captCoords[0], captCoords[1]);
                         console.log("Drawn");
                         resolve(); // ✅ now we say this part is done!
                     };
