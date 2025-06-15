@@ -3,21 +3,21 @@
 
 @font-face {
     font-family: 'helvetica-roman';
-    src: url('../assets/fonts/HelveticaNeueRoman.otf') format('opentype');
+    src: url('https://www.chisel.website/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'helvetica-bold';
-    src: url('../assets/fonts/HelveticaNeueBold.otf') format('opentype');
+    src: url('https://www.chisel.website/assets/fonts/HelveticaNeueBold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'helvetica-light';
-    src: url('../assets/fonts/HelveticaNeueLight.otf') format('opentype');
+    src: url('https://www.chisel.website/assets/fonts/HelveticaNeueLight.otf') format('opentype');
     font-weight: light;
     font-style: normal;
 }
