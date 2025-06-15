@@ -295,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
         const matLabel = document.getElementById("matLabel");
         const dwnldButton = document.getElementById("downloadButton") as HTMLButtonElement;
-        const hNextButton = document.getElementById("headNext") as HTMLButtonElement;
         const img = document.getElementById("matImg") as HTMLImageElement;
         const logoTextCanvas = document.createElement("canvas"); //need to be availabe for dwnld function
         const canvas = document.getElementById("matCanvas") as HTMLCanvasElement;
@@ -499,10 +498,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         dwnldButton.onclick = () => {
             downloadMaterials();
-            hNextButton.classList.remove('hidden');
-                setTimeout(()=> {
-                    hNextButton.classList.remove('translate-y-[-100%]');
-            }, 25);
+            
         };
 
         //event listeners
@@ -657,7 +653,6 @@ document.addEventListener("DOMContentLoaded", function () {
             
             downloadThis(canvas.toDataURL("image/png"), "banner.png");
             setTimeout(()=> {
-                console.log("hello world");
                 popUp.classList.add('translate-y-[-100%]');
                 setTimeout(()=> {
                     popUp.classList.add('hidden');
