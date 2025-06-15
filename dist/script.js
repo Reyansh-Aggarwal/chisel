@@ -8,7 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false];
+Object.defineProperty(exports, "__esModule", { value: true });
+let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false], isDone = [false, false]; //[brandmats,streetbanner]
 var filter;
 document.addEventListener("DOMContentLoaded", function () {
     const menuButton = document.getElementById("menu");
@@ -23,6 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
             dropdownMenu.classList.add("hidden");
         }
     });
+    if (isDone[0] && isDone[1]) {
+        window.location.href = "../pages/end.html";
+        isDone = [false, false];
+    }
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
         const nameValue = localStorage.getItem("nameBrand");
@@ -441,6 +446,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         dwnldButton.onclick = () => {
             downloadMaterials();
+            isDone[0] = true;
         };
         //event listeners
         circles.forEach((circle, index) => {
@@ -582,6 +588,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     popUp.classList.add('hidden');
                 }, 400);
             }, 3000);
+            isDone[1] = true;
         };
         if (img.complete) {
             renderBanner();
