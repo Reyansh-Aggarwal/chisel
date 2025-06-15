@@ -36,11 +36,11 @@
           <hr>
       </header>
       <div id = "donePop"
-          class = "text-xl flex flex-row gap-4 bg-background/90 backdrop-blur-sm outline w-fit p-4 rounded-b-2xl absolute right-8 top-15 transition-all duration-500 ease-out z-10 fixed">
+          class = "text-xl flex flex-row gap-4 bg-background/90 backdrop-blur-sm outline w-fit p-4 rounded-b-2xl right-8 translate-y-[-100%] top-12 md:top-15 transition-all duration-500 ease-out z-10 fixed hidden">
             Done <i class="fa-solid fa-check self-center"></i>
       </div>
       <section id = "mainSec"
-      class = "flex-grow flex flex-col md:flex-row py-16 md:py-24 lg:py-8 items-center justify-around h-full w-screen px-8">
+      class = "flex-grow flex flex-col md:flex-row py-16 md:py-24 lg:py-8 items-center justify-around h-full w-screen px-8 gap-4">
         <div id="tile" 
         class="basis-1/2 md:basis-3/5 lg:basis-1/2">
             <canvas id = "imgCanvas" class = "w-full h-full border "></canvas>
