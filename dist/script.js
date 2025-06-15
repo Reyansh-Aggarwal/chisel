@@ -8,8 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false], isDone = [false, false]; //[brandmats,streetbanner]
+let primaryColor = "#ff0000", secondaryColor = "#ff0000", nameBrand = "basic", isFilled = [false, false, false, false], storedProg = localStorage.getItem("progress"), isDone = [false, false]; //[brandmats,streetbanner]
+if (storedProg) {
+    isDone = JSON.parse(storedProg);
+}
 var filter;
 document.addEventListener("DOMContentLoaded", function () {
     const menuButton = document.getElementById("menu");
@@ -24,10 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
             dropdownMenu.classList.add("hidden");
         }
     });
-    if (isDone[0] && isDone[1]) {
-        window.location.href = "../pages/end.html";
-        isDone = [false, false];
-    }
     if (document.body.getAttribute('id') == "setupPage") {
         //need always
         const nameValue = localStorage.getItem("nameBrand");
@@ -358,63 +356,66 @@ document.addEventListener("DOMContentLoaded", function () {
             return __awaiter(this, void 0, void 0, function* () {
                 const logo = new Image();
                 logo.src = localStorage.getItem("logoImage") || "";
-                yield new Promise((resolve) => {
-                    logo.onload = () => {
-                        const caption = localStorage.getItem("nameBrand") || "hello world";
-                        const logoTextCtx = logoTextCanvas.getContext("2d");
-                        const logoWidth = 1000;
-                        const logoHeight = 1000;
-                        const padding = 80;
-                        var fontSize = 700;
-                        var captCoords = [padding + logoWidth, padding + logoHeight / 2];
-                        let mainFont = "helvetica-bold";
-                        if (feedNum == "2") {
-                            mainFont = "phagspa";
-                        }
-                        else if (feedNum == "3") {
-                            mainFont = "Times New Roman";
-                        }
-                        logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
-                        for (var i = fontSize; i > 0; i--) {
-                            console.log("done", logoTextCtx.measureText(caption.toUpperCase()));
-                            logoTextCtx.font = `${i}px helvetica-bold`;
-                            if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)) {
-                                fontSize = i;
-                                captCoords[1] += (fontSize - 120) / 2;
-                                break;
-                            }
-                        }
-                        captCoords = [2 * padding + logoWidth, padding + logoHeight / 2 + 30];
-                        const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
-                        logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
-                        logoTextCanvas.height = logoHeight + padding * 2;
-                        // Draw logo with color overlay
-                        const offCanvas = document.createElement("canvas");
-                        offCanvas.width = logoWidth;
-                        offCanvas.height = logoHeight;
-                        const offCtx = offCanvas.getContext("2d");
-                        offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
-                        offCtx.globalCompositeOperation = "source-in";
-                        offCtx.fillStyle = txtColor;
-                        offCtx.fillRect(0, 0, logoWidth, logoHeight);
-                        offCtx.globalCompositeOperation = "source-over";
-                        logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
-                        logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
-                        // Draw text
-                        logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
-                        logoTextCtx.fillStyle = txtColor;
-                        console.log("font", logoTextCtx.font, "fill", logoTextCtx.fillStyle);
-                        logoTextCtx.textBaseline = "middle";
-                        logoTextCtx.textAlign = "left";
-                        logoTextCtx.fillText(caption, captCoords[0], captCoords[1]);
-                        console.log("Drawn");
-                        resolve(); // ✅ now we say this part is done!
-                    };
-                    logo.onerror = () => {
-                        console.error("Failed to load logo image.");
-                        resolve(); // or reject, depending on your preference
-                    };
-                });
+                const caption = localStorage.getItem("nameBrand") || "hello world";
+                const logoTextCtx = logoTextCanvas.getContext("2d");
+                const logoWidth = 1000;
+                const logoHeight = 1000;
+                const padding = 80;
+                var fontSize = 700;
+                var captCoords = [padding + logoWidth, padding + logoHeight / 2];
+                let mainFont = "helvetica-bold";
+                if (feedNum == "2") {
+                    mainFont = "phagspa";
+                }
+                else if (feedNum == "3") {
+                    mainFont = "Times New Roman";
+                }
+                logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                for (var i = fontSize; i > 0; i--) {
+                    console.log("done", logoTextCtx.measureText(caption.toUpperCase()));
+                    logoTextCtx.font = `${i}px helvetica-bold`;
+                    if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)) {
+                        fontSize = i;
+                        captCoords[1] += (fontSize - 120) / 2;
+                        break;
+                    }
+                }
+                captCoords = [2 * padding + logoWidth, padding + logoHeight / 2 + 30];
+                const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
+                logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
+                logoTextCanvas.height = logoHeight + padding * 2;
+                if (logo) {
+                    yield new Promise((resolve) => {
+                        logo.onload = () => {
+                            // Draw logo with color overlay
+                            const offCanvas = document.createElement("canvas");
+                            offCanvas.width = logoWidth;
+                            offCanvas.height = logoHeight;
+                            const offCtx = offCanvas.getContext("2d");
+                            offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
+                            offCtx.globalCompositeOperation = "source-in";
+                            offCtx.fillStyle = txtColor;
+                            offCtx.fillRect(0, 0, logoWidth, logoHeight);
+                            offCtx.globalCompositeOperation = "source-over";
+                            logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
+                            logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
+                            resolve(); // ✅ now we say this part is done!
+                        };
+                        logo.onerror = () => {
+                            console.error("Failed to load logo image.");
+                            resolve(); // or reject, depending on your preference
+                        };
+                    });
+                }
+                //eee
+                // Draw text
+                logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
+                logoTextCtx.fillStyle = txtColor;
+                console.log("font", logoTextCtx.font, "fill", logoTextCtx.fillStyle);
+                logoTextCtx.textBaseline = "middle";
+                logoTextCtx.textAlign = "left";
+                logoTextCtx.fillText(caption, captCoords[0], captCoords[1]);
+                console.log("Drawn");
             });
         }
         function downloadMaterials() {
@@ -442,11 +443,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 //Downloading zip
                 const zipBlob = yield zip.generateAsync({ type: "blob" });
                 saveAs(zipBlob, "branding-materials.zip");
+                if (isDone[1]) {
+                    window.location.href = "../pages/end.html";
+                    isDone[1] = false;
+                    console.log("hello go");
+                }
+                else {
+                    isDone[0] = true;
+                    console.log(isDone, "hehe");
+                }
+                localStorage.setItem("progress", JSON.stringify(isDone));
             });
         }
         dwnldButton.onclick = () => {
             downloadMaterials();
-            isDone[0] = true;
         };
         //event listeners
         circles.forEach((circle, index) => {
@@ -588,7 +598,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     popUp.classList.add('hidden');
                 }, 400);
             }, 3000);
-            isDone[1] = true;
+            if (isDone[0]) {
+                window.location.href = "../pages/end.html";
+                isDone[0] = false;
+                console.log("hello go");
+            }
+            else {
+                isDone[1] = true;
+                localStorage.setItem("progress", JSON.stringify(isDone));
+                console.log(isDone, "hehe");
+            }
         };
         if (img.complete) {
             renderBanner();

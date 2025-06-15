@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@config "../tailwind.config.js";
 @font-face {
     font-family: 'helvetica-roman';
     src: url('../assets/fonts/HelveticaNeueRoman.otf') format('opentype');
