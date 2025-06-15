@@ -19,7 +19,7 @@ module.exports = {
         'my-gray': '#292929'
       },
       backgroundImage: {
-        'black-grid': "url('https://www.chisel.website/assets/blackGrid.png')",
+        'black-grid': "url('../assets/blackGrid.png')",
         'landing': "url('../assets/landingBg.png')"
 
       },
