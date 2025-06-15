@@ -137,17 +137,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
             }
         }
-        const textbox = document.getElementById("textbox") as HTMLInputElement;
+        
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
-        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum, canvas.id, img.id, logo);};
+        hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum, canvas.id, img.id, logo);};
         downloadButton.onclick = () => {downloadThis(canvas.toDataURL("image/png"),`post${postNum}.png`)};
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
         
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
-        const textbox = document.getElementById("textbox") as HTMLInputElement;
+       
         const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings") as HTMLDivElement;
@@ -194,45 +194,48 @@ document.addEventListener("DOMContentLoaded", function () {
             hueSlider.value = filter[0];
             saturSlider.value = filter[1];
         } 
-        textbox.value = localStorage.getItem("nameBrand") || "404";
+        
 
         //loading feed at first
-        loadFeed(feedNum, true);
+        if (document.body.getAttribute("id") == "feeds"){
+            loadFeed(feedNum, true);
+        }
+        
 
         //Event listeners
-        this.body.addEventListener("touchstart",(event) => {
-            startX = event.changedTouches[0].screenX;
-        } );
-        this.body.addEventListener("touchend",(event) => {
-            endX = event.changedTouches[0].screenX;
-            handleSwipe();
-        } );
+        if (document.body.getAttribute('id') == "feeds"){
+            this.body.addEventListener("touchstart",(event) => {
+                startX = event.changedTouches[0].screenX;
+            } );
+            this.body.addEventListener("touchend",(event) => {
+                endX = event.changedTouches[0].screenX;
+                handleSwipe();
+            } );
+        }
+        
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
             console.log("hue:", filter[0]);
-            if (document.body.id == "feeds"){
-                console.log("loading");
-                loadFeed(feedNum);
+            if (document.body.id == "feeds" ){ 
+                if (parseInt(filter[0])%10 == 0){
+                    //add buffer
+                    console.log("loading");
+                    loadFeed(feedNum);
+                }
             }
         });      
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
             console.log("saturation:", filter[1]);
-            if (document.body.id == "feeds"){
-                console.log("loading");
-                loadFeed(feedNum);
-            }
+            if (parseInt(filter[0])%5 == 0){
+                    //add buffer
+                    console.log("loading");
+                    loadFeed(feedNum);
+                }
         });
-        textbox.addEventListener("input", () => {
-            //applyFilters(tilesDiv, filter);
-            console.log("saturation:", filter[1]);
-            if (document.body.id == "feeds"){
-                console.log("loading");
-                loadFeed(feedNum);
-            }
-        });
+        
         resetButton?.addEventListener("click", () => {
             hueSlider.value = "360";
             saturSlider.value = "200";
@@ -763,23 +766,29 @@ function previewImage(logoUrl : string) {
 async function loadFeed (feedNum:number, first =false){
     const logo = new Image();
     logo.src = localStorage.getItem("logoImage") || "";
-    
+    console.log("ran function");
     for (let i = 1; i <= 9; i++){
         var tile = document.getElementById(i.toString()) as HTMLImageElement;
         if (first){
             tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+            await new Promise<void>((resolve) => {
+                tile.onload = () => {
+                    console.log("tile loaded");
+                    render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                    resolve();
+                };
+            });
+        } else{
+            console.log("tile loaded");
+            render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
         }
-        await new Promise<void>((resolve) => {
-            tile.onload = () => {
-                render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
-                resolve();
-            };
-        });
+        
        
     }
 }
 
 async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo: HTMLImageElement) {
+    console.log("rendering");
     const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     const img = document.getElementById(imgID) as HTMLImageElement;
@@ -788,10 +797,10 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
     //console.log(feedNum, postNum, canvasID, imgID);
     const hueSlider = document.getElementById("hue") as HTMLInputElement;
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
-    const captionInput = document.getElementById("textbox") as HTMLInputElement;
+    
     const hue = parseInt(hueSlider.value);
     const saturate = parseInt(satSlider.value);
-    var caption = captionInput.value;
+    var caption = localStorage.getItem("nameBrand");
     var loaded:Boolean = false;
     var fontSize = 150;
     var textWidth;

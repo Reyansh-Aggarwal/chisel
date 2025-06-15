@@ -113,16 +113,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
             }
         }
-        const textbox = document.getElementById("textbox");
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
-        textbox.oninput = hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(parseInt(feedNum), postNum, canvas.id, img.id, logo); };
+        hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(parseInt(feedNum), postNum, canvas.id, img.id, logo); };
         downloadButton.onclick = () => { downloadThis(canvas.toDataURL("image/png"), `post${postNum}.png`); };
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage") {
         const hueSlider = document.getElementById("hue");
         const saturSlider = document.getElementById("saturation");
-        const textbox = document.getElementById("textbox");
         const trackerDiv = document.getElementById("trackers");
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings");
@@ -167,39 +165,38 @@ document.addEventListener("DOMContentLoaded", function () {
             hueSlider.value = filter[0];
             saturSlider.value = filter[1];
         }
-        textbox.value = localStorage.getItem("nameBrand") || "404";
         //loading feed at first
-        loadFeed(feedNum, true);
+        if (document.body.getAttribute("id") == "feeds") {
+            loadFeed(feedNum, true);
+        }
         //Event listeners
-        this.body.addEventListener("touchstart", (event) => {
-            startX = event.changedTouches[0].screenX;
-        });
-        this.body.addEventListener("touchend", (event) => {
-            endX = event.changedTouches[0].screenX;
-            handleSwipe();
-        });
+        if (document.body.getAttribute('id') == "feeds") {
+            this.body.addEventListener("touchstart", (event) => {
+                startX = event.changedTouches[0].screenX;
+            });
+            this.body.addEventListener("touchend", (event) => {
+                endX = event.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
             console.log("hue:", filter[0]);
             if (document.body.id == "feeds") {
-                console.log("loading");
-                loadFeed(feedNum);
+                if (parseInt(filter[0]) % 10 == 0) {
+                    //add buffer
+                    console.log("loading");
+                    loadFeed(feedNum);
+                }
             }
         });
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
             console.log("saturation:", filter[1]);
-            if (document.body.id == "feeds") {
-                console.log("loading");
-                loadFeed(feedNum);
-            }
-        });
-        textbox.addEventListener("input", () => {
-            //applyFilters(tilesDiv, filter);
-            console.log("saturation:", filter[1]);
-            if (document.body.id == "feeds") {
+            if (parseInt(filter[0]) % 5 == 0) {
+                //add buffer
                 console.log("loading");
                 loadFeed(feedNum);
             }
@@ -673,22 +670,29 @@ function loadFeed(feedNum_1) {
     return __awaiter(this, arguments, void 0, function* (feedNum, first = false) {
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
+        console.log("ran function");
         for (let i = 1; i <= 9; i++) {
             var tile = document.getElementById(i.toString());
             if (first) {
                 tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+                yield new Promise((resolve) => {
+                    tile.onload = () => {
+                        console.log("tile loaded");
+                        render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                        resolve();
+                    };
+                });
             }
-            yield new Promise((resolve) => {
-                tile.onload = () => {
-                    render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
-                    resolve();
-                };
-            });
+            else {
+                console.log("tile loaded");
+                render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+            }
         }
     });
 }
 function render(feedNum_1) {
     return __awaiter(this, arguments, void 0, function* (feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo) {
+        console.log("rendering");
         const canvas = document.getElementById(canvasID);
         const ctx = canvas.getContext("2d");
         const img = document.getElementById(imgID);
@@ -697,10 +701,9 @@ function render(feedNum_1) {
         //console.log(feedNum, postNum, canvasID, imgID);
         const hueSlider = document.getElementById("hue");
         const satSlider = document.getElementById("saturation");
-        const captionInput = document.getElementById("textbox");
         const hue = parseInt(hueSlider.value);
         const saturate = parseInt(satSlider.value);
-        var caption = captionInput.value;
+        var caption = localStorage.getItem("nameBrand");
         var loaded = false;
         var fontSize = 150;
         var textWidth;
