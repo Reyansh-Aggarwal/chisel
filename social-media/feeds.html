@@ -43,9 +43,15 @@
           class = "text-xl flex flex-row gap-4 bg-background/90 backdrop-blur-sm outline w-fit p-4 rounded-b-2xl absolute right-8 translate-y-[-100%] top-10 md:top-15 transition-all duration-500 ease-out z-10 fixed hidden">
             Next <i class="fa-solid fa-circle-arrow-right self-center"></i>
       </button>
+      <button id = "leftArrow" onclick = "handleArrow('left')" class ="fixed left-3 top-1/2 text-5xl z-15 ">
+        <i class="fa-solid fa-circle-chevron-left"></i>
+      </button>
+      <button id = "rightArrow"  onclick = "handleArrow('right')" class = "fixed right-3 top-1/2 text-5xl z-15">
+        <i class="fa-solid fa-circle-chevron-right"></i>
+      </button>
       <section id = "mainSec"
-      class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-44 justify-center md:justify-between lg:justify-around align-center items-center h-full w-screen p-8">
-        <div id="tiles" class="grid grid-cols-3 grid-rows-3 gap-2 w-full h-full basis-1/2">
+      class = "flex-grow flex flex-col md:flex-row gap-12 pt-32 lg:pt-44 px-16 justify-center md:justify-between lg:justify-around align-center items-center h-full w-screen p-8">
+        <div id="tiles" class="grid grid-cols-3 grid-rows-3 gap-2 w-full h-full basis-1/2 ">
           <!-- Tile 1 -->
           <div id="1-1" class="hover:scale-110 overflow-hidden aspect-square relative" onclick="redirectPost(1)">
             <canvas id="cvs1" class="absolute top-0 left-0 w-full h-full"></canvas>
@@ -117,7 +123,7 @@
           </div> 
         
           <div id = "buttons"
-            class = "flex flex-row gap-4">
+            class = "flex flex-col gap-4 items-center">
               <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold text-black flex flex-row gap-2">
                 Reset <i class="fa-solid fa-arrows-rotate self-center"></i>
               </button>

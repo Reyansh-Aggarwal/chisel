@@ -119,10 +119,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     if (document.body.getAttribute('id') == "postPage"){
-
+        const leftArrow = document.getElementById("leftArrow") as HTMLDivElement;
+        const rightArrow = document.getElementById("rightArrow") as HTMLDivElement;
         const params = new URLSearchParams(window.location.search);
         const postNum = params.get("post") || "1"; // Default fallback
-        const feedNum = params.get("feed") || "1"; // Default fallback
+        const feedNum = params.get("feed") || "2"; // Default fallback
         const img = document.getElementById("postImg") as HTMLImageElement;
         const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
         const downloadButton = document.getElementById("download") as HTMLButtonElement;
@@ -137,7 +138,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
             }
         }
-        
+        console.log(feedNum, postNum);
+        if (parseInt(postNum) == 1){
+                leftArrow.classList.add("hidden");
+            } else if (parseInt(postNum) == 9){
+                rightArrow.classList.add("hidden");
+            }
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
         hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum, canvas.id, img.id, logo);};
@@ -147,7 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
-       
+        const leftArrow = document.getElementById("leftArrow") as HTMLDivElement;
+        const rightArrow = document.getElementById("rightArrow") as HTMLDivElement;
         const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const resetButton = document.getElementById("reset");
         const settingDiv = document.getElementById("colorSettings") as HTMLDivElement;
@@ -165,7 +172,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (document.body.getAttribute('id') == "feeds"){
-
+            if (feedNum == 1){
+                leftArrow.classList.add("hidden");
+            } else if (feedNum == 3){
+                rightArrow.classList.add("hidden");
+            }
             //setting trackers
             const allTrackers = trackerDiv.querySelectorAll<HTMLImageElement>('span');
             var trackerNum : number = 1;
@@ -201,18 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
             loadFeed(feedNum, true);
         }
         
-
         //Event listeners
-        if (document.body.getAttribute('id') == "feeds"){
-            this.body.addEventListener("touchstart",(event) => {
-                startX = event.changedTouches[0].screenX;
-            } );
-            this.body.addEventListener("touchend",(event) => {
-                endX = event.changedTouches[0].screenX;
-                handleSwipe();
-            } );
-        }
-        
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
@@ -257,19 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
         };
 
-        function handleSwipe() {
-            if(startX > endX && (startX - endX > 50)){
-                //swiped left
-                if (feedNum < 3){
-                    changeFeed(feedNum + 1);
-                }
-            } else if (startX < endX && (endX - startX > 50)) {
-                //swipe right
-                if (feedNum > 1){
-                    changeFeed(feedNum - 1);
-                }
-            }
-        }
+        
     }
     if (document.body.getAttribute('id') == "branding"){
         const container = document.getElementById("scrollContainer") as HTMLDivElement;
@@ -564,7 +552,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
     if (document.body.getAttribute('id') == "street-banner"){
-        
+        const leftArrow = document.getElementById("leftArrow") as HTMLDivElement;
+        const rightArrow = document.getElementById("rightArrow") as HTMLDivElement;
         const img = document.getElementById("bannerImg") as HTMLImageElement;
         const feedNum = localStorage.getItem("feed-num") || "1";
         const canvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
@@ -585,6 +574,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (bannerNum == 2){
             mainSection.classList.remove("md:flex-row");
             mainSection.classList.add("md:flex-col");
+        }
+        if (bannerNum == 1){
+            leftArrow.classList.add("hidden");
+        } else if (bannerNum == 2){
+            rightArrow.classList.add("hidden");
         }
         const trackerDiv  = document.getElementById("trackers") as HTMLDivElement;
         const allTrackers = trackerDiv.querySelectorAll<HTMLImageElement>('span');
@@ -708,6 +702,40 @@ document.addEventListener("DOMContentLoaded", function () {
         
     }
 });
+function handleArrow(dir: string) {
+    console.log("arrow");
+
+    const bodyID = document.body.getAttribute("id");
+    
+    if (bodyID === "feeds") {
+        const feedParam = new URLSearchParams(window.location.search).get("feed");
+        let feedNum = feedParam ? parseInt(feedParam, 10) : 1;
+        if (dir === "right" && feedNum < 3) {
+            window.location.href = `../social-media/feeds.html?feed=${feedNum + 1}`;
+        } else if (dir === "left" && feedNum > 1) {
+            window.location.href = `../social-media/feeds.html?feed=${feedNum - 1}`;
+        }
+
+    } else if (bodyID === "postPage") {
+        const feedParam = new URLSearchParams(window.location.search).get("feed");
+        let feedNum = feedParam ? parseInt(feedParam, 10) : 1;
+        const postParam = new URLSearchParams(window.location.search).get("post");
+        let postNum = postParam ? parseInt(postParam, 10) : 1;
+
+        if (dir === "right" && postNum < 9) {
+            window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum + 1}`;
+        } else if (dir === "left" && postNum > 1) {
+            window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum - 1}`;
+        }
+    } else if (bodyID === "street-banner") {
+        if (dir === "right") {
+            window.location.href = `../social-media/postPage.html?num=2`;
+        } else if (dir === "left") {
+            window.location.href = `../social-media/postPage.html?num=1`;
+        }
+
+    }
+}
 
 async function downloadFeed(){
     const zip = new JSZip();
@@ -1035,22 +1063,10 @@ function redirectPost(postNum: number){
 }
 
 function changeFeed(feedNum:number){
-    //getting feed number
-    var currfeedNum = 1
-    const mainSection = document.getElementById("mainSec") as HTMLElement;
-    const urlParam = new URLSearchParams (window.location.search).get("feed");
-    if (urlParam){
-        currfeedNum = parseInt(urlParam);
-    }
-    
-    if (feedNum < currfeedNum){
-        mainSection.classList.add("animate-swipe-right");    
-    } else if (feedNum > currfeedNum){
-        mainSection.classList.add("animate-swipe-left");    
-    }
+
     setTimeout(()=> {
     window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
-    }, 700);
+    }, 10);
 }
 
 function changeBanner(num:number){
