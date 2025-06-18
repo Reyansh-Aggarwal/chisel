@@ -88,7 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // Store the values in localStorage
-                localStorage.setItem("nameBrand", nameBrand);
+                const cleaned = nameBrand.replace(/\bopticals?\b/gi, "");
+                console.log("CLEANED =", cleaned);
+                localStorage.setItem("nameBrand", cleaned);
                 
                 //console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
@@ -163,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const urlParam = new URLSearchParams (window.location.search).get("feed");
         filter = ["360","123"];
         var feedNum = 1;
-        let storedFilter, startX:number, endX:number;
+        let storedFilter;
         //getting feed number
         if (urlParam){
             feedNum = parseInt(urlParam);
@@ -197,6 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (feedNum == 2 || feedNum == 3){
                 settingDiv.classList.add("hidden");
+                resetButton?.classList.add("hidden");
             }
         }
         if (storedFilter){
@@ -603,8 +606,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (img){
             img.src = `../assets/banner/${feedNum}-${bannerNum}.png` || "";
         }
-        
-        
+                
         
         async function renderBanner(){
             const ctx = canvas.getContext('2d')!;
@@ -613,6 +615,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var hue = filter[0], saturate = filter[1];
             var fontSize;
             var captCoords:number[];
+            var maxWidth = 1850;
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
 
@@ -629,37 +632,27 @@ document.addEventListener("DOMContentLoaded", function () {
             if (caption) {
                 ctx.fillStyle = "white";
                 if (feedNum == "2"){
+                    
                     ctx.fillStyle = "#4b200f";
                 }
                 captCoords = [canvas.width/2,2216];
                 fontSize = 220;
                 if (bannerNum == 2){
+                    maxWidth = 1975;
                     fontSize = 440;
                     captCoords = [canvas.width/2 + 1200 ,canvas.height/2 + 600];
                 }
                 
                 ctx.font = `${fontSize}px helvetica-bold`;
                 ctx.textAlign = "center";
-                ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
+                caption = "nazar opticals";
+                console.log(ctx.measureText(caption).width);
+                ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxWidth);
                 
                 console.log(caption, "caption");
             }
         }
-        function handleSwipe() {
-            if(startX > endX && (startX - endX > 50)){
-                //swiped left
-                if (bannerNum < 2){
-                    changeBanner(bannerNum + 1);
-                }
-            } else if (startX < endX && (endX - startX > 50)) {
-                //swipe right
-                if (bannerNum > 1){
-                    changeBanner(bannerNum - 1);
-                }
-                
-            }
-        }
-        
+
         dwnldButton.onclick = () => {
             localStorage.setItem("banner-num", bannerNum.toString());
             popUp.classList.remove('hidden');
@@ -692,13 +685,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var startX = 0;
         var endX = 0;
-        this.body.addEventListener("touchstart",(event) => {
-            startX = event.changedTouches[0].screenX;
-        } );
-        this.body.addEventListener("touchend",(event) => {
-            endX = event.changedTouches[0].screenX;
-            handleSwipe();
-        } );
         
     }
 });
@@ -729,9 +715,9 @@ function handleArrow(dir: string) {
         }
     } else if (bodyID === "street-banner") {
         if (dir === "right") {
-            window.location.href = `../social-media/postPage.html?num=2`;
+            window.location.href = `../pages/street-banner.html?num=2`;
         } else if (dir === "left") {
-            window.location.href = `../social-media/postPage.html?num=1`;
+            window.location.href = `../pages/street-banner.html?num=1`;
         }
 
     }
