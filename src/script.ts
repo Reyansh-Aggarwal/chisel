@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const downloadButton = document.getElementById("download") as HTMLButtonElement;
         const hueSlider = document.getElementById("hue") as HTMLInputElement;
         const saturSlider = document.getElementById("saturation") as HTMLInputElement;
-
+        const resetButton = document.getElementById("reset") as HTMLButtonElement;
         if (img && postNum && feedNum) {
             const parsedPostNum = parseInt(postNum, 10);
             const parsedFeedNum = parseInt(feedNum, 10);
@@ -147,6 +147,11 @@ document.addEventListener("DOMContentLoaded", function () {
         logo.src = localStorage.getItem("logoImage") || "";
         hueSlider.oninput = saturSlider.oninput = img.onload = () => {render(parseInt(feedNum),postNum, canvas.id, img.id,true);};
         downloadButton.onclick = () => {downloadThis(canvas.toDataURL("image/png"),`post${postNum}.png`)};
+        resetButton?.addEventListener("click", () => {
+            hueSlider.value = "180";
+            saturSlider.value = "100";
+            render(parseInt(feedNum),postNum, canvas.id, img.id,true);
+        });            
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage"){
         
@@ -217,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
             if (document.body.id == "feeds" ){ 
-                if (parseInt(filter[0])%5 == 0){
+                if (parseInt(filter[0])%2 == 0){
                     //add buffer
                     loadFeed(feedNum);
                 }
@@ -227,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
             if (document.body.id == "feeds" ){ 
-                if (parseInt(filter[0])%5 == 0){
+                if (parseInt(filter[0])%2 == 0){
                     //add buffer
                     loadFeed(feedNum);
                 }
@@ -239,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
             saturSlider.value = "100";
             if (document.body.id == "feeds"){
                 loadFeed(feedNum);
-            }
+            } 
         });
         downloadButton.onclick = async () => {
             if (document.body.id == "feeds"){
@@ -785,7 +790,7 @@ async function render(feedNum: number, postNum = "1", canvasID = "imgCanvas", im
 
         texture = fxCanvas.texture(img);
         fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
-
+        texture.destroy(); 
         // Copy filtered result to visible canvas
         ctx.drawImage(fxCanvas, 0, 0, canvas.width, canvas.height);
 
