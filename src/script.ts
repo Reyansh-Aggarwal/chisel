@@ -645,7 +645,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 
                 ctx.font = `${fontSize}px helvetica-bold`;
                 ctx.textAlign = "center";
-                caption = "nazar opticals";
+
                 console.log(ctx.measureText(caption).width);
                 ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxWidth);
                 
