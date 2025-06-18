@@ -663,7 +663,7 @@ function render(feedNum_1) {
         const hueSlider = document.getElementById("hue");
         const satSlider = document.getElementById("saturation");
         const hue = parseInt(hueSlider.value);
-        const saturate = parseInt(satSlider.value);
+        const saturate = parseInt(satSlider.value) / 200;
         var caption = localStorage.getItem("nameBrand");
         var loaded = false;
         var fontSize = 150;
@@ -686,7 +686,10 @@ function render(feedNum_1) {
             canvas.height = img.naturalHeight;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (feedNum == 1) {
-                ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+                const fxCanvas = fx.canvas();
+                const texture = fxCanvas.texture(img);
+                fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+                //ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
                 filter[0] = hue.toString();
                 filter[1] = saturate.toString();
             }

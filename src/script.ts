@@ -10,7 +10,7 @@ let primaryColor = "#ff0000",
     }
 var filter:string[];
     // 0- name; 1-primary color; 2- secondary color; 3- image;
-declare var JSZip: any;
+declare var JSZip: any, fx:any;
 declare function saveAs(blob: Blob, filename: string): void;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -754,7 +754,7 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
     
     const hue = parseInt(hueSlider.value);
-    const saturate = parseInt(satSlider.value);
+    const saturate = parseInt(satSlider.value)/200;
     var caption = localStorage.getItem("nameBrand");
     var loaded:Boolean = false;
     var fontSize = 150;
@@ -780,7 +780,10 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (feedNum == 1) {
-            ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+            const fxCanvas = fx.canvas();
+            const texture = fxCanvas.texture(img);
+            fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+            //ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
             filter[0] = hue.toString();
             filter[1] = saturate.toString();
         }
