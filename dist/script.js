@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     menuButton.addEventListener("click", () => {
         dropdownMenu.classList.toggle("hidden");
     });
-    // Optional: close dropdown when clicking outside
+    //close dropdown when clicking outside
     document.addEventListener("click", (event) => {
         const target = event.target;
         if (!menuButton.contains(target) && !dropdownMenu.contains(target)) {
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const parsedPostNum = parseInt(postNum, 10);
             const parsedFeedNum = parseInt(feedNum, 10);
             if (!isNaN(parsedPostNum) && !isNaN(parsedFeedNum)) {
-                img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
+                img.src = `../assets/social-media-${parsedFeedNum}/download/${parsedPostNum}.png`;
             }
         }
         if (parseInt(postNum) == 1) {
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
-        hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(parseInt(feedNum), postNum, canvas.id, img.id, logo); };
+        hueSlider.oninput = saturSlider.oninput = img.onload = () => { render(parseInt(feedNum), postNum, canvas.id, img.id, true); };
         downloadButton.onclick = () => { downloadThis(canvas.toDataURL("image/png"), `post${postNum}.png`); };
     }
     if (document.body.getAttribute('id') == "feeds" || document.body.getAttribute("id") == "postPage") {
@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
             if (document.body.id == "feeds") {
-                if (parseInt(filter[0]) % 10 == 0) {
+                if (parseInt(filter[0]) % 5 == 0) {
                     //add buffer
                     loadFeed(feedNum);
                 }
@@ -547,8 +547,6 @@ document.addEventListener("DOMContentLoaded", function () {
         else {
             img.onload = renderBanner;
         }
-        var startX = 0;
-        var endX = 0;
     }
 });
 function handleArrow(dir) {
@@ -586,21 +584,23 @@ function handleArrow(dir) {
 }
 function downloadFeed() {
     return __awaiter(this, void 0, void 0, function* () {
+        const urlParam = new URLSearchParams(window.location.search).get("feed");
+        var feedNum = 1;
+        if (urlParam) {
+            localStorage.setItem("feed-num", urlParam); //updating stored feed num
+            feedNum = parseInt(urlParam);
+        }
         const zip = new JSZip();
         var canvas, canvasBlob;
         for (let i = 1; i <= 9; i++) {
+            yield render(feedNum, i.toString(), `cvs${i}`, "", true);
             canvas = document.getElementById(`cvs${i}`);
             canvasBlob = yield new Promise(resolve => canvas.toBlob(resolve, "image/png"));
             zip.file(`post-${i}.png`, canvasBlob);
-            //downloadThis(canvas.toDataURL("image/png"),`post${i}.png`)
         }
         //Downloading zip
         const zipBlob = yield zip.generateAsync({ type: "blob" });
         saveAs(zipBlob, "socialMediaFeed.zip");
-        const urlParam = new URLSearchParams(window.location.search).get("feed");
-        if (urlParam) {
-            localStorage.setItem("feed-num", urlParam);
-        }
     });
 }
 function downloadThis(dataURL, filename) {
@@ -615,7 +615,6 @@ function previewImage(logoUrl) {
     const imgTemplate = document.getElementById("imageTemplate");
     const imgDiv = document.getElementById("imageDiv");
     const changeOverlay = document.getElementById("changeOverlay");
-    const imgInput = document.getElementById("imageInput");
     //settinbg values
     imgPreview.src = logoUrl;
     localStorage.setItem("logoImage", logoUrl);
@@ -628,30 +627,37 @@ function previewImage(logoUrl) {
 }
 function loadFeed(feedNum_1) {
     return __awaiter(this, arguments, void 0, function* (feedNum, first = false) {
-        const logo = new Image();
-        logo.src = localStorage.getItem("logoImage") || "";
         for (let i = 1; i <= 9; i++) {
             var tile = document.getElementById(i.toString());
             if (first) {
-                tile.src = `../assets/social-media-${feedNum}/${i}.png`;
+                tile.src = `../assets/social-media-${feedNum}/display/${i}.png`;
                 yield new Promise((resolve) => {
                     tile.onload = () => {
-                        render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                        render(feedNum, i.toString(), `cvs${i}`, tile.id);
                         resolve();
                     };
                 });
             }
             else {
-                render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
+                render(feedNum, i.toString(), `cvs${i}`, tile.id);
             }
         }
     });
 }
 function render(feedNum_1) {
-    return __awaiter(this, arguments, void 0, function* (feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo) {
+    return __awaiter(this, arguments, void 0, function* (feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", newImg = false) {
         const canvas = document.getElementById(canvasID);
         const ctx = canvas.getContext("2d");
-        const img = document.getElementById(imgID);
+        var img;
+        if (newImg) {
+            img = new Image();
+            img.src = `../assets/social-media-${feedNum}/download/${postNum}.png`;
+        }
+        else {
+            img = document.getElementById(imgID);
+        }
+        const logo = new Image();
+        logo.src = localStorage.getItem("logoImage") || "";
         var logoCoords = [0, 0];
         var captCoords = [0, 0];
         const hueSlider = document.getElementById("hue");
@@ -661,7 +667,7 @@ function render(feedNum_1) {
         var caption = localStorage.getItem("nameBrand");
         var loaded = false;
         var fontSize = 150;
-        var textWidth;
+        var maxtextWidth = 800, logoSize;
         //checking if image has loaded 
         yield new Promise((resolve) => {
             if (img.complete) {
@@ -687,38 +693,52 @@ function render(feedNum_1) {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             localStorage.setItem(`filter`, JSON.stringify(filter));
             if (logo.complete) {
-                logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width);
-                ctx.drawImage(logo, logoCoords[0], logoCoords[1], 200, 200);
-            }
-            if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
-                if (postNum == "6") {
-                    fontSize = 60;
-                    captCoords = [323, canvas.height / 2 + 25];
-                    ctx.fillStyle = "white";
+                if (newImg) {
+                    logoSize = 200;
                 }
                 else {
-                    //caption = "helloooo9";
-                    fontSize = 145;
-                    ctx.font = `${fontSize}px helvetica-bold`;
-                    captCoords = [850, 830];
-                    textWidth = ctx.measureText(caption.toUpperCase()).width;
-                    var textLength = caption.length;
-                    if (textWidth > 483) {
-                        //fontSize -= (textWidth-483)/483 * 3.33;
-                        //
+                    logoSize = 100;
+                }
+                logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
+                ctx.drawImage(logo, logoCoords[0], logoCoords[1], logoSize, logoSize);
+            }
+            if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
+                console.log("hehe");
+                if (newImg) {
+                    if (postNum == "6") {
+                        fontSize = 60;
+                        ctx.font = `${fontSize}px helvetica-bold`;
+                        captCoords = [323, (canvas.height / 2 + 25)];
+                        maxtextWidth = 176;
+                        ctx.fillStyle = "white";
                     }
-                    for (var i = fontSize; i > 0; i--) {
-                        ctx.font = `${i}px helvetica-bold`;
-                        if (!(ctx.measureText(caption.toUpperCase()).width > 383)) {
-                            fontSize = i;
-                            captCoords[1] += (fontSize - 120) / 2;
-                            break;
-                        }
+                    else {
+                        //caption = "helloooo9";
+                        fontSize = 145;
+                        ctx.font = `${fontSize}px helvetica-bold`;
+                        captCoords = [850, 830];
+                        maxtextWidth = 423.9;
+                        ctx.fillStyle = '#51afff';
                     }
-                    ctx.fillStyle = '#51afff';
+                }
+                else {
+                    if (postNum == "6") {
+                        fontSize = 22;
+                        ctx.font = `${fontSize}px helvetica-bold`;
+                        captCoords = [115, (canvas.height / 2 + 10)];
+                        ctx.fillStyle = "white";
+                        maxtextWidth = 176;
+                    }
+                    else {
+                        fontSize = 53;
+                        ctx.font = `${fontSize}px helvetica-bold`;
+                        captCoords = [302, 299];
+                        maxtextWidth = 156;
+                        ctx.fillStyle = '#51afff';
+                    }
                 }
                 ctx.font = `${fontSize}px helvetica-bold`;
-                ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
+                ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
             }
         }
     });
@@ -790,41 +810,79 @@ function checkRequired(event) {
         } //others not needed because color cant be empty?
     }
 }
-function getLogoPos(postNum, feedNum, height, width) {
+function getLogoPos(postNum, feedNum, height, width, newImg = false) {
     var logoPos = [0, 0];
-    switch (feedNum) {
-        case 1:
-            if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8") {
-                logoPos = [0, 0];
-            }
-            else if (postNum == "2" || postNum == "7" || postNum == "9") {
-                logoPos = [0, height - 275];
-            }
-            break;
-        case 2:
-            if (postNum == "1" || postNum == "4") {
-                logoPos = [0, height - 275];
-            }
-            else if (postNum == "6" || postNum == "7" || postNum == "9") {
-                logoPos = [width - 275, 0];
-            }
-            else if (postNum == "5" || postNum == "8") {
-                logoPos = [width - 275, height - 275];
-            }
-            else if (postNum == "2" || postNum == "3") {
-                logoPos = [0, 0];
-            }
-            break;
-        case 3:
-            if (postNum == "1" || postNum == "2" || postNum == "3" || postNum == "8") {
-                logoPos = [0, 0];
-            }
-            else if (postNum == "7") {
-                logoPos = [0, height - 275];
-            }
-            else {
-                logoPos = [width - 275, 0];
-            }
+    if (newImg) {
+        switch (feedNum) {
+            case 1:
+                if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8") {
+                    logoPos = [0, 0];
+                }
+                else if (postNum == "2" || postNum == "7" || postNum == "9") {
+                    logoPos = [0, height - 275];
+                }
+                break;
+            case 2:
+                if (postNum == "1" || postNum == "4") {
+                    logoPos = [0, height - 275];
+                }
+                else if (postNum == "6" || postNum == "7" || postNum == "9") {
+                    logoPos = [width - 275, 0];
+                }
+                else if (postNum == "5" || postNum == "8") {
+                    logoPos = [width - 275, height - 275];
+                }
+                else if (postNum == "2" || postNum == "3") {
+                    logoPos = [0, 0];
+                }
+                break;
+            case 3:
+                if (postNum == "1" || postNum == "2" || postNum == "3" || postNum == "8") {
+                    logoPos = [0, 0];
+                }
+                else if (postNum == "7") {
+                    logoPos = [0, height - 275];
+                }
+                else {
+                    logoPos = [width - 275, 0];
+                }
+        }
+    }
+    else {
+        switch (feedNum) {
+            case 1:
+                if (postNum == "1" || postNum == "3" || postNum == "4" || postNum == "5" || postNum == "8") {
+                    logoPos = [0, 0];
+                }
+                else if (postNum == "2" || postNum == "7" || postNum == "9") {
+                    logoPos = [0, height - 110];
+                }
+                break;
+            case 2:
+                if (postNum == "1" || postNum == "4") {
+                    logoPos = [0, height - 110];
+                }
+                else if (postNum == "6" || postNum == "7" || postNum == "9") {
+                    logoPos = [width - 110, 0];
+                }
+                else if (postNum == "5" || postNum == "8") {
+                    logoPos = [width - 110, height - 110];
+                }
+                else if (postNum == "2" || postNum == "3") {
+                    logoPos = [0, 0];
+                }
+                break;
+            case 3:
+                if (postNum == "1" || postNum == "2" || postNum == "3" || postNum == "8") {
+                    logoPos = [0, 0];
+                }
+                else if (postNum == "7") {
+                    logoPos = [0, height - 110];
+                }
+                else {
+                    logoPos = [width - 110, 0];
+                }
+        }
     }
     return logoPos;
 }
