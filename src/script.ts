@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isFilled[0] && isFilled[3]) {
                 event.preventDefault(); 
 
-                //console.log("Form submission detected");
                 const formData = new FormData(form);
     
                 //get form data
@@ -78,21 +77,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 //image handling
                 if(logoImage){
                     localStorage.setItem("logoImage", logoImage);
-                    console.log("Uploaded successfully");
                 }  
                 
                 //handling window changes seperately
                 if(imgPreview.src){
                     window.location.href = "../social-media/intro.html";
-                    console.log('yes image');
                 }
 
                 // Store the values in localStorage
                 const cleaned = nameBrand.replace(/\bopticals?\b/gi, "");
-                console.log("CLEANED =", cleaned);
                 localStorage.setItem("nameBrand", cleaned);
                 
-                //console.log(`Primary Color: ${primaryColor}, Secondary Color: ${secondaryColor}, Name: ${nameBrand}]`);
             }
         });
 
@@ -105,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         chImgButton.addEventListener("click", () => {
             imgInput.click();
-            console.log("clicked");
         });
         
         remImgButton.addEventListener("click", () => {
@@ -140,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 img.src = `../assets/social-media-${parsedFeedNum}/${parsedPostNum}.png`;
             }
         }
-        console.log(feedNum, postNum);
         if (parseInt(postNum) == 1){
                 leftArrow.classList.add("hidden");
             } else if (parseInt(postNum) == 9){
@@ -219,11 +212,9 @@ document.addEventListener("DOMContentLoaded", function () {
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
-            console.log("hue:", filter[0]);
             if (document.body.id == "feeds" ){ 
                 if (parseInt(filter[0])%10 == 0){
                     //add buffer
-                    console.log("loading");
                     loadFeed(feedNum);
                 }
             }
@@ -231,10 +222,8 @@ document.addEventListener("DOMContentLoaded", function () {
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
-            console.log("saturation:", filter[1]);
             if (parseInt(filter[0])%5 == 0){
                     //add buffer
-                    console.log("loading");
                     loadFeed(feedNum);
                 }
         });
@@ -243,7 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
             hueSlider.value = "360";
             saturSlider.value = "200";
             if (document.body.id == "feeds"){
-                console.log("loading");
                 loadFeed(feedNum);
             }
         });
@@ -279,7 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
             radius=200;
         }
         if (window.matchMedia("(min-width: 800px)").matches){
-            console.log("matched");
             radius = 300;
             startAngle -= 90;
             endAngle -= 90;
@@ -287,7 +274,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let feedNum = localStorage.getItem("feed-num") || "1";
-        console.log("hehehe", feedNum);
         const matNames = ["Carry Bag", "Case", "Business Card", "Cloth", "Cleaning Spray"];
         const matAlias = ["bag", "case", "bns-card", "cloth", "spray"];
         const downPath = ["bns-card/bns-card-front.png", "bns-card/bns-card-back.png", "texture.png"];
@@ -314,8 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             //initial pos of marker as well
             positionMarker(2);
-            console.log("main circle", activeCircleNum);
-            //console.log(circlesPos); //debug
+
         }
 
         function positionMarker(cNum: number): void{
@@ -359,7 +344,6 @@ document.addEventListener("DOMContentLoaded", function () {
             
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
-            console.log(canvas.width, canvas.height);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 
@@ -376,7 +360,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     textColor = "#834e00";
                 }
             }
-            console.log("feed ", feedNum);
             await drawLogoText(textColor);
             var logoCoords : [number,number][] = [[1000,1600], [350,1025], [1000,1320], [350,2300], [1200,1625]];
 
@@ -388,7 +371,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const ltfinalHeight = logoTextCanvas.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             ctx.drawImage(logoTextCanvas, logoCoords[activeCircleNum][0], logoCoords[activeCircleNum][1], ltfinalWidth, ltfinalHeight);
-            console.log("rendered");  
         };
             
         async function drawLogoText(txtColor: string) {
@@ -409,7 +391,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
             for (var i = fontSize; i > 0; i--){
-                console.log("done", logoTextCtx.measureText(caption.toUpperCase()));
                 logoTextCtx.font = `${i}px helvetica-bold`;
                 if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)){
                     fontSize = i;
@@ -454,12 +435,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // Draw text
             logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
             logoTextCtx.fillStyle = txtColor;
-            console.log("font", logoTextCtx.font, "fill", logoTextCtx.fillStyle);
             logoTextCtx.textBaseline = "middle";
             logoTextCtx.textAlign = "left";
             logoTextCtx.fillText(caption, captCoords[0], captCoords[1]);
-
-            console.log("Drawn");
             
         }
 
@@ -499,10 +477,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isDone[1]){
                 window.location.href = "../pages/end.html";
                 isDone[1] = false;
-                console.log("hello go");
             }else{
                 isDone[0] = true;
-                console.log(isDone, "hehe");
             }
             localStorage.setItem("progress", JSON.stringify(isDone));
             
@@ -518,36 +494,8 @@ document.addEventListener("DOMContentLoaded", function () {
         circles.forEach((circle, index) => {
             circle.onclick = () => {
                 positionMarker(index);
-                console.log(index);
             };
         });
-
-        //we dont need this but I spent an hour on it so im keeping it 
-        /*
-        container.addEventListener("wheel", (event) => {
-            event.preventDefault(); // prevent actual scroll
-
-            const delta = event.deltaY > 0 ? 10 : -10;
-            // DeltaY is positive for scroll down, negative for scroll up
-            if (event.deltaY > 0) {
-                console.log("Scroll down");
-                markerAngle += delta;
-            } else {
-                console.log("Scroll up");
-                markerAngle += delta;
-            }
-
-            //limiting values
-            if (markerAngle < 90){
-                markerAngle = 90;
-            } else if (markerAngle > 270){
-                markerAngle = 270;
-            }
-
-            console.log(markerAngle);
-            positionMarker();
-        
-        }, { passive: false });*/
 
         // Initial positioning of circles
         positionCircles(startAngle,endAngle);
@@ -567,7 +515,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const urlParam = new URLSearchParams (window.location.search).get("num");
 
         var bannerNum = 1;
-        console.log("helo", localStorage.getItem("feed-num"));
         if (urlParam){
             bannerNum = parseInt(urlParam);
         } else {
@@ -597,10 +544,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let filter:string[];
         if (storedFilter){
             filter = JSON.parse(storedFilter);
-            console.log("filter = ", filter);
         } else {
             filter = ["360", "200"];
-            console.log("hello world");
         }
 
         if (img){
@@ -611,7 +556,6 @@ document.addEventListener("DOMContentLoaded", function () {
         async function renderBanner(){
             const ctx = canvas.getContext('2d')!;
             var caption = localStorage.getItem("nameBrand");
-            console.log(filter);
             var hue = filter[0], saturate = filter[1];
             var fontSize;
             var captCoords:number[];
@@ -646,10 +590,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ctx.font = `${fontSize}px helvetica-bold`;
                 ctx.textAlign = "center";
 
-                console.log(ctx.measureText(caption).width);
                 ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxWidth);
                 
-                console.log(caption, "caption");
             }
         }
 
@@ -669,11 +611,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isDone[0]){
                 window.location.href = "../pages/end.html";
                 isDone[0] = false;
-                console.log("hello go");
             }else{
                 isDone[1] = true;
                 localStorage.setItem("progress", JSON.stringify(isDone));
-                console.log(isDone, "hehe");
             }
         };
 
@@ -689,7 +629,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 function handleArrow(dir: string) {
-    console.log("arrow");
 
     const bodyID = document.body.getAttribute("id");
     
@@ -756,7 +695,6 @@ function downloadThis(dataURL : any, filename : string){
 
 function previewImage(logoUrl : string) {           
 
-    console.log("image previewed");
     const prevDiv = document.getElementById("imagePreviewDiv") as HTMLDivElement;
     const imgPreview = document.getElementById("imagePreview") as HTMLImageElement;
     const imgTemplate = document.getElementById("imageTemplate") as HTMLDivElement;
@@ -780,20 +718,17 @@ function previewImage(logoUrl : string) {
 async function loadFeed (feedNum:number, first =false){
     const logo = new Image();
     logo.src = localStorage.getItem("logoImage") || "";
-    console.log("ran function");
     for (let i = 1; i <= 9; i++){
         var tile = document.getElementById(i.toString()) as HTMLImageElement;
         if (first){
             tile.src = `../assets/social-media-${feedNum}/${i}.png`;
             await new Promise<void>((resolve) => {
                 tile.onload = () => {
-                    console.log("tile loaded");
                     render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
                     resolve();
                 };
             });
         } else{
-            console.log("tile loaded");
             render(feedNum, i.toString(), `cvs${i}`, tile.id, logo);
         }
         
@@ -802,13 +737,11 @@ async function loadFeed (feedNum:number, first =false){
 }
 
 async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", logo: HTMLImageElement) {
-    console.log("rendering");
     const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     const img = document.getElementById(imgID) as HTMLImageElement;
     var logoCoords = [0,0];
     var captCoords = [0,0];
-    //console.log(feedNum, postNum, canvasID, imgID);
     const hueSlider = document.getElementById("hue") as HTMLInputElement;
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
     
@@ -822,12 +755,10 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
    //checking if image has loaded 
     await new Promise<void>((resolve) => {
         if (img.complete) {
-            console.log("complete");
             loaded = true;
             resolve();
         } else {
             img.onload = () => {
-                console.log("jsload");
                 loaded = true;
                 resolve();
             };
@@ -835,7 +766,6 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
     });
         
     if (loaded){
-        //console.log("loaded");
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
 
@@ -867,21 +797,12 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
                 captCoords = [850, 830];
                 textWidth = ctx.measureText(caption.toUpperCase()).width;
                 var textLength = caption.length;
-                console.log(textWidth);
                 if(textWidth > 483){
                     //fontSize -= (textWidth-483)/483 * 3.33;
                     //
                 }
-                if (textLength > 4){ // 50 60
-                    /*fontSize -= (textLength)*(textLength-4) +30;
-                    console.log("textlen", textLength);
-                    */
-                    
                 
-                }
-                console.log("start");
                     for (var i = fontSize; i > 0; i--){
-                        console.log("done");
                         ctx.font = `${i}px helvetica-bold`;
                         if (!(ctx.measureText(caption.toUpperCase()).width > 383)){
                             fontSize = i;
@@ -889,18 +810,14 @@ async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", img
                             break;
                         }
                     }
-                
-                console.log(fontSize);
-                
+                                
                 ctx.fillStyle = '#51afff';
             }
             ctx.font = `${fontSize}px helvetica-bold`;
             
             ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1]);
             
-            console.log(caption, "caption");
         }
-        console.log("rendered");
     }
 }
 
@@ -922,9 +839,7 @@ function imageChange(){
                     let transparentPixelFound = false;
                     canvas.width = img.width;
                     canvas.height = img.height;
-                    console.log("img loaded");
                     if(ctx){
-                        console.log("yay ctx");
                         ctx.drawImage(img, 0, 0);
                     
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
@@ -932,10 +847,8 @@ function imageChange(){
                         for (let i = 3; i < imageData.length; i += 4) {
                             if (imageData[i] === 0) { // Alpha channel is 0 (fully transparent)
                                 transparentPixelFound = true;
-                                //console.log("transparecny");
                                 break;
                             } else {
-                                //console.log("not found");
                             }
                         }
                     }
@@ -952,7 +865,6 @@ function imageChange(){
             
             isFilled[3] = true;
         } else {
-            console.log("no png");
         }
     }
     
@@ -970,20 +882,16 @@ function checkRequired(event: Event){
     if(data!=""){
         if (input.id == "name") {   
             isFilled[0] = true;
-            //console.log("name filled");   
             
         } else if (input.id == "primaryColor" || input.id == "secondaryColor") {
             isFilled[1] = true;
-            //console.log("color filled"); 
         } else if (input.id == "imageInput"){
             isFilled[3] = true;
         }
-        //console.log(isFilled);
         makeGradient(submitButton, true);
     } else if (!data){
         if (input.id == "name"){
             isFilled[0] = false;
-            //console.log("name not filled"); 
             makeGradient(submitButton, false);
         } //others not needed because color cant be empty?
     }
@@ -1045,7 +953,6 @@ function redirectPost(postNum: number){
         feedNum = parseInt(urlParam);
     }
     window.location.href = `../social-media/postPage.html?feed=${feedNum}&post=${postNum}`;
-    //console.log(postNum, "rideiredt");
 }
 
 function changeFeed(feedNum:number){
@@ -1067,7 +974,6 @@ function changeBanner(num:number){
     } else if (num > bannerNum){
         mainSection.classList.add("animate-swipe-left");    
     }
-    console.log("swiped");
     bannerNum = num;
     setTimeout(()=> {
         window.location.href = `../pages/street-banner.html?num=${bannerNum}`;
