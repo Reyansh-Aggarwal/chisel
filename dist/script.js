@@ -13,6 +13,8 @@ if (storedProg) {
     isDone = JSON.parse(storedProg);
 }
 var filter;
+const fxCanvas = fx.canvas();
+let texture;
 document.addEventListener("DOMContentLoaded", function () {
     const menuButton = document.getElementById("menu");
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -196,14 +198,16 @@ document.addEventListener("DOMContentLoaded", function () {
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
-            if (parseInt(filter[0]) % 5 == 0) {
-                //add buffer
-                loadFeed(feedNum);
+            if (document.body.id == "feeds") {
+                if (parseInt(filter[0]) % 5 == 0) {
+                    //add buffer
+                    loadFeed(feedNum);
+                }
             }
         });
         resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => {
-            hueSlider.value = "360";
-            saturSlider.value = "200";
+            hueSlider.value = "180";
+            saturSlider.value = "100";
             if (document.body.id == "feeds") {
                 loadFeed(feedNum);
             }
@@ -648,101 +652,95 @@ function render(feedNum_1) {
     return __awaiter(this, arguments, void 0, function* (feedNum, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", newImg = false) {
         const canvas = document.getElementById(canvasID);
         const ctx = canvas.getContext("2d");
-        var img;
+        let img;
         if (newImg) {
             img = new Image();
             img.src = `../assets/social-media-${feedNum}/download/${postNum}.png`;
+            img.crossOrigin = "anonymous";
         }
         else {
             img = document.getElementById(imgID);
         }
         const logo = new Image();
         logo.src = localStorage.getItem("logoImage") || "";
-        var logoCoords = [0, 0];
-        var captCoords = [0, 0];
         const hueSlider = document.getElementById("hue");
         const satSlider = document.getElementById("saturation");
-        const hue = parseInt(hueSlider.value);
-        const saturate = parseInt(satSlider.value) / 200;
-        var caption = localStorage.getItem("nameBrand");
-        var loaded = false;
-        var fontSize = 150;
-        var maxtextWidth = 800, logoSize;
-        //checking if image has loaded 
+        const hue = (parseInt(hueSlider.value) - 180) / 180; // -1 to 1
+        const saturate = (parseInt(satSlider.value) - 100) / 100; // -1 to 1
+        const caption = localStorage.getItem("nameBrand") || "";
+        let fontSize = 150;
+        let maxtextWidth = 800;
+        let logoSize;
+        let logoCoords = [0, 0];
+        let captCoords = [0, 0];
         yield new Promise((resolve) => {
-            if (img.complete) {
-                loaded = true;
+            if (img.complete)
                 resolve();
+            else
+                img.onload = () => resolve();
+        });
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (feedNum === 1) {
+            // Apply glfx filter
+            console.log("saturation", saturate);
+            const gl = fxCanvas.getContext("webgl") || fxCanvas.getContext("experimental-webgl");
+            gl === null || gl === void 0 ? void 0 : gl.getExtension("WEBGL_color_buffer_float");
+            texture = fxCanvas.texture(img);
+            fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+            // Copy filtered result to visible canvas
+            ctx.drawImage(fxCanvas, 0, 0, canvas.width, canvas.height);
+            filter[0] = ((hue * 180) + 180).toString();
+            filter[1] = ((saturate * 100) + 100).toString();
+            localStorage.setItem(`filter`, JSON.stringify(filter));
+        }
+        else {
+            // No filter: draw original
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+        yield new Promise((resolve) => {
+            if (logo.complete)
+                resolve();
+            else
+                logo.onload = () => resolve();
+        });
+        if (logo.src && logo.complete) {
+            logoSize = newImg ? 200 : 100;
+            logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
+            ctx.drawImage(logo, logoCoords[0], logoCoords[1], logoSize, logoSize);
+        }
+        if (caption && feedNum === 1 && (postNum === "6" || postNum === "8")) {
+            if (newImg) {
+                if (postNum === "6") {
+                    fontSize = 60;
+                    captCoords = [323, (canvas.height / 2 + 25)];
+                    maxtextWidth = 176;
+                    ctx.fillStyle = "white";
+                }
+                else {
+                    fontSize = 145;
+                    captCoords = [850, 830];
+                    maxtextWidth = 423.9;
+                    ctx.fillStyle = "#51afff";
+                }
             }
             else {
-                img.onload = () => {
-                    loaded = true;
-                    resolve();
-                };
-            }
-        });
-        if (loaded) {
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (feedNum == 1) {
-                const fxCanvas = fx.canvas();
-                const texture = fxCanvas.texture(img);
-                fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
-                //ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
-                filter[0] = hue.toString();
-                filter[1] = saturate.toString();
-            }
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            localStorage.setItem(`filter`, JSON.stringify(filter));
-            if (logo.complete) {
-                if (newImg) {
-                    logoSize = 200;
+                if (postNum === "6") {
+                    fontSize = 22;
+                    captCoords = [115, (canvas.height / 2 + 10)];
+                    maxtextWidth = 176;
+                    ctx.fillStyle = "white";
                 }
                 else {
-                    logoSize = 100;
+                    fontSize = 53;
+                    captCoords = [302, 299];
+                    maxtextWidth = 156;
+                    ctx.fillStyle = "#51afff";
                 }
-                logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
-                ctx.drawImage(logo, logoCoords[0], logoCoords[1], logoSize, logoSize);
             }
-            if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
-                console.log("hehe");
-                if (newImg) {
-                    if (postNum == "6") {
-                        fontSize = 60;
-                        ctx.font = `${fontSize}px helvetica-bold`;
-                        captCoords = [323, (canvas.height / 2 + 25)];
-                        maxtextWidth = 176;
-                        ctx.fillStyle = "white";
-                    }
-                    else {
-                        //caption = "helloooo9";
-                        fontSize = 145;
-                        ctx.font = `${fontSize}px helvetica-bold`;
-                        captCoords = [850, 830];
-                        maxtextWidth = 423.9;
-                        ctx.fillStyle = '#51afff';
-                    }
-                }
-                else {
-                    if (postNum == "6") {
-                        fontSize = 22;
-                        ctx.font = `${fontSize}px helvetica-bold`;
-                        captCoords = [115, (canvas.height / 2 + 10)];
-                        ctx.fillStyle = "white";
-                        maxtextWidth = 176;
-                    }
-                    else {
-                        fontSize = 53;
-                        ctx.font = `${fontSize}px helvetica-bold`;
-                        captCoords = [302, 299];
-                        maxtextWidth = 156;
-                        ctx.fillStyle = '#51afff';
-                    }
-                }
-                ctx.font = `${fontSize}px helvetica-bold`;
-                ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
-            }
+            ctx.font = `${fontSize}px helvetica-bold`;
+            ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
         }
     });
 }

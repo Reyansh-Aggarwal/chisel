@@ -10,8 +10,11 @@ let primaryColor = "#ff0000",
     }
 var filter:string[];
     // 0- name; 1-primary color; 2- secondary color; 3- image;
-declare var JSZip: any, fx:any;
+declare var JSZip: any, fx: any;
+const fxCanvas = fx.canvas();
+let texture: any;
 declare function saveAs(blob: Blob, filename: string): void;
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const menuButton = document.getElementById("menu") as HTMLButtonElement;
@@ -223,15 +226,17 @@ document.addEventListener("DOMContentLoaded", function () {
         saturSlider.addEventListener("input", () => {
             filter[1] = saturSlider.value;
             //applyFilters(tilesDiv, filter);
-            if (parseInt(filter[0])%5 == 0){
+            if (document.body.id == "feeds" ){ 
+                if (parseInt(filter[0])%5 == 0){
                     //add buffer
                     loadFeed(feedNum);
                 }
+            }
         });
         
         resetButton?.addEventListener("click", () => {
-            hueSlider.value = "360";
-            saturSlider.value = "200";
+            hueSlider.value = "180";
+            saturSlider.value = "100";
             if (document.body.id == "feeds"){
                 loadFeed(feedNum);
             }
@@ -735,113 +740,106 @@ async function loadFeed (feedNum:number, first =false){
     }
 }
 
-async function render(feedNum:number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", newImg:boolean = false) {
+async function render(feedNum: number, postNum = "1", canvasID = "imgCanvas", imgID = "postImg", newImg: boolean = false) {
     const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
-    var img:HTMLImageElement;
-    if (newImg){
+    let img: HTMLImageElement;
+
+    if (newImg) {
         img = new Image();
         img.src = `../assets/social-media-${feedNum}/download/${postNum}.png`;
+        img.crossOrigin = "anonymous";
     } else {
         img = document.getElementById(imgID) as HTMLImageElement;
-
     }
+
     const logo = new Image();
     logo.src = localStorage.getItem("logoImage") || "";
-    var logoCoords = [0,0];
-    var captCoords = [0,0];
+
     const hueSlider = document.getElementById("hue") as HTMLInputElement;
     const satSlider = document.getElementById("saturation") as HTMLInputElement;
-    
-    const hue = parseInt(hueSlider.value);
-    const saturate = parseInt(satSlider.value)/200;
-    var caption = localStorage.getItem("nameBrand");
-    var loaded:Boolean = false;
-    var fontSize = 150;
-    var maxtextWidth= 800, logoSize;
+    const hue = (parseInt(hueSlider.value) - 180) / 180;      // -1 to 1
+    const saturate = (parseInt(satSlider.value) - 100) / 100; // -1 to 1
 
-   //checking if image has loaded 
+    const caption = localStorage.getItem("nameBrand") || "";
+    let fontSize = 150;
+    let maxtextWidth = 800;
+    let logoSize: number;
+    let logoCoords: [number, number] = [0, 0];
+    let captCoords: [number, number] = [0, 0];
+
     await new Promise<void>((resolve) => {
-        if (img.complete) {
-            loaded = true;
-            resolve();
-        } else {
-            img.onload = () => {
-                loaded = true;
-                resolve();
-            };
-        }
+        if (img.complete) resolve();
+        else img.onload = () => resolve();
     });
-        
-    if (loaded){
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (feedNum == 1) {
-            const fxCanvas = fx.canvas();
-            const texture = fxCanvas.texture(img);
-            fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
-            //ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
-            filter[0] = hue.toString();
-            filter[1] = saturate.toString();
-        }
+    if (feedNum === 1) {
+        // Apply glfx filter
+        console.log("saturation", saturate);
+        const gl = fxCanvas.getContext("webgl") || fxCanvas.getContext("experimental-webgl");
+        gl?.getExtension("WEBGL_color_buffer_float");
 
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        texture = fxCanvas.texture(img);
+        fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+
+        // Copy filtered result to visible canvas
+        ctx.drawImage(fxCanvas, 0, 0, canvas.width, canvas.height);
+
+        filter[0] = ((hue * 180) + 180).toString();
+        filter[1] = ((saturate * 100) + 100).toString();
         localStorage.setItem(`filter`, JSON.stringify(filter));
+    } else {
+        // No filter: draw original
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    }
 
-        if (logo.complete) {
-            if (newImg){
-                logoSize = 200;
-            } else {
-                logoSize = 100;
-            }
-            logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
-            ctx.drawImage(logo, logoCoords[0], logoCoords[1], logoSize, logoSize);
-        }
-        if (caption && feedNum == 1 && (postNum == "6" || postNum == "8")) {
-            console.log("hehe");
-            if (newImg){
-                if(postNum == "6"){
-                    fontSize = 60;
-                    ctx.font = `${fontSize}px helvetica-bold`;
-                    captCoords = [ 323 ,(canvas.height/2 + 25)];
-                    maxtextWidth =176;     
-                                                 
-                    ctx.fillStyle = "white";
-                } else{
-                    //caption = "helloooo9";
-                    fontSize = 145;
-                    ctx.font = `${fontSize}px helvetica-bold`;
-                    captCoords = [850, 830];
-                    maxtextWidth = 423.9;            
-                    ctx.fillStyle = '#51afff';
-                }    
-            } else {
-                if(postNum == "6"){
-                    fontSize = 22;
-                    ctx.font = `${fontSize}px helvetica-bold`;
-                    captCoords = [115,(canvas.height/2 +10)];
-                    ctx.fillStyle = "white";
-                    maxtextWidth = 176;                
+    await new Promise<void>((resolve) => {
+        if (logo.complete) resolve();
+        else logo.onload = () => resolve();
+    });
 
-                } else{
-                    fontSize = 53;
-                    ctx.font = `${fontSize}px helvetica-bold`;
-                    captCoords = [302, 299];
-                    maxtextWidth = 156;              
-                    ctx.fillStyle = '#51afff';
-                }
+    if (logo.src && logo.complete) {
+        logoSize = newImg ? 200 : 100;
+        logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
+        ctx.drawImage(logo, logoCoords[0], logoCoords[1], logoSize, logoSize);
+    }
+
+    if (caption && feedNum === 1 && (postNum === "6" || postNum === "8")) {
+        if (newImg) {
+            if (postNum === "6") {
+                fontSize = 60;
+                captCoords = [323, (canvas.height / 2 + 25)];
+                maxtextWidth = 176;
+                ctx.fillStyle = "white";
+            } else {
+                fontSize = 145;
+                captCoords = [850, 830];
+                maxtextWidth = 423.9;
+                ctx.fillStyle = "#51afff";
             }
-            
-            ctx.font = `${fontSize}px helvetica-bold`;
-            
-            ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
-            
+        } else {
+            if (postNum === "6") {
+                fontSize = 22;
+                captCoords = [115, (canvas.height / 2 + 10)];
+                maxtextWidth = 176;
+                ctx.fillStyle = "white";
+            } else {
+                fontSize = 53;
+                captCoords = [302, 299];
+                maxtextWidth = 156;
+                ctx.fillStyle = "#51afff";
+            }
         }
+
+        ctx.font = `${fontSize}px helvetica-bold`;
+        ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
     }
 }
+
 
 function imageChange(){
     const imgInput = document.getElementById("imageInput") as HTMLInputElement;
@@ -921,7 +919,7 @@ function checkRequired(event: Event){
 }
 
 function getLogoPos (postNum : string, feedNum : number, height: number, width: number, newImg:boolean = false){
-    var logoPos = [0,0];
+    var logoPos: [number,number] = [0,0];
     if (newImg){
         switch (feedNum){
             case 1:
@@ -1033,3 +1031,4 @@ function changeBanner(num:number){
         window.location.href = `../pages/street-banner.html?num=${bannerNum}`;
     }, 300);
 }
+
