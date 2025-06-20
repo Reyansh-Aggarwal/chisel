@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             makeGradient(submitButton, true);
             isFilled[0] = true;
         }
-        if (logoImageValue) {
+        if (logoImageValue && logoImageValue != "") {
             previewImage(logoImageValue);
             isFilled[3] = true;
         }
@@ -374,7 +374,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
             await drawLogoText(textColor);
-            var logoCoords : [number,number][] = [[1000,1600], [350,1025], [1000,1320], [350,2300], [1200,1625]];
+            var logoCoords : [number,number][] = [[375,1600/3], [350/3,350], [1000/3,1320/3], [150, 750], [400,550]];
 
             let scale = 0.3;
             if (activeCircleNum == 4){
@@ -391,27 +391,27 @@ document.addEventListener("DOMContentLoaded", function () {
             logo.src = localStorage.getItem("logoImage") || "";
             const caption = localStorage.getItem("nameBrand") || "hello world";
             const logoTextCtx = logoTextCanvas.getContext("2d")!;
-            const logoWidth = 1000;
-            const logoHeight = 1000;
-            const padding = 80;
-            var fontSize = 700;
+            const logoWidth = 300;
+            const logoHeight = 300;
+            const padding = 10;
+            var fontSize = 240;
             var captCoords = [padding + logoWidth, padding+ logoHeight / 2];
-            let mainFont = "helvetica-bold";
+            let mainFont = "helvetica-roman";
             if (feedNum == "2") {
                 mainFont = "phagspa";
             } else if (feedNum == "3") {
                 mainFont = "Times New Roman";
             }
             logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
-            for (var i = fontSize; i > 0; i--){
+            /*for (var i = fontSize; i > 0; i--){
                 logoTextCtx.font = `${i}px helvetica-bold`;
                 if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)){
                     fontSize = i;
                     captCoords[1] += (fontSize-120)/2;
                     break;
                 }
-            }
-            captCoords = [2*padding + logoWidth , padding+ logoHeight / 2 +30];
+            }*/
+            captCoords = [2*padding + logoWidth , padding+ 180];
             const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
 
             logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
@@ -425,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         offCanvas.width = logoWidth;
                         offCanvas.height = logoHeight;
                         const offCtx = offCanvas.getContext("2d")!;
-                        offCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
+                        offCtx.drawImage(logo, padding, 2*padding, logoWidth, logoHeight);
                         offCtx.globalCompositeOperation = "source-in";
                         offCtx.fillStyle = txtColor;
                         offCtx.fillRect(0, 0, logoWidth, logoHeight);
@@ -433,14 +433,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
                         logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
-
-                        
-                        resolve(); // ✅ now we say this part is done!
-                        };
-
-                        logo.onerror = () => {
-                            console.error("Failed to load logo image.");
-                            resolve(); // or reject, depending on your preference
+                        resolve(); 
                         };
                 });
             } 
@@ -497,11 +490,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
         }
 
-        dwnldButton.onclick = () => {
-            downloadMaterials();
-            
-            
-        };
+        dwnldButton.onclick = downloadMaterials;
 
         //event listeners
         circles.forEach((circle, index) => {
@@ -823,8 +812,8 @@ async function render(feedNum: number, postNum = "1", canvasID = "imgCanvas", im
                 maxtextWidth = 176;
                 ctx.fillStyle = "white";
             } else {
-                fontSize = 145;
-                captCoords = [850, 830];
+                fontSize = 140;
+                captCoords = [850, 825];
                 maxtextWidth = 423.9;
                 ctx.fillStyle = "#51afff";
             }
@@ -838,13 +827,19 @@ async function render(feedNum: number, postNum = "1", canvasID = "imgCanvas", im
                 fontSize = 53;
                 captCoords = [302, 299];
                 maxtextWidth = 156;
-                ctx.fillStyle = "#51afff";
+                ctx.fillStyle = "#2b9dfb";
             }
         }
 
         ctx.font = `${fontSize}px helvetica-bold`;
+        if (postNum == "8"){
+             ctx.filter = `hue-rotate(${hue*180}deg) saturate(${(saturate + 1) * 100}%)`;
+        }
+       
+
         ctx.fillText(caption.toUpperCase(), captCoords[0], captCoords[1], maxtextWidth);
-    }
+        ctx.filter = "none";
+    }   
 }
 
 
