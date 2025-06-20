@@ -68,10 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
         //===================================================================
 
         form.addEventListener('submit', (event: Event) => {
-    
-            if (isFilled[0] && isFilled[3]) {
+            
+            if (isFilled[0]) {
+                
                 event.preventDefault(); 
-
                 const formData = new FormData(form);
     
                 //get form data
@@ -81,7 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 //image handling
                 if(logoImage){
                     localStorage.setItem("logoImage", logoImage);
-                }  
+                } else {
+                    localStorage.setItem("logoImage", "");
+                }
                 
                 //handling window changes seperately
                 if(imgPreview.src){
