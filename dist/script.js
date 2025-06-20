@@ -62,14 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const formData = new FormData(form);
                 //get form data
                 nameBrand = formData.get("name") || nameBrand;
-                const logoImage = imgPreview.src;
-                //image handling
-                if (logoImage) {
-                    localStorage.setItem("logoImage", logoImage);
-                }
-                else {
-                    localStorage.setItem("logoImage", "");
-                }
                 //handling window changes seperately
                 if (imgPreview.src) {
                     window.location.href = "../social-media/intro.html";
@@ -240,7 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let cAngle = [0, 0, 0, 0, 0];
         const circleCount = 5; // Dynamically get the number of circles
         let radius = 150; // Adjusted radius for better visibility
-        let markerAngle = 180;
         let xOffset = 0;
         let activeCircleNum = 2;
         var startAngle = 180;
@@ -342,15 +333,16 @@ document.addEventListener("DOMContentLoaded", function () {
         ;
         function drawLogoText(txtColor) {
             return __awaiter(this, void 0, void 0, function* () {
+                const logoData = localStorage.getItem("logoImage");
+                var caption = localStorage.getItem("nameBrand") || "hello world";
+                let maxtextWidth = 600;
                 const logo = new Image();
-                logo.src = localStorage.getItem("logoImage") || "";
-                const caption = localStorage.getItem("nameBrand") || "hello world";
                 const logoTextCtx = logoTextCanvas.getContext("2d");
                 const logoWidth = 300;
                 const logoHeight = 300;
                 const padding = 10;
-                var fontSize = 240;
-                var captCoords = [padding + logoWidth, padding + logoHeight / 2];
+                let fontSize = 240;
+                let captCoords = [2 * padding + logoWidth, padding + 180];
                 let mainFont = "helvetica-roman";
                 if (feedNum == "2") {
                     mainFont = "phagspa";
@@ -359,22 +351,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     mainFont = "Times New Roman";
                 }
                 logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
-                /*for (var i = fontSize; i > 0; i--){
-                    logoTextCtx.font = `${i}px helvetica-bold`;
-                    if (!(logoTextCtx.measureText(caption.toUpperCase()).width > 2000)){
-                        fontSize = i;
-                        captCoords[1] += (fontSize-120)/2;
-                        break;
-                    }
-                }*/
-                captCoords = [2 * padding + logoWidth, padding + 180];
-                const textWidth = caption ? logoTextCtx.measureText(caption).width : 0;
+                const textWidth = logoTextCtx.measureText(caption).width;
                 logoTextCanvas.width = logoWidth + padding + textWidth + padding * 2;
                 logoTextCanvas.height = logoHeight + padding * 2;
-                if (logo) {
+                logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
+                if (logoData) {
+                    logo.src = logoData;
                     yield new Promise((resolve) => {
                         logo.onload = () => {
-                            // Draw logo with color overlay
                             const offCanvas = document.createElement("canvas");
                             offCanvas.width = logoWidth;
                             offCanvas.height = logoHeight;
@@ -383,20 +367,20 @@ document.addEventListener("DOMContentLoaded", function () {
                             offCtx.globalCompositeOperation = "source-in";
                             offCtx.fillStyle = txtColor;
                             offCtx.fillRect(0, 0, logoWidth, logoHeight);
-                            offCtx.globalCompositeOperation = "source-over";
-                            logoTextCtx.clearRect(0, 0, logoTextCanvas.width, logoTextCanvas.height);
                             logoTextCtx.drawImage(offCanvas, padding, padding, logoWidth, logoHeight);
+                            resolve();
+                        };
+                        logo.onerror = () => {
+                            console.warn("Failed to load logo image.");
                             resolve();
                         };
                     });
                 }
-                //eee
-                // Draw text
                 logoTextCtx.font = `${fontSize}px ${mainFont}, Arial, sans-serif`;
                 logoTextCtx.fillStyle = txtColor;
                 logoTextCtx.textBaseline = "middle";
                 logoTextCtx.textAlign = "left";
-                logoTextCtx.fillText(caption, captCoords[0], captCoords[1]);
+                logoTextCtx.fillText(caption, captCoords[0], captCoords[1], maxtextWidth);
             });
         }
         function downloadMaterials() {
@@ -703,12 +687,14 @@ function render(feedNum_1) {
             // No filter: draw original
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
-        yield new Promise((resolve) => {
-            if (logo.complete)
-                resolve();
-            else
-                logo.onload = () => resolve();
-        });
+        if (logo) {
+            yield new Promise((resolve) => {
+                if (logo.complete)
+                    resolve();
+                else
+                    logo.onload = () => resolve();
+            });
+        }
         if (logo.src && logo.complete) {
             logoSize = newImg ? 200 : 100;
             logoCoords = getLogoPos(postNum, feedNum, canvas.height, canvas.width, newImg);
@@ -755,6 +741,7 @@ function render(feedNum_1) {
 function imageChange() {
     const imgInput = document.getElementById("imageInput");
     const imgFile = imgInput.files ? imgInput.files[0] : null;
+    const imgPreview = document.getElementById("imagePreview");
     if (imgFile) {
         if (imgFile === null || imgFile === void 0 ? void 0 : imgFile.type.includes('png')) {
             const reader = new FileReader();
@@ -772,16 +759,17 @@ function imageChange() {
                         ctx.drawImage(img, 0, 0);
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
                         for (let i = 3; i < imageData.length; i += 4) {
-                            if (imageData[i] === 0) { // Alpha channel is 0 (fully transparent)
+                            if (imageData[i] === 0) {
                                 transparentPixelFound = true;
                                 break;
-                            }
-                            else {
                             }
                         }
                     }
                     if (transparentPixelFound) {
                         previewImage(img.src);
+                        const dataUrl = reader.result;
+                        imgPreview.src = dataUrl;
+                        localStorage.setItem("logoImage", dataUrl);
                     }
                     else {
                         alert("The Image does NOT have a transparent background.");
