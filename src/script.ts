@@ -255,7 +255,8 @@ document.addEventListener("DOMContentLoaded", function () {
             
         }
         //Event listeners
-        selectButton.onclick = () => {
+        selectButton.onclick = (e) => {
+            e.stopPropagation();
             checked = !checked;
             
             setCheckBox(checked);
