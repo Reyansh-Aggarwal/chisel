@@ -123,13 +123,21 @@
           </div> 
         
           <div id = "buttons"
-            class = "flex flex-col gap-4 items-center">
+              class = "flex flex-col gap-4 items-center">
               <button id = "reset" class = "bg-blue-500 rounded-full w-fit p-4 text-2xl font-helvetica-bold text-black flex flex-row gap-2">
                 Reset <i class="fa-solid fa-arrows-rotate self-center"></i>
               </button>
               <button id="download"
               class = "bg-black outline-blue-500 outline rounded-full w-fit p-4 text-2xl text-blue-500 font-helvetica-bold flex flex-row gap-2"> 
               Download <i class="fa-solid fa-arrow-down self-center"></i>
+              </button>
+              <button id="select"
+              class = "bg-black outline-blue-500 outline rounded-full w-fit p-4 text-2xl text-blue-500 font-helvetica-bold flex flex-row gap-2"> 
+                Select  
+                <span class = "flex flex-col self-center">
+                  <i id="checkbox-regular" class="fa-regular fa-square-check self-center inset-0 transition-all duration-300 ease-in opacity-100"></i>
+                  <i id="checkbox-solid" class="fa-solid absolute fa-square-check self-center inset-0 transition-all duration-300 ease-in opacity-0"></i>
+                </span>
               </button>
           </div>
         </div>

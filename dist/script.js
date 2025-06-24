@@ -132,16 +132,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const rightArrow = document.getElementById("rightArrow");
         const trackerDiv = document.getElementById("trackers");
         const resetButton = document.getElementById("reset");
+        const selectButton = document.getElementById("select");
         const settingDiv = document.getElementById("colorSettings");
         const downloadButton = document.getElementById("download");
         const hNextButton = document.getElementById("headNext");
         const urlParam = new URLSearchParams(window.location.search).get("feed");
+        var checked = false;
         filter = ["360", "123"];
         var feedNum = 1;
-        let storedFilter;
+        let storedFilter, checkboxSolid, checkboxRegular;
         //getting feed number
         if (urlParam) {
             feedNum = parseInt(urlParam);
+            if (urlParam == localStorage.getItem("feed-num")) {
+                checked = true;
+                setCheckBox(checked);
+            }
         }
         else {
             window.location.href = `../social-media/feeds.html?feed=${feedNum}`;
@@ -185,7 +191,41 @@ document.addEventListener("DOMContentLoaded", function () {
         if (document.body.getAttribute("id") == "feeds") {
             loadFeed(feedNum, true);
         }
+        function setCheckBox(checked) {
+            checkboxRegular = document.getElementById("checkbox-regular");
+            checkboxSolid = document.getElementById("checkbox-solid");
+            const urlParam = new URLSearchParams(window.location.search).get("feed");
+            if (urlParam) {
+                if (checked) {
+                    localStorage.setItem("feed-num", urlParam);
+                }
+                else {
+                    localStorage.removeItem("feed-num");
+                }
+            }
+            //managing classes (visibility) use toggle and function (for checked/unchecked)
+            if (checked) {
+                checkboxRegular === null || checkboxRegular === void 0 ? void 0 : checkboxRegular.classList.add("opacity-0", "absolute", "hidden");
+                checkboxRegular === null || checkboxRegular === void 0 ? void 0 : checkboxRegular.classList.remove("opacity-100", "scale-100");
+                checkboxSolid === null || checkboxSolid === void 0 ? void 0 : checkboxSolid.classList.add("opacity-100", "scale-100");
+                checkboxSolid === null || checkboxSolid === void 0 ? void 0 : checkboxSolid.classList.remove("opacity-0", "absolute", "hidden");
+                hNextButton.classList.remove('hidden');
+                setTimeout(() => {
+                    hNextButton.classList.remove('translate-y-[-100%]');
+                }, 25);
+            }
+            else {
+                checkboxRegular === null || checkboxRegular === void 0 ? void 0 : checkboxRegular.classList.add("opacity-100", "scale-100");
+                checkboxRegular === null || checkboxRegular === void 0 ? void 0 : checkboxRegular.classList.remove("opacity-0", "absolute", "hidden");
+                checkboxSolid === null || checkboxSolid === void 0 ? void 0 : checkboxSolid.classList.add("opacity-0", "absolute", "hidden");
+                checkboxSolid === null || checkboxSolid === void 0 ? void 0 : checkboxSolid.classList.remove("opacity-100", "scale-100");
+            }
+        }
         //Event listeners
+        selectButton.onclick = () => {
+            checked = !checked;
+            setCheckBox(checked);
+        };
         hueSlider.addEventListener("input", () => {
             filter[0] = hueSlider.value;
             //applyFilters(tilesDiv, filter);
@@ -213,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadFeed(feedNum);
             }
         });
-        downloadButton.onclick = () => __awaiter(this, void 0, void 0, function* () {
+        downloadButton.onclick = downloadButton.ontouchend = () => __awaiter(this, void 0, void 0, function* () {
             if (document.body.id == "feeds") {
                 hNextButton.classList.remove('hidden');
                 setTimeout(() => {
@@ -302,23 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 canvas.width = img.naturalWidth;
                 canvas.height = img.naturalHeight;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                //drawing logo
-                let textColor = "black";
-                if (feedNum == "1") {
-                    textColor = "#3b82f6";
-                }
-                else if (feedNum == "3") {
-                    textColor = "white";
-                }
-                else if (feedNum == "2") {
-                    if (activeCircleNum == 2) {
-                        textColor = "white";
-                    }
-                    else {
-                        textColor = "#834e00";
-                    }
-                }
-                yield drawLogoText(textColor);
                 var logoCoords = [[375, 1600 / 3], [350 / 3, 350], [1000 / 3, 1320 / 3], [150, 750], [400, 550]];
                 let scale = 0.3;
                 if (activeCircleNum == 4) {
@@ -336,6 +359,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const logoData = localStorage.getItem("logoImage");
                 var caption = localStorage.getItem("nameBrand") || "hello world";
                 let maxtextWidth = 600;
+                let filter = JSON.parse(localStorage.getItem("filter") || "");
+                var hue = (parseInt(filter[0]) - 180) / 180, saturate = (parseInt(filter[1]) - 100) / 100;
                 const logo = new Image();
                 const logoTextCtx = logoTextCanvas.getContext("2d");
                 const logoWidth = 300;
@@ -381,6 +406,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 logoTextCtx.textBaseline = "middle";
                 logoTextCtx.textAlign = "left";
                 logoTextCtx.fillText(caption, captCoords[0], captCoords[1], maxtextWidth);
+                if (feedNum === "1") {
+                    // Apply glfx filter
+                    console.log("saturation", saturate);
+                    const gl = fxCanvas.getContext("webgl") || fxCanvas.getContext("experimental-webgl");
+                    gl === null || gl === void 0 ? void 0 : gl.getExtension("WEBGL_color_buffer_float");
+                    texture = fxCanvas.texture(logoTextCanvas);
+                    fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+                    texture.destroy();
+                    // Copy filtered result to visible canvas
+                    logoTextCtx.drawImage(fxCanvas, 0, 0, logoTextCanvas.width, logoTextCanvas.height);
+                }
             });
         }
         function downloadMaterials() {
@@ -418,7 +454,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("progress", JSON.stringify(isDone));
             });
         }
-        dwnldButton.onclick = downloadMaterials;
+        dwnldButton.onclick = dwnldButton.ontouchend = downloadMaterials;
         //event listeners
         circles.forEach((circle, index) => {
             circle.onclick = () => {
@@ -427,6 +463,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         // Initial positioning of circles
         positionCircles(startAngle, endAngle);
+        //drawing logo
+        let textColor = "black";
+        if (feedNum == "1") {
+            textColor = "#3b82f6";
+        }
+        else if (feedNum == "3") {
+            textColor = "white";
+        }
+        else if (feedNum == "2") {
+            if (activeCircleNum == 2) {
+                textColor = "white";
+            }
+            else {
+                textColor = "#834e00";
+            }
+        }
+        drawLogoText(textColor);
     }
     if (document.body.getAttribute('id') == "street-banner") {
         const leftArrow = document.getElementById("leftArrow");
@@ -480,18 +533,24 @@ document.addEventListener("DOMContentLoaded", function () {
             return __awaiter(this, void 0, void 0, function* () {
                 const ctx = canvas.getContext('2d');
                 var caption = localStorage.getItem("nameBrand");
-                var hue = filter[0], saturate = filter[1];
+                var hue = (parseInt(filter[0]) - 180) / 180, saturate = (parseInt(filter[1]) - 100) / 100;
                 var fontSize;
                 var captCoords;
                 var maxWidth = 1850;
                 canvas.width = img.naturalWidth;
                 canvas.height = img.naturalHeight;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (feedNum == "1") {
-                    ctx.filter = `hue-rotate(${hue}deg) saturate(${saturate}%)`;
+                if (feedNum === "1") {
+                    // Apply glfx filter
+                    console.log("saturation", saturate);
+                    const gl = fxCanvas.getContext("webgl") || fxCanvas.getContext("experimental-webgl");
+                    gl === null || gl === void 0 ? void 0 : gl.getExtension("WEBGL_color_buffer_float");
+                    texture = fxCanvas.texture(img);
+                    fxCanvas.draw(texture).hueSaturation(hue, saturate).update();
+                    texture.destroy();
+                    // Copy filtered result to visible canvas
+                    ctx.drawImage(fxCanvas, 0, 0, canvas.width, canvas.height);
                 }
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                localStorage.setItem(`filter`, JSON.stringify(filter));
                 if (caption) {
                     ctx.fillStyle = "white";
                     if (feedNum == "2") {
@@ -510,7 +569,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
-        dwnldButton.onclick = () => {
+        dwnldButton.onclick = dwnldButton.ontouchend = () => {
             localStorage.setItem("banner-num", bannerNum.toString());
             popUp.classList.remove('hidden');
             setTimeout(() => {
@@ -717,8 +776,8 @@ function render(feedNum_1) {
             }
             else {
                 if (postNum === "6") {
-                    fontSize = 22;
-                    captCoords = [115, (canvas.height / 2 + 10)];
+                    fontSize = 21;
+                    captCoords = [115, (canvas.height / 2 + 9)];
                     maxtextWidth = 176;
                     ctx.fillStyle = "white";
                 }
